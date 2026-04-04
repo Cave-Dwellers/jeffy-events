@@ -1,0 +1,250 @@
+[gd_scene format=3 uid="uid://cyk0phhurs6n7"]
+
+[ext_resource type="Texture2D" uid="uid://7pc0jjhhwvj3" path="res://addons/jeffy_events/asset/icon/Add.svg" id="1_gudbx"]
+[ext_resource type="Texture2D" uid="uid://bmaqov8dsbe5f" path="res://addons/jeffy_events/asset/icon/Reload.svg" id="2_k1yvw"]
+[ext_resource type="Texture2D" uid="uid://cetqhevs031e4" path="res://addons/jeffy_events/asset/icon/Remove.svg" id="2_xor01"]
+[ext_resource type="Texture2D" uid="uid://bigshvbjvptjk" path="res://addons/jeffy_events/asset/icon/EventGraph.svg" id="3_hbwa6"]
+[ext_resource type="Texture2D" uid="uid://bwjeiceovmefo" path="res://addons/jeffy_events/asset/icon/EventLabel.svg" id="4_c8yvv"]
+[ext_resource type="Texture2D" uid="uid://7p0ewwufccg1" path="res://addons/jeffy_events/asset/icon/Variables.svg" id="5_c8yvv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k1yvw"]
+content_margin_left = 4.5
+content_margin_top = 4.5
+content_margin_right = 4.5
+content_margin_bottom = 4.5
+bg_color = Color(1, 1, 1, 0.04)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hbwa6"]
+content_margin_left = 4.5
+content_margin_top = 4.5
+content_margin_right = 4.5
+content_margin_bottom = 4.5
+bg_color = Color(0.161, 0.161, 0.161, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5686275, 0.25490198, 0.6745098, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8yvv"]
+content_margin_left = 3.0
+content_margin_top = 1.8
+content_margin_right = 3.0
+content_margin_bottom = 1.8
+bg_color = Color(0.21896, 0.21896, 0.21896, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xor01"]
+content_margin_left = 3.0
+content_margin_top = 1.8
+content_margin_right = 3.0
+content_margin_bottom = 1.8
+bg_color = Color(0.27692, 0.27692, 0.27692, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y0b81"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.161, 0.161, 0.161, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bqj51"]
+content_margin_left = 3.0
+content_margin_top = 1.8
+content_margin_right = 3.0
+content_margin_bottom = 1.8
+bg_color = Color(0.2576, 0.2576, 0.2576, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiv7q"]
+content_margin_left = 4.5
+content_margin_top = 4.5
+content_margin_right = 4.5
+content_margin_bottom = 4.5
+bg_color = Color(0.12236, 0.12236, 0.12236, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gudbx"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="Theme" id="Theme_gudbx"]
+ItemList/colors/font_color = Color(1, 1, 1, 0.75)
+ItemList/colors/font_hovered_color = Color(1, 1, 1, 0.85)
+ItemList/colors/font_hovered_selected_color = Color(1, 1, 1, 1)
+ItemList/colors/font_outline_color = Color(1, 1, 1, 0)
+ItemList/colors/font_selected_color = Color(1, 1, 1, 0.85)
+ItemList/colors/guide_color = Color(1, 1, 1, 0)
+ItemList/colors/scroll_hint_color = Color(0, 0, 0, 1)
+ItemList/constants/h_separation = 5
+ItemList/constants/icon_margin = 5
+ItemList/constants/line_separation = 3
+ItemList/constants/outline_size = 0
+ItemList/constants/v_separation = 3
+ItemList/styles/cursor = SubResource("StyleBoxFlat_k1yvw")
+ItemList/styles/cursor_unfocused = SubResource("StyleBoxFlat_k1yvw")
+ItemList/styles/focus = SubResource("StyleBoxFlat_hbwa6")
+ItemList/styles/hovered = SubResource("StyleBoxFlat_c8yvv")
+ItemList/styles/hovered_selected = SubResource("StyleBoxFlat_xor01")
+ItemList/styles/hovered_selected_focus = SubResource("StyleBoxFlat_hbwa6")
+ItemList/styles/panel = SubResource("StyleBoxFlat_y0b81")
+ItemList/styles/selected = SubResource("StyleBoxFlat_bqj51")
+ItemList/styles/selected_focus = SubResource("StyleBoxFlat_hbwa6")
+ItemListSecondary/styles/panel = SubResource("StyleBoxFlat_xiv7q")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_gudbx")
+
+[node name="Frontend" type="Control" unique_id=401715599]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_gudbx")
+
+[node name="Frame" type="HSplitContainer" parent="." unique_id=1141198225]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LeftSplit" type="VSplitContainer" parent="Frame" unique_id=1175463563]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.45
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Frame/LeftSplit" unique_id=1751548816]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="ContainerA" type="PanelContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1976717118]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Frame/LeftSplit/VBoxContainer/ContainerA" unique_id=259064562]
+layout_mode = 2
+text = "No event sources found :("
+horizontal_alignment = 1
+
+[node name="EventList" type="Tree" parent="Frame/LeftSplit/VBoxContainer/ContainerA" unique_id=1359476010]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1255856191]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="AddEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/Buttons" unique_id=66122126]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Add New Event Source"
+icon = ExtResource("1_gudbx")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="RemoveEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/Buttons" unique_id=1565541985]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Remove Selected Source"
+disabled = true
+icon = ExtResource("2_xor01")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="RefreshSources" type="Button" parent="Frame/LeftSplit/VBoxContainer/Buttons" unique_id=1654875292]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+tooltip_text = "Reload Sources"
+icon = ExtResource("2_k1yvw")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="ContainerB" type="PanelContainer" parent="Frame/LeftSplit" unique_id=1278339379]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GraphList" type="ItemList" parent="Frame/LeftSplit/ContainerB" unique_id=958874907]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ItemListSecondary"
+item_count = 2
+item_0/text = "Graph.tres"
+item_0/icon = ExtResource("3_hbwa6")
+item_1/text = "Graph2.tres"
+item_1/icon = ExtResource("3_hbwa6")
+metadata/_edit_use_anchors_ = true
+
+[node name="RightContainer" type="TabContainer" parent="Frame" unique_id=1030618837]
+layout_mode = 2
+size_flags_horizontal = 3
+current_tab = 0
+tab_0/title = "Event Graph"
+tab_0/icon = ExtResource("3_hbwa6")
+tab_1/icon = ExtResource("4_c8yvv")
+tab_2/icon = ExtResource("5_c8yvv")
+
+[node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606]
+layout_mode = 2
+scroll_offset = Vector2(-35, -31)
+metadata/_tab_index = 0
+metadata/_tab_name = "Event Graph"
+
+[node name="Labels" type="PanelContainer" parent="Frame/RightContainer" unique_id=1529908744]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Variables" type="PanelContainer" parent="Frame/RightContainer" unique_id=1684929755]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
