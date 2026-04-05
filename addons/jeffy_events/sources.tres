@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EventSources" format=3 uid="uid://dijpmppxhjsht"]
+
+[ext_resource type="Script" uid="uid://dfgsvhr3qav6c" path="res://addons/jeffy_events/script/EventSources.gd" id="1_gmcd2"]
+
+[sub_resource type="GDScript" id="GDScript_6d36r"]
+
+[resource]
+script = ExtResource("1_gmcd2")
+metadata/_custom_type_script = "uid://dfgsvhr3qav6c"

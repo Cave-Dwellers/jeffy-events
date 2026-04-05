@@ -1,11 +1,15 @@
 [gd_scene format=3 uid="uid://cyk0phhurs6n7"]
 
 [ext_resource type="Texture2D" uid="uid://7pc0jjhhwvj3" path="res://addons/jeffy_events/asset/icon/Add.svg" id="1_gudbx"]
+[ext_resource type="Texture2D" uid="uid://7m0hut0tf85u" path="res://addons/jeffy_events/asset/icon/Save.svg" id="2_bqj51"]
 [ext_resource type="Texture2D" uid="uid://bmaqov8dsbe5f" path="res://addons/jeffy_events/asset/icon/Reload.svg" id="2_k1yvw"]
 [ext_resource type="Texture2D" uid="uid://cetqhevs031e4" path="res://addons/jeffy_events/asset/icon/Remove.svg" id="2_xor01"]
 [ext_resource type="Texture2D" uid="uid://bigshvbjvptjk" path="res://addons/jeffy_events/asset/icon/EventGraph.svg" id="3_hbwa6"]
 [ext_resource type="Texture2D" uid="uid://bwjeiceovmefo" path="res://addons/jeffy_events/asset/icon/EventLabel.svg" id="4_c8yvv"]
+[ext_resource type="Script" uid="uid://c6526joyfso8t" path="res://addons/jeffy_events/script/frontend/SourcesContainer.gd" id="4_xiv7q"]
 [ext_resource type="Texture2D" uid="uid://7p0ewwufccg1" path="res://addons/jeffy_events/asset/icon/Variables.svg" id="5_c8yvv"]
+[ext_resource type="Texture2D" uid="uid://beuqniy18tdyd" path="res://addons/jeffy_events/asset/icon/Load.svg" id="7_y0b81"]
+[ext_resource type="Script" uid="uid://bw0ssjry4xhf8" path="res://addons/jeffy_events/script/frontend/modal/AddEventSourceModal.gd" id="10_rwnnl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k1yvw"]
 content_margin_left = 4.5
@@ -162,16 +166,38 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
 
-[node name="ContainerA" type="PanelContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1976717118]
+[node name="MenuBar" type="MenuBar" parent="Frame/LeftSplit/VBoxContainer" unique_id=309866287]
+layout_mode = 2
+flat = true
+
+[node name="File" type="PopupMenu" parent="Frame/LeftSplit/VBoxContainer/MenuBar" unique_id=1307789576]
+oversampling_override = 1.0
+size = Vector2i(158, 116)
+item_count = 4
+item_0/text = "New Event"
+item_0/icon = ExtResource("3_hbwa6")
+item_0/id = 0
+item_1/text = "Save Event"
+item_1/icon = ExtResource("2_bqj51")
+item_1/id = 1
+item_2/text = "Save Event as..."
+item_2/id = 2
+item_3/text = "Load Event"
+item_3/icon = ExtResource("7_y0b81")
+item_3/id = 3
+
+[node name="SourcesContainer" type="PanelContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1976717118]
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("4_xiv7q")
 
-[node name="Label" type="Label" parent="Frame/LeftSplit/VBoxContainer/ContainerA" unique_id=259064562]
+[node name="NoSources" type="Label" parent="Frame/LeftSplit/VBoxContainer/SourcesContainer" unique_id=259064562]
+visible = false
 layout_mode = 2
 text = "No event sources found :("
 horizontal_alignment = 1
 
-[node name="EventList" type="Tree" parent="Frame/LeftSplit/VBoxContainer/ContainerA" unique_id=1359476010]
+[node name="EventList" type="Tree" parent="Frame/LeftSplit/VBoxContainer/SourcesContainer" unique_id=1359476010]
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -217,11 +243,6 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"ItemListSecondary"
-item_count = 2
-item_0/text = "Graph.tres"
-item_0/icon = ExtResource("3_hbwa6")
-item_1/text = "Graph2.tres"
-item_1/icon = ExtResource("3_hbwa6")
 metadata/_edit_use_anchors_ = true
 
 [node name="RightContainer" type="TabContainer" parent="Frame" unique_id=1030618837]
@@ -235,7 +256,7 @@ tab_2/icon = ExtResource("5_c8yvv")
 
 [node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606]
 layout_mode = 2
-scroll_offset = Vector2(-35, -31)
+scroll_offset = Vector2(0, -31)
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
 
@@ -248,3 +269,79 @@ metadata/_tab_index = 1
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
+
+[node name="Modal" type="Node" parent="." unique_id=1424297605]
+
+[node name="AddEventSourceModal" type="Window" parent="Modal" unique_id=939259200]
+oversampling_override = 1.0
+title = "Add Event Source"
+initial_position = 1
+size = Vector2i(400, 128)
+visible = false
+transient = true
+exclusive = true
+min_size = Vector2i(400, 128)
+script = ExtResource("10_rwnnl")
+
+[node name="Margin" type="MarginContainer" parent="Modal/AddEventSourceModal" unique_id=1523672318]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Sort" type="VBoxContainer" parent="Modal/AddEventSourceModal/Margin" unique_id=1869739376]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name" type="HBoxContainer" parent="Modal/AddEventSourceModal/Margin/Sort" unique_id=1289614864]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Modal/AddEventSourceModal/Margin/Sort/Name" unique_id=2032596883]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Name"
+
+[node name="NameLine" type="LineEdit" parent="Modal/AddEventSourceModal/Margin/Sort/Name" unique_id=1621083113]
+custom_minimum_size = Vector2(224, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "..."
+
+[node name="Path" type="HBoxContainer" parent="Modal/AddEventSourceModal/Margin/Sort" unique_id=692201279]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Modal/AddEventSourceModal/Margin/Sort/Path" unique_id=361628191]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Source Path"
+
+[node name="PathLine" type="LineEdit" parent="Modal/AddEventSourceModal/Margin/Sort/Path" unique_id=1396979760]
+custom_minimum_size = Vector2(196, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "res://..."
+
+[node name="LoadButton" type="Button" parent="Modal/AddEventSourceModal/Margin/Sort/Path" unique_id=175149060]
+layout_mode = 2
+size_flags_horizontal = 8
+icon = ExtResource("7_y0b81")
+
+[node name="Buttons" type="HBoxContainer" parent="Modal/AddEventSourceModal/Margin/Sort" unique_id=1715321572]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="Add" type="Button" parent="Modal/AddEventSourceModal/Margin/Sort/Buttons" unique_id=402700863]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Add"
+
+[node name="Cancel" type="Button" parent="Modal/AddEventSourceModal/Margin/Sort/Buttons" unique_id=203190195]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"

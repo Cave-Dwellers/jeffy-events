@@ -10,7 +10,14 @@ var frontend : Control
 ## Reference to the plugin dock
 var jep_dock : EditorDock
 
-func _enable_plugin() -> void:
+func _disable_plugin() -> void:
+	# Remove our dock
+	if is_instance_valid(jep_dock):
+		remove_dock(jep_dock)
+		jep_dock.queue_free()
+		jep_dock = null
+
+func _enter_tree() -> void:
 	# Create dock for our frontend
 	jep_dock = EditorDock.new()
 	jep_dock.name = "Event Graph Editor"
@@ -23,17 +30,6 @@ func _enable_plugin() -> void:
 	jep_dock.add_child(frontend)
 	add_dock(jep_dock)
 
-func _disable_plugin() -> void:
-	# Remove our dock
-	if is_instance_valid(jep_dock):
-		remove_dock(jep_dock)
-		jep_dock.queue_free()
-		jep_dock = null
-
-func _enter_tree() -> void:
-	# Initialization of the plugin goes here.
-	pass
-
 func _exit_tree() -> void:
-	# Clean-up of the plugin goes here.
-	pass
+	if is_instance_valid(jep_dock):
+		_disable_plugin()
