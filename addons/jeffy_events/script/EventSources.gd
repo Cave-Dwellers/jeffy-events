@@ -1,4 +1,5 @@
-class_name JEP_EventSources extends Resource
+@tool
+class_name JEP_EventDatabase extends Resource
 
 # !!!WARNING!!! DO NOT MODIFY THIS SCRIPT !!!WARNING!!!
 # To add event sources, please use the frontend panel on 
@@ -14,42 +15,30 @@ class_name JEP_EventSources extends Resource
 ## that event scripts exist at the given directories.
 
 ## All tracked sources
-@export_storage var sources : Array[Source]
+@export_storage var sources : Array[JEP_Source]
 
 ## Adds a source
 func add_source(path : String, name : String) -> void:
-	var source := Source.new(path, name)
+	var source := JEP_Source.new(path, name)
 	if source.validate():
 		sources.append(source)
+		changed.emit()
 
 ## Removes a source
-func remove_source(path : String) -> void:
-	for source : Source in sources:
-		if source.location != path:
-			continue
-			
-		sources.erase(source)
-		break
+func remove_source(source : JEP_Source) -> void:
+	sources.erase(source)
+	changed.emit()
 
 ## Validates all sources and removes broken paths
 func validate() -> void:
-	for source : Source in sources:
+	for source : JEP_Source in sources:
 		if source.validate():
 			continue
 		
-		push_warning("%s is no longer a valid event source. Was it renamed/moved?", source.location)
+		printerr("%s is no longer a valid event source. Was it renamed/moved?" % source.location)
 		sources.erase(source)
+		changed.emit()
 
-class Source extends Resource:
-	## The directory path of the source
-	@export_storage var location : String
-	## The name of the source, either manually assigned or auto generated
-	@export_storage var name : String
-	
-	func _init(p_location : String, p_name : String) -> void:
-		self.location = p_location
-		self.name = p_name
-	
-	func validate() -> bool:
-		return DirAccess.dir_exists_absolute(location)
-	
+## Returns true if there are any sources being tracked
+func has_sources() -> bool:
+	return !sources.is_empty()

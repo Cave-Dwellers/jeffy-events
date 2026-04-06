@@ -1,9 +1,14 @@
-[gd_resource type="Resource" script_class="EventSources" format=3 uid="uid://dijpmppxhjsht"]
+[gd_resource type="Resource" script_class="JEP_EventDatabase" format=3 uid="uid://dijpmppxhjsht"]
 
-[ext_resource type="Script" uid="uid://dfgsvhr3qav6c" path="res://addons/jeffy_events/script/EventSources.gd" id="1_gmcd2"]
+[ext_resource type="Script" uid="uid://dfgsvhr3qav6c" path="res://addons/jeffy_events/script/EventSources.gd" id="1_6d36r"]
+[ext_resource type="Script" uid="uid://j8g122kbp8ox" path="res://addons/jeffy_events/script/Source.gd" id="2_6o3rl"]
 
-[sub_resource type="GDScript" id="GDScript_6d36r"]
+[sub_resource type="Resource" id="Resource_6d36r"]
+script = ExtResource("2_6o3rl")
+location = "res://addons/jeffy_events/events/"
+name = "Built-in"
 
 [resource]
-script = ExtResource("1_gmcd2")
+script = ExtResource("1_6d36r")
+sources = Array[ExtResource("2_6o3rl")]([SubResource("Resource_6d36r")])
 metadata/_custom_type_script = "uid://dfgsvhr3qav6c"

@@ -1,12 +1,16 @@
+@tool
 class_name JEP_AddEventSourceModal extends JEP_Modal
 
-const SOURCES : JEP_EventSources = preload("res://addons/jeffy_events/sources.tres")
+## Fired when source has been successfully added.
+signal source_added()
 
-@onready var name_field : LineEdit = $Margin/Sort/Name/NameLine
-@onready var path_field : LineEdit = $Margin/Sort/Path/PathLine
-@onready var path_button : Button = $Margin/Sort/Path/LoadButton
-@onready var add_button : Button = $Margin/Sort/Buttons/Add
-@onready var cancel_button : Button = $Margin/Sort/Buttons/Cancel
+const SOURCES : JEP_EventDatabase = preload("res://addons/jeffy_events/sources.tres")
+
+@onready var name_field : LineEdit = $Panel/Margin/Sort/Name/NameLine
+@onready var path_field : LineEdit = $Panel/Margin/Sort/Path/PathLine
+@onready var path_button : Button = $Panel/Margin/Sort/Path/LoadButton
+@onready var add_button : Button = $Panel/Margin/Sort/Buttons/Add
+@onready var cancel_button : Button = $Panel/Margin/Sort/Buttons/Cancel
 
 ## The name the user has supplied
 var s_name : String :
@@ -42,6 +46,7 @@ func _open_dir_picker() -> void:
 	# Connect signal and show to user
 	picker.dir_selected.connect(_dir_selected.bind())
 	add_child(picker)
+	picker.popup_centered_clamped()
 
 func _dir_selected(dir : String) -> void:
 	# Set path to dir
@@ -57,6 +62,8 @@ func _dir_selected(dir : String) -> void:
 
 func _add_source() -> void:
 	SOURCES.add_source(s_path, s_name)
+	source_added.emit()
+	close()
 
 func _should_enable_button() -> bool:
 	# TODO: More nuanced checking against EventSources

@@ -1,142 +1,20 @@
 [gd_scene format=3 uid="uid://cyk0phhurs6n7"]
 
 [ext_resource type="Texture2D" uid="uid://7pc0jjhhwvj3" path="res://addons/jeffy_events/asset/icon/Add.svg" id="1_gudbx"]
+[ext_resource type="Theme" uid="uid://davxjktmxss41" path="res://addons/jeffy_events/asset/theme.tres" id="1_tt28f"]
 [ext_resource type="Texture2D" uid="uid://7m0hut0tf85u" path="res://addons/jeffy_events/asset/icon/Save.svg" id="2_bqj51"]
+[ext_resource type="Script" uid="uid://d1mi1bi5ct0oe" path="res://addons/jeffy_events/script/frontend/Frontend.gd" id="2_ird5w"]
 [ext_resource type="Texture2D" uid="uid://bmaqov8dsbe5f" path="res://addons/jeffy_events/asset/icon/Reload.svg" id="2_k1yvw"]
 [ext_resource type="Texture2D" uid="uid://cetqhevs031e4" path="res://addons/jeffy_events/asset/icon/Remove.svg" id="2_xor01"]
 [ext_resource type="Texture2D" uid="uid://bigshvbjvptjk" path="res://addons/jeffy_events/asset/icon/EventGraph.svg" id="3_hbwa6"]
+[ext_resource type="Texture2D" uid="uid://dk2hfx2if054y" path="res://addons/jeffy_events/asset/icon/Search.svg" id="4_4pgtr"]
 [ext_resource type="Texture2D" uid="uid://bwjeiceovmefo" path="res://addons/jeffy_events/asset/icon/EventLabel.svg" id="4_c8yvv"]
-[ext_resource type="Script" uid="uid://c6526joyfso8t" path="res://addons/jeffy_events/script/frontend/SourcesContainer.gd" id="4_xiv7q"]
 [ext_resource type="Texture2D" uid="uid://7p0ewwufccg1" path="res://addons/jeffy_events/asset/icon/Variables.svg" id="5_c8yvv"]
+[ext_resource type="Script" uid="uid://b8egdudm6xsu6" path="res://addons/jeffy_events/script/frontend/SourceManager.gd" id="7_rwnnl"]
 [ext_resource type="Texture2D" uid="uid://beuqniy18tdyd" path="res://addons/jeffy_events/asset/icon/Load.svg" id="7_y0b81"]
 [ext_resource type="Script" uid="uid://bw0ssjry4xhf8" path="res://addons/jeffy_events/script/frontend/modal/AddEventSourceModal.gd" id="10_rwnnl"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k1yvw"]
-content_margin_left = 4.5
-content_margin_top = 4.5
-content_margin_right = 4.5
-content_margin_bottom = 4.5
-bg_color = Color(1, 1, 1, 0.04)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hbwa6"]
-content_margin_left = 4.5
-content_margin_top = 4.5
-content_margin_right = 4.5
-content_margin_bottom = 4.5
-bg_color = Color(0.161, 0.161, 0.161, 1)
-draw_center = false
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5686275, 0.25490198, 0.6745098, 0.8)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8yvv"]
-content_margin_left = 3.0
-content_margin_top = 1.8
-content_margin_right = 3.0
-content_margin_bottom = 1.8
-bg_color = Color(0.21896, 0.21896, 0.21896, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xor01"]
-content_margin_left = 3.0
-content_margin_top = 1.8
-content_margin_right = 3.0
-content_margin_bottom = 1.8
-bg_color = Color(0.27692, 0.27692, 0.27692, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y0b81"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.161, 0.161, 0.161, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bqj51"]
-content_margin_left = 3.0
-content_margin_top = 1.8
-content_margin_right = 3.0
-content_margin_bottom = 1.8
-bg_color = Color(0.2576, 0.2576, 0.2576, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiv7q"]
-content_margin_left = 4.5
-content_margin_top = 4.5
-content_margin_right = 4.5
-content_margin_bottom = 4.5
-bg_color = Color(0.12236, 0.12236, 0.12236, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-corner_detail = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gudbx"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(0.1, 0.1, 0.1, 0.6)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
-
-[sub_resource type="Theme" id="Theme_gudbx"]
-ItemList/colors/font_color = Color(1, 1, 1, 0.75)
-ItemList/colors/font_hovered_color = Color(1, 1, 1, 0.85)
-ItemList/colors/font_hovered_selected_color = Color(1, 1, 1, 1)
-ItemList/colors/font_outline_color = Color(1, 1, 1, 0)
-ItemList/colors/font_selected_color = Color(1, 1, 1, 0.85)
-ItemList/colors/guide_color = Color(1, 1, 1, 0)
-ItemList/colors/scroll_hint_color = Color(0, 0, 0, 1)
-ItemList/constants/h_separation = 5
-ItemList/constants/icon_margin = 5
-ItemList/constants/line_separation = 3
-ItemList/constants/outline_size = 0
-ItemList/constants/v_separation = 3
-ItemList/styles/cursor = SubResource("StyleBoxFlat_k1yvw")
-ItemList/styles/cursor_unfocused = SubResource("StyleBoxFlat_k1yvw")
-ItemList/styles/focus = SubResource("StyleBoxFlat_hbwa6")
-ItemList/styles/hovered = SubResource("StyleBoxFlat_c8yvv")
-ItemList/styles/hovered_selected = SubResource("StyleBoxFlat_xor01")
-ItemList/styles/hovered_selected_focus = SubResource("StyleBoxFlat_hbwa6")
-ItemList/styles/panel = SubResource("StyleBoxFlat_y0b81")
-ItemList/styles/selected = SubResource("StyleBoxFlat_bqj51")
-ItemList/styles/selected_focus = SubResource("StyleBoxFlat_hbwa6")
-ItemListSecondary/styles/panel = SubResource("StyleBoxFlat_xiv7q")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_gudbx")
+[ext_resource type="Script" uid="uid://dd5b3xijau6u8" path="res://addons/jeffy_events/script/DirectoryParser.gd" id="11_ajte1"]
+[ext_resource type="PackedScene" uid="uid://ce1a5qj7tkxmb" path="res://addons/jeffy_events/scene/confirmation_modal.tscn" id="13_jfkun"]
 
 [node name="Frontend" type="Control" unique_id=401715599]
 custom_minimum_size = Vector2(0, 128)
@@ -146,7 +24,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_gudbx")
+theme = ExtResource("1_tt28f")
+script = ExtResource("2_ird5w")
 
 [node name="Frame" type="HSplitContainer" parent="." unique_id=1141198225]
 layout_mode = 1
@@ -155,11 +34,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+split_offsets = PackedInt32Array(26)
+split_offset = 26
 
 [node name="LeftSplit" type="VSplitContainer" parent="Frame" unique_id=1175463563]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.45
+split_offsets = PackedInt32Array(2)
+split_offset = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Frame/LeftSplit" unique_id=1751548816]
 layout_mode = 2
@@ -189,7 +72,6 @@ item_3/id = 3
 [node name="SourcesContainer" type="PanelContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1976717118]
 layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("4_xiv7q")
 
 [node name="NoSources" type="Label" parent="Frame/LeftSplit/VBoxContainer/SourcesContainer" unique_id=259064562]
 visible = false
@@ -197,28 +79,34 @@ layout_mode = 2
 text = "No event sources found :("
 horizontal_alignment = 1
 
-[node name="EventList" type="Tree" parent="Frame/LeftSplit/VBoxContainer/SourcesContainer" unique_id=1359476010]
+[node name="SourceTree" type="Tree" parent="Frame/LeftSplit/VBoxContainer/SourcesContainer" unique_id=1359476010]
 layout_mode = 2
 size_flags_vertical = 3
+hide_root = true
 
-[node name="Buttons" type="HBoxContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1255856191]
+[node name="SourcesManagement" type="HBoxContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1255856191]
 layout_mode = 2
-size_flags_horizontal = 8
 
-[node name="AddEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/Buttons" unique_id=66122126]
-custom_minimum_size = Vector2(24, 24)
+[node name="FilterSourceTree" type="LineEdit" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=394885313]
 layout_mode = 2
 size_flags_horizontal = 3
+placeholder_text = "Filter Events"
+right_icon = ExtResource("4_4pgtr")
+
+[node name="AddEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=66122126]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 8
 tooltip_text = "Add New Event Source"
 icon = ExtResource("1_gudbx")
 flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="RemoveEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/Buttons" unique_id=1565541985]
+[node name="RemoveEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=1565541985]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 8
 tooltip_text = "Remove Selected Source"
 disabled = true
 icon = ExtResource("2_xor01")
@@ -226,7 +114,7 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="RefreshSources" type="Button" parent="Frame/LeftSplit/VBoxContainer/Buttons" unique_id=1654875292]
+[node name="RefreshSources" type="Button" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=1654875292]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 tooltip_text = "Reload Sources"
@@ -234,6 +122,16 @@ icon = ExtResource("2_k1yvw")
 flat = true
 icon_alignment = 1
 expand_icon = true
+
+[node name="SourceManager" type="Node" parent="Frame/LeftSplit/VBoxContainer" unique_id=656008482 node_paths=PackedStringArray("add_source_modal", "remove_source_modal", "source_tree", "no_sources_label", "add_source_button", "remove_source_button", "refresh_sources_button")]
+script = ExtResource("7_rwnnl")
+add_source_modal = NodePath("../../../../Modal/AddEventSourceModal")
+remove_source_modal = NodePath("../../../../Modal/RemoveEventSourceModal")
+source_tree = NodePath("../SourcesContainer/SourceTree")
+no_sources_label = NodePath("../SourcesContainer/NoSources")
+add_source_button = NodePath("../SourcesManagement/AddEventSource")
+remove_source_button = NodePath("../SourcesManagement/RemoveEventSource")
+refresh_sources_button = NodePath("../SourcesManagement/RefreshSources")
 
 [node name="ContainerB" type="PanelContainer" parent="Frame/LeftSplit" unique_id=1278339379]
 layout_mode = 2
@@ -275,73 +173,104 @@ metadata/_tab_index = 2
 [node name="AddEventSourceModal" type="Window" parent="Modal" unique_id=939259200]
 oversampling_override = 1.0
 title = "Add Event Source"
-initial_position = 1
+initial_position = 2
 size = Vector2i(400, 128)
 visible = false
 transient = true
 exclusive = true
+popup_window = true
+minimize_disabled = true
+maximize_disabled = true
 min_size = Vector2i(400, 128)
+theme = ExtResource("1_tt28f")
 script = ExtResource("10_rwnnl")
 
-[node name="Margin" type="MarginContainer" parent="Modal/AddEventSourceModal" unique_id=1523672318]
+[node name="Panel" type="PanelContainer" parent="Modal/AddEventSourceModal" unique_id=1018477785]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_type_variation = &"ModalContainer"
+
+[node name="Margin" type="MarginContainer" parent="Modal/AddEventSourceModal/Panel" unique_id=1523672318]
+layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Sort" type="VBoxContainer" parent="Modal/AddEventSourceModal/Margin" unique_id=1869739376]
+[node name="Sort" type="VBoxContainer" parent="Modal/AddEventSourceModal/Panel/Margin" unique_id=1869739376]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Name" type="HBoxContainer" parent="Modal/AddEventSourceModal/Margin/Sort" unique_id=1289614864]
+[node name="Name" type="HBoxContainer" parent="Modal/AddEventSourceModal/Panel/Margin/Sort" unique_id=1289614864]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Modal/AddEventSourceModal/Margin/Sort/Name" unique_id=2032596883]
+[node name="Label" type="Label" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Name" unique_id=2032596883]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Name"
 
-[node name="NameLine" type="LineEdit" parent="Modal/AddEventSourceModal/Margin/Sort/Name" unique_id=1621083113]
+[node name="NameLine" type="LineEdit" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Name" unique_id=1621083113]
 custom_minimum_size = Vector2(224, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "..."
 
-[node name="Path" type="HBoxContainer" parent="Modal/AddEventSourceModal/Margin/Sort" unique_id=692201279]
+[node name="Path" type="HBoxContainer" parent="Modal/AddEventSourceModal/Panel/Margin/Sort" unique_id=692201279]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Modal/AddEventSourceModal/Margin/Sort/Path" unique_id=361628191]
+[node name="Label" type="Label" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Path" unique_id=361628191]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Source Path"
 
-[node name="PathLine" type="LineEdit" parent="Modal/AddEventSourceModal/Margin/Sort/Path" unique_id=1396979760]
+[node name="PathLine" type="LineEdit" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Path" unique_id=1396979760]
 custom_minimum_size = Vector2(196, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "res://..."
 
-[node name="LoadButton" type="Button" parent="Modal/AddEventSourceModal/Margin/Sort/Path" unique_id=175149060]
+[node name="LoadButton" type="Button" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Path" unique_id=175149060]
 layout_mode = 2
 size_flags_horizontal = 8
 icon = ExtResource("7_y0b81")
 
-[node name="Buttons" type="HBoxContainer" parent="Modal/AddEventSourceModal/Margin/Sort" unique_id=1715321572]
+[node name="Buttons" type="HBoxContainer" parent="Modal/AddEventSourceModal/Panel/Margin/Sort" unique_id=1715321572]
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="Add" type="Button" parent="Modal/AddEventSourceModal/Margin/Sort/Buttons" unique_id=402700863]
+[node name="Add" type="Button" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Buttons" unique_id=402700863]
 layout_mode = 2
 size_flags_horizontal = 3
+disabled = true
 text = "Add"
 
-[node name="Cancel" type="Button" parent="Modal/AddEventSourceModal/Margin/Sort/Buttons" unique_id=203190195]
+[node name="Cancel" type="Button" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Buttons" unique_id=203190195]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel"
+
+[node name="RemoveEventSourceModal" parent="Modal" unique_id=304774771 instance=ExtResource("13_jfkun")]
+title = "Remove Event Source"
+size = Vector2i(400, 128)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+popup_window = true
+minimize_disabled = true
+maximize_disabled = true
+min_size = Vector2i(0, 118)
+prompt = "Are you sure you want to remove this event
+source? This action cannot be undone."
+
+[node name="DirectoryParser" type="Node" parent="." unique_id=1627942734]
+script = ExtResource("11_ajte1")
+metadata/_custom_type_script = "uid://dd5b3xijau6u8"
+
+[connection signal="dock_ready" from="." to="Frame/LeftSplit/VBoxContainer/SourceManager" method="_on_dock_ready"]
+[connection signal="parse_requested" from="Frame/LeftSplit/VBoxContainer/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
+[connection signal="parsing_complete" from="DirectoryParser" to="Frame/LeftSplit/VBoxContainer/SourceManager" method="_build_menu_from_source"]

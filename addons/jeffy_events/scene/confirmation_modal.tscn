@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://ce1a5qj7tkxmb"]
+
+[ext_resource type="Theme" uid="uid://davxjktmxss41" path="res://addons/jeffy_events/asset/theme.tres" id="1_lc0ly"]
+[ext_resource type="Script" uid="uid://b47g8lkv5ca5d" path="res://addons/jeffy_events/script/frontend/modal/ConfirmationModal.gd" id="2_j6inx"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_lc0ly"]
+device = -1
+keycode = 4194305
+
+[sub_resource type="Shortcut" id="Shortcut_j6inx"]
+events = [SubResource("InputEventKey_lc0ly")]
+
+[node name="ConfirmationModal" type="Window" unique_id=304774771]
+oversampling_override = 1.0
+title = "..."
+initial_position = 2
+size = Vector2i(400, 100)
+theme = ExtResource("1_lc0ly")
+script = ExtResource("2_j6inx")
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=1943294492]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ModalContainer"
+
+[node name="Margin" type="MarginContainer" parent="Panel" unique_id=1203633276]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Sort" type="VBoxContainer" parent="Panel/Margin" unique_id=532643356]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Prompt" type="Label" parent="Panel/Margin/Sort" unique_id=1371636627]
+layout_mode = 2
+text = "Prompt"
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/Margin/Sort" unique_id=38009670]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="Confirm" type="Button" parent="Panel/Margin/Sort/Buttons" unique_id=1973777629]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "OK"
+
+[node name="Cancel" type="Button" parent="Panel/Margin/Sort/Buttons" unique_id=922123525]
+layout_mode = 2
+size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_j6inx")
+text = "Cancel"
