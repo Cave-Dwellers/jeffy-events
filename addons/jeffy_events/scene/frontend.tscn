@@ -3,17 +3,18 @@
 [ext_resource type="Texture2D" uid="uid://7pc0jjhhwvj3" path="res://addons/jeffy_events/asset/icon/Add.svg" id="1_gudbx"]
 [ext_resource type="Theme" uid="uid://davxjktmxss41" path="res://addons/jeffy_events/asset/theme.tres" id="1_tt28f"]
 [ext_resource type="Texture2D" uid="uid://7m0hut0tf85u" path="res://addons/jeffy_events/asset/icon/Save.svg" id="2_bqj51"]
-[ext_resource type="Script" uid="uid://d1mi1bi5ct0oe" path="res://addons/jeffy_events/script/frontend/Frontend.gd" id="2_ird5w"]
+[ext_resource type="Script" uid="uid://d1mi1bi5ct0oe" path="res://addons/jeffy_events/script/editor/Frontend.gd" id="2_ird5w"]
 [ext_resource type="Texture2D" uid="uid://bmaqov8dsbe5f" path="res://addons/jeffy_events/asset/icon/Reload.svg" id="2_k1yvw"]
 [ext_resource type="Texture2D" uid="uid://cetqhevs031e4" path="res://addons/jeffy_events/asset/icon/Remove.svg" id="2_xor01"]
 [ext_resource type="Texture2D" uid="uid://bigshvbjvptjk" path="res://addons/jeffy_events/asset/icon/EventGraph.svg" id="3_hbwa6"]
 [ext_resource type="Texture2D" uid="uid://dk2hfx2if054y" path="res://addons/jeffy_events/asset/icon/Search.svg" id="4_4pgtr"]
 [ext_resource type="Texture2D" uid="uid://bwjeiceovmefo" path="res://addons/jeffy_events/asset/icon/EventLabel.svg" id="4_c8yvv"]
 [ext_resource type="Texture2D" uid="uid://7p0ewwufccg1" path="res://addons/jeffy_events/asset/icon/Variables.svg" id="5_c8yvv"]
-[ext_resource type="Script" uid="uid://b8egdudm6xsu6" path="res://addons/jeffy_events/script/frontend/SourceManager.gd" id="7_rwnnl"]
+[ext_resource type="Script" uid="uid://b8egdudm6xsu6" path="res://addons/jeffy_events/script/editor/SourceManager.gd" id="7_rwnnl"]
 [ext_resource type="Texture2D" uid="uid://beuqniy18tdyd" path="res://addons/jeffy_events/asset/icon/Load.svg" id="7_y0b81"]
-[ext_resource type="Script" uid="uid://bw0ssjry4xhf8" path="res://addons/jeffy_events/script/frontend/modal/AddEventSourceModal.gd" id="10_rwnnl"]
-[ext_resource type="Script" uid="uid://dd5b3xijau6u8" path="res://addons/jeffy_events/script/DirectoryParser.gd" id="11_ajte1"]
+[ext_resource type="Script" uid="uid://bw0ssjry4xhf8" path="res://addons/jeffy_events/script/editor/modal/AddEventSourceModal.gd" id="10_rwnnl"]
+[ext_resource type="Script" uid="uid://dd5b3xijau6u8" path="res://addons/jeffy_events/script/editor/DirectoryParser.gd" id="11_ajte1"]
+[ext_resource type="Script" uid="uid://yaeidctfmayd" path="res://addons/jeffy_events/script/editor/LabelsListManager.gd" id="13_0fkv5"]
 [ext_resource type="PackedScene" uid="uid://ce1a5qj7tkxmb" path="res://addons/jeffy_events/scene/confirmation_modal.tscn" id="13_jfkun"]
 
 [node name="Frontend" type="Control" unique_id=401715599]
@@ -146,22 +147,77 @@ metadata/_edit_use_anchors_ = true
 [node name="RightContainer" type="TabContainer" parent="Frame" unique_id=1030618837]
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 0
+current_tab = 1
 tab_0/title = "Event Graph"
 tab_0/icon = ExtResource("3_hbwa6")
 tab_1/icon = ExtResource("4_c8yvv")
 tab_2/icon = ExtResource("5_c8yvv")
 
 [node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606]
+visible = false
 layout_mode = 2
 scroll_offset = Vector2(0, -31)
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
 
 [node name="Labels" type="PanelContainer" parent="Frame/RightContainer" unique_id=1529908744]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="Margin" type="MarginContainer" parent="Frame/RightContainer/Labels" unique_id=1979494947]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Scroll" type="ScrollContainer" parent="Frame/RightContainer/Labels/Margin" unique_id=732000210]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Sort" type="VBoxContainer" parent="Frame/RightContainer/Labels/Margin/Scroll" unique_id=1929178413]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Frame/RightContainer/Labels/Margin/Scroll/Sort" unique_id=1667400136]
+layout_mode = 2
+
+[node name="LabelEntry" type="HBoxContainer" parent="Frame/RightContainer/Labels/Margin/Scroll/Sort" unique_id=1955486820]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="LineEdit" parent="Frame/RightContainer/Labels/Margin/Scroll/Sort/LabelEntry" unique_id=563459223]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelLineEdit"
+text = "Label"
+editable = false
+
+[node name="Button" type="Button" parent="Frame/RightContainer/Labels/Margin/Scroll/Sort/LabelEntry" unique_id=1100035715]
+layout_mode = 2
+icon = ExtResource("2_xor01")
+flat = true
+
+[node name="AddEntry" type="HBoxContainer" parent="Frame/RightContainer/Labels/Margin/Scroll/Sort" unique_id=236430086]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="Frame/RightContainer/Labels/Margin/Scroll/Sort/AddEntry" unique_id=2117729602]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "New Label..."
+max_length = 30
+
+[node name="Button" type="Button" parent="Frame/RightContainer/Labels/Margin/Scroll/Sort/AddEntry" unique_id=1668240820]
+layout_mode = 2
+icon = ExtResource("1_gudbx")
+flat = true
+
+[node name="LabelsManager" type="Node" parent="Frame/RightContainer/Labels" unique_id=1645267369 node_paths=PackedStringArray("entry_template", "entry_container")]
+script = ExtResource("13_0fkv5")
+entry_template = NodePath("../Margin/Scroll/Sort/LabelEntry")
+entry_container = NodePath("../Margin/Scroll/Sort/VBoxContainer")
 
 [node name="Variables" type="PanelContainer" parent="Frame/RightContainer" unique_id=1684929755]
 visible = false

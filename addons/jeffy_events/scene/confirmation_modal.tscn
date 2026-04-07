@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ce1a5qj7tkxmb"]
 
 [ext_resource type="Theme" uid="uid://davxjktmxss41" path="res://addons/jeffy_events/asset/theme.tres" id="1_lc0ly"]
-[ext_resource type="Script" uid="uid://b47g8lkv5ca5d" path="res://addons/jeffy_events/script/frontend/modal/ConfirmationModal.gd" id="2_j6inx"]
+[ext_resource type="Script" uid="uid://b47g8lkv5ca5d" path="res://addons/jeffy_events/script/editor/modal/ConfirmationModal.gd" id="2_j6inx"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_lc0ly"]
 device = -1
