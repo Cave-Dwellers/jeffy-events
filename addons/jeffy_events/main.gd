@@ -8,16 +8,18 @@ const SCN_FRONTEND: PackedScene = preload("res://addons/jeffy_events/scene/front
 const ICO_FRONTEND: Texture2D = preload("res://addons/jeffy_events/asset/icon/EventGraphEditor.svg")
 
 ## Reference to the current frontend
-var frontend : Control
+var frontend : JEP_Frontend
 ## Reference to the plugin dock
 var jep_dock : EditorDock
 
-func _disable_plugin() -> void:
-	# Remove our dock
-	if is_instance_valid(jep_dock):
-		remove_dock(jep_dock)
-		jep_dock.queue_free()
-		jep_dock = null
+func _get_plugin_name() -> String:
+	return "JeffyEvents"
+
+func _get_plugin_icon() -> Texture2D:
+	return ICO_FRONTEND
+
+func _handles(object: Object) -> bool:
+	return object is JEP_EventGraph
 
 func _enter_tree() -> void:
 	create_dock()
@@ -29,6 +31,13 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
 	if is_instance_valid(jep_dock):
 		_disable_plugin()
+
+func _disable_plugin() -> void:
+	# Remove our dock
+	if is_instance_valid(jep_dock):
+		remove_dock(jep_dock)
+		jep_dock.queue_free()
+		jep_dock = null
 
 ## Creates the frontend dock
 func create_dock() -> void:
@@ -46,6 +55,9 @@ func create_dock() -> void:
 	
 	# Mark as ready
 	frontend._dock_ready()
+
+func _save_external_data() -> void:
+	frontend.save_requested.emit()
 
 ## Called when EventSource changes
 func _on_source_change() -> void:

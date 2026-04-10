@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://deyds8jrfs6vo"]
+
+[ext_resource type="Script" uid="uid://b47320e67ccq1" path="res://addons/jeffy_events/script/editor/FilePicker.gd" id="1_5kssn"]
+[ext_resource type="Texture2D" uid="uid://beuqniy18tdyd" path="res://addons/jeffy_events/asset/icon/Load.svg" id="1_v1a8l"]
+
+[node name="FilePicker" type="HBoxContainer" unique_id=1227210654]
+size_flags_horizontal = 3
+script = ExtResource("1_5kssn")
+
+[node name="Path" type="LineEdit" parent="." unique_id=1903356272]
+custom_minimum_size = Vector2(196, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "res://..."
+
+[node name="Load" type="Button" parent="." unique_id=1297529714]
+layout_mode = 2
+size_flags_horizontal = 8
+icon = ExtResource("1_v1a8l")

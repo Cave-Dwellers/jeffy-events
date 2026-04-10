@@ -7,8 +7,7 @@ signal source_added()
 const SOURCES : JEP_EventDatabase = preload("res://addons/jeffy_events/sources.tres")
 
 @onready var name_field : LineEdit = $Panel/Margin/Sort/Name/NameLine
-@onready var path_field : LineEdit = $Panel/Margin/Sort/Path/PathLine
-@onready var path_button : Button = $Panel/Margin/Sort/Path/LoadButton
+@onready var path_field : LineEdit = $Panel/Margin/Sort/Path/FilePicker/Path
 @onready var add_button : Button = $Panel/Margin/Sort/Buttons/Add
 @onready var cancel_button : Button = $Panel/Margin/Sort/Buttons/Cancel
 
@@ -28,7 +27,6 @@ func _ready() -> void:
 	add_button.disabled = true
 	
 	# Connect signals
-	path_button.pressed.connect(_open_dir_picker.bind())
 	add_button.pressed.connect(_add_source.bind())
 	cancel_button.pressed.connect(close.bind())
 
@@ -36,17 +34,6 @@ func _reset_state() -> void:
 	add_button.disabled = true
 	s_name = ""
 	s_path = ""
-
-func _open_dir_picker() -> void:
-	# Create file picker object
-	var picker := EditorFileDialog.new()
-	picker.file_mode = FileDialog.FILE_MODE_OPEN_DIR
-	picker.display_mode = FileDialog.DISPLAY_LIST
-	
-	# Connect signal and show to user
-	picker.dir_selected.connect(_dir_selected.bind())
-	add_child(picker)
-	picker.popup_centered_clamped()
 
 func _dir_selected(dir : String) -> void:
 	# Set path to dir

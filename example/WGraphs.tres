@@ -1,0 +1,129 @@
+[gd_resource type="Resource" script_class="JEP_EventGraph" format=3 uid="uid://bwtuym0k655wv"]
+
+[ext_resource type="Script" uid="uid://wrht034bbam1" path="res://addons/jeffy_events/script/Event.gd" id="1_kn7vf"]
+[ext_resource type="Script" uid="uid://lqyk281ucrq2" path="res://addons/jeffy_events/events/EventLabel.gd" id="2_wrvch"]
+[ext_resource type="Script" uid="uid://c5esjyr207jgv" path="res://addons/jeffy_events/events/EventTerminator.gd" id="3_bhfdh"]
+
+[sub_resource type="Resource" id="Resource_128qk"]
+script = ExtResource("2_wrvch")
+position = Vector2(-100, 0)
+
+[sub_resource type="Resource" id="Resource_l82au"]
+script = ExtResource("3_bhfdh")
+position = Vector2(100, 0)
+
+[sub_resource type="GDScript" id="GDScript_rhiwx"]
+
+[sub_resource type="GDScript" id="GDScript_7h10o"]
+script/source = "@tool
+class_name JEP_EventGraph extends Resource
+
+## Represents a set of events and how they are connected to eachother
+
+signal event_added(event : JEP_Event)
+signal event_removed(event : JEP_Event)
+
+signal label_added(label : StringName)
+signal label_removed(label : StringName)
+
+signal variable_added(variable : VariableDefinition)
+signal variable_removed(variable : VariableDefinition)
+
+## Events that are present in the graph
+@export_storage var _events : Array[JEP_Event]
+## Labels that are present in the graph
+@export_storage var _labels : Array[StringName]
+## Variables that are present in the graph
+@export_storage var _variables : Array[VariableDefinition]
+## Connections between events
+@export_storage var connections : Dictionary
+
+## Adds [arg event] with the position [arg at] to the event arary.
+func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO) -> void:
+	_events.append(event)
+	event.position = at
+	
+	event_added.emit(event)
+	emit_changed()
+
+## Removes [arg event] from the event array
+func remove_event(event : JEP_Event) -> void:
+	var before : int = _events.size()
+	_events.erase(event)
+	if before != _events.size():
+		event_removed.emit(event)
+		emit_changed()
+
+## Removes an event located at [arg indice] in the event array
+func remove_event_at(indice : int) -> void:
+	if _events.size() <= indice:
+		printerr(\"Tried to erase event id %0d, out of bounds!\" % indice)
+		return
+	
+	var event := _events.pop_at(indice)
+	
+	event_removed.emit(event)
+	emit_changed()
+
+func has_event_type(type : GDScript) -> void:
+	pass
+
+## Adds [arg label] to the graph, if it doesn't already exist
+func add_label(label : StringName) -> void:
+	if !has_label(label):
+		_labels.append(label)
+		
+		label_added.emit(label)
+		emit_changed()
+
+## Removes [arg label] from the graph, if it exists
+func remove_label(label : StringName) -> void:
+	if has_label(label):
+		_labels.erase(label)
+		
+		label_removed.emit(label)
+		emit_changed()
+
+## Returns true if this graph contains [arg label]
+func has_label(label : StringName) -> bool:
+	return _labels.any(
+		func(l : StringName) -> bool: return l == label)
+
+## Adds [arg variable] with [arg type], if it doesn't already exist 
+func add_variable(variable : StringName, type : int) -> void:
+	if !has_variable(variable):
+		var def : VariableDefinition = VariableDefinition.new(variable, type)
+		_variables.append(def)
+		
+		variable_added.emit(def)
+		emit_changed()
+
+## Removes [arg variable] from the graph, if it exists
+func remove_variable(variable : StringName) -> void:
+	if has_variable(variable):
+		var at : int = _variables.find_custom(func(v : VariableDefinition) -> bool: return v.name == variable)
+		var def : StringName = _variables.pop_at(at)
+		
+		variable_removed.emit(def)
+		emit_changed()
+
+## Returns true if this graph contains [arg variable]
+func has_variable(variable : StringName) -> bool:
+	return _variables.any(
+		func(v : VariableDefinition) -> bool: return v.name == variable)
+
+class VariableDefinition extends Resource:
+	
+	## A definition of a variable
+	
+	var name : StringName
+	var type : int
+	
+	func _init(p_name : StringName, p_type : int) -> void:
+		self.name = p_name
+		self.type = p_type
+"
+
+[resource]
+script = SubResource("GDScript_7h10o")
+_events = Array[ExtResource("1_kn7vf")]([SubResource("Resource_128qk"), SubResource("Resource_l82au")])

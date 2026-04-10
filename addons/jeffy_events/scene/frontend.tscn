@@ -2,20 +2,23 @@
 
 [ext_resource type="Texture2D" uid="uid://7pc0jjhhwvj3" path="res://addons/jeffy_events/asset/icon/Add.svg" id="1_gudbx"]
 [ext_resource type="Theme" uid="uid://davxjktmxss41" path="res://addons/jeffy_events/asset/theme.tres" id="1_tt28f"]
-[ext_resource type="Texture2D" uid="uid://7m0hut0tf85u" path="res://addons/jeffy_events/asset/icon/Save.svg" id="2_bqj51"]
 [ext_resource type="Script" uid="uid://d1mi1bi5ct0oe" path="res://addons/jeffy_events/script/editor/Frontend.gd" id="2_ird5w"]
 [ext_resource type="Texture2D" uid="uid://bmaqov8dsbe5f" path="res://addons/jeffy_events/asset/icon/Reload.svg" id="2_k1yvw"]
 [ext_resource type="Texture2D" uid="uid://cetqhevs031e4" path="res://addons/jeffy_events/asset/icon/Remove.svg" id="2_xor01"]
+[ext_resource type="Script" uid="uid://c1lgsc8p3vw7h" path="res://addons/jeffy_events/script/editor/MenuBar.gd" id="3_0fkv5"]
 [ext_resource type="Texture2D" uid="uid://bigshvbjvptjk" path="res://addons/jeffy_events/asset/icon/EventGraph.svg" id="3_hbwa6"]
 [ext_resource type="Texture2D" uid="uid://dk2hfx2if054y" path="res://addons/jeffy_events/asset/icon/Search.svg" id="4_4pgtr"]
 [ext_resource type="Texture2D" uid="uid://bwjeiceovmefo" path="res://addons/jeffy_events/asset/icon/EventLabel.svg" id="4_c8yvv"]
 [ext_resource type="Texture2D" uid="uid://7p0ewwufccg1" path="res://addons/jeffy_events/asset/icon/Variables.svg" id="5_c8yvv"]
 [ext_resource type="Script" uid="uid://b8egdudm6xsu6" path="res://addons/jeffy_events/script/editor/SourceManager.gd" id="7_rwnnl"]
-[ext_resource type="Texture2D" uid="uid://beuqniy18tdyd" path="res://addons/jeffy_events/asset/icon/Load.svg" id="7_y0b81"]
+[ext_resource type="Script" uid="uid://bkspwg5kx5wqx" path="res://addons/jeffy_events/script/editor/EventListController.gd" id="9_e1yht"]
 [ext_resource type="Script" uid="uid://bw0ssjry4xhf8" path="res://addons/jeffy_events/script/editor/modal/AddEventSourceModal.gd" id="10_rwnnl"]
 [ext_resource type="Script" uid="uid://dd5b3xijau6u8" path="res://addons/jeffy_events/script/editor/DirectoryParser.gd" id="11_ajte1"]
 [ext_resource type="Script" uid="uid://yaeidctfmayd" path="res://addons/jeffy_events/script/editor/LabelsListManager.gd" id="13_0fkv5"]
-[ext_resource type="PackedScene" uid="uid://ce1a5qj7tkxmb" path="res://addons/jeffy_events/scene/confirmation_modal.tscn" id="13_jfkun"]
+[ext_resource type="PackedScene" uid="uid://ce1a5qj7tkxmb" path="res://addons/jeffy_events/scene/modal/confirmation_modal.tscn" id="13_jfkun"]
+[ext_resource type="PackedScene" uid="uid://deyds8jrfs6vo" path="res://addons/jeffy_events/scene/modal/file_picker.tscn" id="14_ekmjb"]
+[ext_resource type="Script" uid="uid://s45vx7u1plvo" path="res://addons/jeffy_events/script/editor/modal/NewEventGraphModal.gd" id="15_ekmjb"]
+[ext_resource type="Script" uid="uid://boo6sfqamn6ry" path="res://addons/jeffy_events/script/editor/EventGraphPool.gd" id="16_4qmgu"]
 
 [node name="Frontend" type="Control" unique_id=401715599]
 custom_minimum_size = Vector2(0, 128)
@@ -45,56 +48,39 @@ size_flags_stretch_ratio = 0.45
 split_offsets = PackedInt32Array(2)
 split_offset = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Frame/LeftSplit" unique_id=1751548816]
+[node name="ContainerB" type="VBoxContainer" parent="Frame/LeftSplit" unique_id=1735052068]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 4.0
 
-[node name="MenuBar" type="MenuBar" parent="Frame/LeftSplit/VBoxContainer" unique_id=309866287]
+[node name="MenuBar" type="MenuBar" parent="Frame/LeftSplit/ContainerB" unique_id=309866287]
 layout_mode = 2
 flat = true
+script = ExtResource("3_0fkv5")
 
-[node name="File" type="PopupMenu" parent="Frame/LeftSplit/VBoxContainer/MenuBar" unique_id=1307789576]
-oversampling_override = 1.0
-size = Vector2i(158, 116)
-item_count = 4
-item_0/text = "New Event"
-item_0/icon = ExtResource("3_hbwa6")
-item_0/id = 0
-item_1/text = "Save Event"
-item_1/icon = ExtResource("2_bqj51")
-item_1/id = 1
-item_2/text = "Save Event as..."
-item_2/id = 2
-item_3/text = "Load Event"
-item_3/icon = ExtResource("7_y0b81")
-item_3/id = 3
-
-[node name="SourcesContainer" type="PanelContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1976717118]
+[node name="EventList" type="ItemList" parent="Frame/LeftSplit/ContainerB" unique_id=958874907]
 layout_mode = 2
 size_flags_vertical = 3
+theme_type_variation = &"ItemListSecondary"
+script = ExtResource("9_e1yht")
+metadata/_edit_use_anchors_ = true
 
-[node name="NoSources" type="Label" parent="Frame/LeftSplit/VBoxContainer/SourcesContainer" unique_id=259064562]
-visible = false
-layout_mode = 2
-text = "No event sources found :("
-horizontal_alignment = 1
+[node name="EventListManager" type="Node" parent="Frame/LeftSplit/ContainerB" unique_id=1033733757]
 
-[node name="SourceTree" type="Tree" parent="Frame/LeftSplit/VBoxContainer/SourcesContainer" unique_id=1359476010]
+[node name="EventSourceList" type="VBoxContainer" parent="Frame/LeftSplit" unique_id=1751548816]
 layout_mode = 2
 size_flags_vertical = 3
-hide_root = true
+size_flags_stretch_ratio = 2.0
 
-[node name="SourcesManagement" type="HBoxContainer" parent="Frame/LeftSplit/VBoxContainer" unique_id=1255856191]
+[node name="SourcesManagement" type="HBoxContainer" parent="Frame/LeftSplit/EventSourceList" unique_id=1255856191]
 layout_mode = 2
 
-[node name="FilterSourceTree" type="LineEdit" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=394885313]
+[node name="FilterSourceTree" type="LineEdit" parent="Frame/LeftSplit/EventSourceList/SourcesManagement" unique_id=394885313]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Filter Events"
 right_icon = ExtResource("4_4pgtr")
 
-[node name="AddEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=66122126]
+[node name="AddEventSource" type="Button" parent="Frame/LeftSplit/EventSourceList/SourcesManagement" unique_id=66122126]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -104,7 +90,7 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="RemoveEventSource" type="Button" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=1565541985]
+[node name="RemoveEventSource" type="Button" parent="Frame/LeftSplit/EventSourceList/SourcesManagement" unique_id=1565541985]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -115,7 +101,7 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="RefreshSources" type="Button" parent="Frame/LeftSplit/VBoxContainer/SourcesManagement" unique_id=1654875292]
+[node name="RefreshSources" type="Button" parent="Frame/LeftSplit/EventSourceList/SourcesManagement" unique_id=1654875292]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 tooltip_text = "Reload Sources"
@@ -124,7 +110,22 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="SourceManager" type="Node" parent="Frame/LeftSplit/VBoxContainer" unique_id=656008482 node_paths=PackedStringArray("add_source_modal", "remove_source_modal", "source_tree", "no_sources_label", "add_source_button", "remove_source_button", "refresh_sources_button")]
+[node name="SourcesContainer" type="PanelContainer" parent="Frame/LeftSplit/EventSourceList" unique_id=1976717118]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NoSources" type="Label" parent="Frame/LeftSplit/EventSourceList/SourcesContainer" unique_id=259064562]
+visible = false
+layout_mode = 2
+text = "No event sources found :("
+horizontal_alignment = 1
+
+[node name="SourceTree" type="Tree" parent="Frame/LeftSplit/EventSourceList/SourcesContainer" unique_id=1359476010]
+layout_mode = 2
+size_flags_vertical = 3
+hide_root = true
+
+[node name="SourceManager" type="Node" parent="Frame/LeftSplit/EventSourceList" unique_id=656008482 node_paths=PackedStringArray("add_source_modal", "remove_source_modal", "source_tree", "no_sources_label", "add_source_button", "remove_source_button", "refresh_sources_button")]
 script = ExtResource("7_rwnnl")
 add_source_modal = NodePath("../../../../Modal/AddEventSourceModal")
 remove_source_modal = NodePath("../../../../Modal/RemoveEventSourceModal")
@@ -134,33 +135,23 @@ add_source_button = NodePath("../SourcesManagement/AddEventSource")
 remove_source_button = NodePath("../SourcesManagement/RemoveEventSource")
 refresh_sources_button = NodePath("../SourcesManagement/RefreshSources")
 
-[node name="ContainerB" type="PanelContainer" parent="Frame/LeftSplit" unique_id=1278339379]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="GraphList" type="ItemList" parent="Frame/LeftSplit/ContainerB" unique_id=958874907]
-layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"ItemListSecondary"
-metadata/_edit_use_anchors_ = true
-
 [node name="RightContainer" type="TabContainer" parent="Frame" unique_id=1030618837]
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 1
+current_tab = 0
 tab_0/title = "Event Graph"
 tab_0/icon = ExtResource("3_hbwa6")
 tab_1/icon = ExtResource("4_c8yvv")
 tab_2/icon = ExtResource("5_c8yvv")
 
 [node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606]
-visible = false
 layout_mode = 2
 scroll_offset = Vector2(0, -31)
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
 
 [node name="Labels" type="PanelContainer" parent="Frame/RightContainer" unique_id=1529908744]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -283,16 +274,10 @@ custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Source Path"
 
-[node name="PathLine" type="LineEdit" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Path" unique_id=1396979760]
-custom_minimum_size = Vector2(196, 0)
+[node name="FilePicker" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Path" unique_id=1227210654 instance=ExtResource("14_ekmjb")]
 layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "res://..."
-
-[node name="LoadButton" type="Button" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Path" unique_id=175149060]
-layout_mode = 2
-size_flags_horizontal = 8
-icon = ExtResource("7_y0b81")
+file_mode = 2
+display_mode = 1
 
 [node name="Buttons" type="HBoxContainer" parent="Modal/AddEventSourceModal/Panel/Margin/Sort" unique_id=1715321572]
 layout_mode = 2
@@ -305,6 +290,93 @@ disabled = true
 text = "Add"
 
 [node name="Cancel" type="Button" parent="Modal/AddEventSourceModal/Panel/Margin/Sort/Buttons" unique_id=203190195]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="NewEventGraphModal" type="Window" parent="Modal" unique_id=61551887]
+oversampling_override = 1.0
+title = "New Event Graph"
+initial_position = 2
+size = Vector2i(400, 128)
+visible = false
+transient = true
+exclusive = true
+popup_window = true
+minimize_disabled = true
+maximize_disabled = true
+min_size = Vector2i(400, 128)
+theme = ExtResource("1_tt28f")
+script = ExtResource("15_ekmjb")
+
+[node name="Panel" type="PanelContainer" parent="Modal/NewEventGraphModal" unique_id=1152710762]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ModalContainer"
+
+[node name="Margin" type="MarginContainer" parent="Modal/NewEventGraphModal/Panel" unique_id=1634838838]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Sort" type="VBoxContainer" parent="Modal/NewEventGraphModal/Panel/Margin" unique_id=608748701]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Path" type="HBoxContainer" parent="Modal/NewEventGraphModal/Panel/Margin/Sort" unique_id=864246675]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Modal/NewEventGraphModal/Panel/Margin/Sort/Path" unique_id=1514547465]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Path"
+
+[node name="FilePicker" parent="Modal/NewEventGraphModal/Panel/Margin/Sort/Path" unique_id=2072352341 instance=ExtResource("14_ekmjb")]
+layout_mode = 2
+file_mode = 4
+display_mode = 1
+filter = &"*.tres"
+filter_desc = &"Graph resource"
+
+[node name="Preset" type="HBoxContainer" parent="Modal/NewEventGraphModal/Panel/Margin/Sort" unique_id=1713280868]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Modal/NewEventGraphModal/Panel/Margin/Sort/Preset" unique_id=1724401399]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+tooltip_text = "Determines what events the graph starts with"
+mouse_filter = 1
+text = "Graph Preset"
+
+[node name="PresetOption" type="OptionButton" parent="Modal/NewEventGraphModal/Panel/Margin/Sort/Preset" unique_id=2076868416]
+custom_minimum_size = Vector2(224, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+selected = 0
+item_count = 2
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+popup/item_1/text = "None"
+popup/item_1/id = 1
+
+[node name="Buttons" type="HBoxContainer" parent="Modal/NewEventGraphModal/Panel/Margin/Sort" unique_id=2023045519]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="Add" type="Button" parent="Modal/NewEventGraphModal/Panel/Margin/Sort/Buttons" unique_id=1157833192]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Create"
+
+[node name="Cancel" type="Button" parent="Modal/NewEventGraphModal/Panel/Margin/Sort/Buttons" unique_id=1213551887]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel"
@@ -323,10 +395,25 @@ min_size = Vector2i(0, 118)
 prompt = "Are you sure you want to remove this event
 source? This action cannot be undone."
 
+[node name="EventGraphPool" type="Node" parent="." unique_id=1461389952]
+unique_name_in_owner = true
+script = ExtResource("16_4qmgu")
+
 [node name="DirectoryParser" type="Node" parent="." unique_id=1627942734]
 script = ExtResource("11_ajte1")
 metadata/_custom_type_script = "uid://dd5b3xijau6u8"
 
-[connection signal="dock_ready" from="." to="Frame/LeftSplit/VBoxContainer/SourceManager" method="_on_dock_ready"]
-[connection signal="parse_requested" from="Frame/LeftSplit/VBoxContainer/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
-[connection signal="parsing_complete" from="DirectoryParser" to="Frame/LeftSplit/VBoxContainer/SourceManager" method="_build_menu_from_source"]
+[connection signal="dock_ready" from="." to="Frame/LeftSplit/ContainerB/MenuBar" method="_on_dock_ready"]
+[connection signal="dock_ready" from="." to="Frame/LeftSplit/EventSourceList/SourceManager" method="_on_dock_ready"]
+[connection signal="request_add_event_modal" from="Frame/LeftSplit/ContainerB/MenuBar" to="Modal/NewEventGraphModal" method="open"]
+[connection signal="item_selected" from="Frame/LeftSplit/ContainerB/EventList" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_selected"]
+[connection signal="parse_requested" from="Frame/LeftSplit/EventSourceList/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
+[connection signal="picked_path" from="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/AddEventSourceModal" method="_dir_selected"]
+[connection signal="graph_created" from="Modal/NewEventGraphModal" to="EventGraphPool" method="add_graph"]
+[connection signal="picked_path" from="Modal/NewEventGraphModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/NewEventGraphModal" method="_assign_path"]
+[connection signal="graph_added" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_added"]
+[connection signal="graph_removed" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_removed"]
+[connection signal="graph_saved" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_saved"]
+[connection signal="parsing_complete" from="DirectoryParser" to="Frame/LeftSplit/EventSourceList/SourceManager" method="_build_menu_from_source"]
+
+[editable path="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker"]
