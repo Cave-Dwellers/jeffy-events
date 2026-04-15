@@ -6,48 +6,104 @@ class_name JEP_EventGraphPool extends Node
 
 signal graph_added(graph : JEP_EventGraph)
 signal graph_removed(graph : JEP_EventGraph)
+signal graph_replaced(old : JEP_EventGraph, new : JEP_EventGraph)
 signal graph_saved(graph : JEP_EventGraph)
 
-var _graphs : Array[JEP_EventGraph] = []
-var _pending_save : Array[bool] = []
+var _graphs : Dictionary[String, Entry] = {}
 
-func add_graph(graph : JEP_EventGraph) -> void:
-	_graphs.append(graph)
-	_pending_save.append(false)
+func _dock_ready() -> void:
+	# Monitor file system changes
+	var fs := EditorInterface.get_file_system_dock()
+	fs.resource_removed.connect(_on_resource_removed)
+	fs.files_moved.connect(_on_file_moved)
+
+func open_graph(path : String) -> void:
+	var graph : Variant = load(path)
 	
-	graph.changed.connect(_graph_changed.bind(graph))
-	graph_added.emit(graph)
-
-func remove_graph(graph : JEP_EventGraph) -> void:
-	var indice := get_indice(graph)
-	if indice == -1:
-		printerr("JEP_EventGraphPool::remove_graph | Graph does not contain provided event")
+	if graph is not JEP_EventGraph:
+		JEP_Print.toast_error("Invalid or corrupt graph file! %s" % path)
 		return
 	
-	_graphs.remove_at(indice)
-	_pending_save.remove_at(indice)
+	JEP_Print.info("Opened graph at %s" % path)
+	add_graph(graph)
+
+func add_graph(graph : JEP_EventGraph) -> void:
+	if has(graph):
+		JEP_Print.info("Replacing graph in pool")
+		var old_entry := _graphs[graph.resource_path]
+		_graphs[graph.resource_path] = Entry.new(graph)
+		graph_replaced.emit(old_entry.graph, graph)
+	else:
+		JEP_Print.info("Adding graph to pool")
+		_graphs[graph.resource_path] = Entry.new(graph)
+		graph_added.emit(graph)
+		
+	if !graph.changed.is_connected(_graph_changed):
+		graph.changed.connect(_graph_changed.bind(graph), CONNECT_ONE_SHOT)
+
+func remove_graph(graph : JEP_EventGraph) -> void:
+	if !has(graph):
+		JEP_Print.error("Graph not in graph pool!")
+		return
 	
+	_graphs.erase(graph.resource_path)
 	graph.changed.disconnect(_graph_changed)
 	graph_removed.emit(graph)
 
-func get_indice(graph : JEP_EventGraph) -> int:
-	return _graphs.find(graph)
+func save_graph(graph : JEP_EventGraph) -> bool:
+	if !has(graph):
+		JEP_Print.error("Graph not in graph pool!")
+		return false
+	
+	var entry : Entry = _graphs[graph.resource_path]
+	return _save_entry(entry)
+	
+func save_all_graphs() -> void:
+	var graphs_saved : int = 0
+	
+	for entry : Entry in _graphs.values():
+		if _save_entry(entry):
+			graphs_saved += 1
+	
+	if graphs_saved > 0:
+		JEP_Print.toast_info("Saved %d graph%s." % [graphs_saved, "s" if graphs_saved > 1 else ""])
+
+func has(graph : JEP_EventGraph) -> bool:
+	if _graphs.has(graph.resource_path):
+		return true
+	return false
 
 func _graph_changed(graph : JEP_EventGraph) -> void:
-	var indice := get_indice(graph)
-	if indice == -1:
+	if !has(graph):
 		return
 	
-	_pending_save[indice] = true
+	_graphs[graph.resource_path].pending_save = true
 
-func _on_save_request() -> void:
-	for i in range(_graphs.size()):
-		if !_pending_save[i]:
-			continue
-		
-		var graph := _graphs[i]
-		ResourceSaver.save(graph, graph.resource_path)
-		graph_saved.emit(graph)
-		
-		# No longer pending save
-		_pending_save[i] = false
+func _save_entry(entry : Entry) -> bool:
+	entry.pending_save = false
+	return ResourceSaver.save(entry.graph) == OK
+
+## Monitoring when graph files are removed
+func _on_resource_removed(resource : Resource) -> void:
+	if resource is not JEP_EventGraph:
+		return
+	
+	remove_graph(resource)
+
+func _on_file_moved(old : String, new : String) -> void:
+	var file : Variant = load(new)
+	if file is not JEP_EventGraph:
+		return
+	
+	if !_graphs.has(old):
+		return
+	
+	var graph := _graphs[old]
+	_graphs[new] = graph
+
+class Entry extends RefCounted:
+	var graph : JEP_EventGraph
+	var pending_save : bool = false
+	
+	func _init(p_graph : JEP_EventGraph = null) -> void:
+		self.graph = p_graph

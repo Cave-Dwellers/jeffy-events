@@ -2,23 +2,25 @@
 
 [ext_resource type="Texture2D" uid="uid://7pc0jjhhwvj3" path="res://addons/jeffy_events/asset/icon/Add.svg" id="1_gudbx"]
 [ext_resource type="Theme" uid="uid://davxjktmxss41" path="res://addons/jeffy_events/asset/theme.tres" id="1_tt28f"]
-[ext_resource type="Script" uid="uid://d1mi1bi5ct0oe" path="res://addons/jeffy_events/script/editor/Frontend.gd" id="2_ird5w"]
+[ext_resource type="Script" uid="uid://d1mi1bi5ct0oe" path="res://addons/jeffy_events/script/editor/dock/Frontend.gd" id="2_ird5w"]
 [ext_resource type="Texture2D" uid="uid://bmaqov8dsbe5f" path="res://addons/jeffy_events/asset/icon/Reload.svg" id="2_k1yvw"]
 [ext_resource type="Texture2D" uid="uid://cetqhevs031e4" path="res://addons/jeffy_events/asset/icon/Remove.svg" id="2_xor01"]
-[ext_resource type="Script" uid="uid://c1lgsc8p3vw7h" path="res://addons/jeffy_events/script/editor/MenuBar.gd" id="3_0fkv5"]
+[ext_resource type="Script" uid="uid://c1lgsc8p3vw7h" path="res://addons/jeffy_events/script/editor/dock/FrontendMenuBar.gd" id="3_0fkv5"]
 [ext_resource type="Texture2D" uid="uid://bigshvbjvptjk" path="res://addons/jeffy_events/asset/icon/EventGraph.svg" id="3_hbwa6"]
 [ext_resource type="Texture2D" uid="uid://dk2hfx2if054y" path="res://addons/jeffy_events/asset/icon/Search.svg" id="4_4pgtr"]
 [ext_resource type="Texture2D" uid="uid://bwjeiceovmefo" path="res://addons/jeffy_events/asset/icon/EventLabel.svg" id="4_c8yvv"]
+[ext_resource type="Script" uid="uid://sgixw4p7fycr" path="res://addons/jeffy_events/script/editor/GraphParser.gd" id="4_is55q"]
 [ext_resource type="Texture2D" uid="uid://7p0ewwufccg1" path="res://addons/jeffy_events/asset/icon/Variables.svg" id="5_c8yvv"]
-[ext_resource type="Script" uid="uid://b8egdudm6xsu6" path="res://addons/jeffy_events/script/editor/SourceManager.gd" id="7_rwnnl"]
-[ext_resource type="Script" uid="uid://bkspwg5kx5wqx" path="res://addons/jeffy_events/script/editor/EventListController.gd" id="9_e1yht"]
+[ext_resource type="Script" uid="uid://b8egdudm6xsu6" path="res://addons/jeffy_events/script/editor/dock/SourceManager.gd" id="7_rwnnl"]
+[ext_resource type="Script" uid="uid://bkspwg5kx5wqx" path="res://addons/jeffy_events/script/editor/dock/EventListController.gd" id="9_e1yht"]
 [ext_resource type="Script" uid="uid://bw0ssjry4xhf8" path="res://addons/jeffy_events/script/editor/modal/AddEventSourceModal.gd" id="10_rwnnl"]
 [ext_resource type="Script" uid="uid://dd5b3xijau6u8" path="res://addons/jeffy_events/script/editor/DirectoryParser.gd" id="11_ajte1"]
-[ext_resource type="Script" uid="uid://yaeidctfmayd" path="res://addons/jeffy_events/script/editor/LabelsListManager.gd" id="13_0fkv5"]
+[ext_resource type="Script" uid="uid://yaeidctfmayd" path="res://addons/jeffy_events/script/editor/dock/LabelsListManager.gd" id="13_0fkv5"]
 [ext_resource type="PackedScene" uid="uid://ce1a5qj7tkxmb" path="res://addons/jeffy_events/scene/modal/confirmation_modal.tscn" id="13_jfkun"]
 [ext_resource type="PackedScene" uid="uid://deyds8jrfs6vo" path="res://addons/jeffy_events/scene/modal/file_picker.tscn" id="14_ekmjb"]
 [ext_resource type="Script" uid="uid://s45vx7u1plvo" path="res://addons/jeffy_events/script/editor/modal/NewEventGraphModal.gd" id="15_ekmjb"]
 [ext_resource type="Script" uid="uid://boo6sfqamn6ry" path="res://addons/jeffy_events/script/editor/EventGraphPool.gd" id="16_4qmgu"]
+[ext_resource type="Script" uid="uid://dxtqd13lb6pv6" path="res://addons/jeffy_events/script/editor/EventGraphFrontend.gd" id="16_iri01"]
 
 [node name="Frontend" type="Control" unique_id=401715599]
 custom_minimum_size = Vector2(0, 128)
@@ -30,6 +32,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_tt28f")
 script = ExtResource("2_ird5w")
+
+[node name="EventGraphPool" type="Node" parent="." unique_id=1461389952]
+unique_name_in_owner = true
+script = ExtResource("16_4qmgu")
+
+[node name="GraphParser" type="Node" parent="." unique_id=1969330064]
+script = ExtResource("4_is55q")
+
+[node name="DirectoryParser" type="Node" parent="." unique_id=1627942734]
+script = ExtResource("11_ajte1")
+metadata/_custom_type_script = "uid://dd5b3xijau6u8"
 
 [node name="Frame" type="HSplitContainer" parent="." unique_id=1141198225]
 layout_mode = 1
@@ -57,7 +70,7 @@ layout_mode = 2
 flat = true
 script = ExtResource("3_0fkv5")
 
-[node name="EventList" type="ItemList" parent="Frame/LeftSplit/ContainerB" unique_id=958874907]
+[node name="GraphList" type="ItemList" parent="Frame/LeftSplit/ContainerB" unique_id=958874907]
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"ItemListSecondary"
@@ -146,9 +159,31 @@ tab_2/icon = ExtResource("5_c8yvv")
 
 [node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606]
 layout_mode = 2
-scroll_offset = Vector2(0, -31)
+snapping_distance = 16
+right_disconnects = true
+type_names = {
+0: "Flow",
+1: "DataVariant",
+2: "DataNumber",
+3: "DataString",
+4: "DataBool",
+5: "DataNodePath",
+6: "DataResource"
+}
+script = ExtResource("16_iri01")
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
+
+[node name="GraphNode" type="GraphNode" parent="Frame/RightContainer/EventGraph" unique_id=1249941130]
+visible = false
+layout_mode = 0
+offset_left = 255.5
+offset_top = 172.5
+offset_right = 509.5
+offset_bottom = 382.5003
+mouse_filter = 1
+position_offset = Vector2(255.5, 172.5)
+title = "Test"
 
 [node name="Labels" type="PanelContainer" parent="Frame/RightContainer" unique_id=1529908744]
 visible = false
@@ -216,6 +251,56 @@ layout_mode = 2
 metadata/_tab_index = 2
 
 [node name="Modal" type="Node" parent="." unique_id=1424297605]
+
+[node name="InstructionHandlerModal" type="Window" parent="Modal" unique_id=767849119]
+oversampling_override = 1.0
+title = "Manage Instruction Handlers"
+initial_position = 2
+size = Vector2i(600, 400)
+visible = false
+transient = true
+exclusive = true
+popup_window = true
+minimize_disabled = true
+maximize_disabled = true
+theme = ExtResource("1_tt28f")
+
+[node name="PanelContainer" type="PanelContainer" parent="Modal/InstructionHandlerModal" unique_id=461208842]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ModalContainer"
+
+[node name="General" type="MarginContainer" parent="Modal/InstructionHandlerModal/PanelContainer" unique_id=468924993]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/InstructionHandlerModal/PanelContainer/General" unique_id=427022100]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Modal/InstructionHandlerModal/PanelContainer/General/VBoxContainer" unique_id=1446430080]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Modal/InstructionHandlerModal/PanelContainer/General/VBoxContainer/HBoxContainer" unique_id=1798931829]
+layout_mode = 2
+text = "Instruction Handlers"
+
+[node name="ItemList" type="ItemList" parent="Modal/InstructionHandlerModal/PanelContainer/General/VBoxContainer" unique_id=401503698]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="Modal/InstructionHandlerModal" unique_id=359162310]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="AddEventSourceModal" type="Window" parent="Modal" unique_id=939259200]
 oversampling_override = 1.0
@@ -395,25 +480,25 @@ min_size = Vector2i(0, 118)
 prompt = "Are you sure you want to remove this event
 source? This action cannot be undone."
 
-[node name="EventGraphPool" type="Node" parent="." unique_id=1461389952]
-unique_name_in_owner = true
-script = ExtResource("16_4qmgu")
-
-[node name="DirectoryParser" type="Node" parent="." unique_id=1627942734]
-script = ExtResource("11_ajte1")
-metadata/_custom_type_script = "uid://dd5b3xijau6u8"
-
+[connection signal="dock_ready" from="." to="EventGraphPool" method="_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/LeftSplit/ContainerB/MenuBar" method="_on_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/LeftSplit/EventSourceList/SourceManager" method="_on_dock_ready"]
-[connection signal="request_add_event_modal" from="Frame/LeftSplit/ContainerB/MenuBar" to="Modal/NewEventGraphModal" method="open"]
-[connection signal="item_selected" from="Frame/LeftSplit/ContainerB/EventList" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_selected"]
+[connection signal="graph_added" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_added"]
+[connection signal="graph_removed" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_removed"]
+[connection signal="graph_replaced" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_replaced"]
+[connection signal="graph_saved" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_saved"]
+[connection signal="parsed" from="GraphParser" to="Frame/RightContainer/EventGraph" method="on_graph_parsed"]
+[connection signal="parsing_complete" from="DirectoryParser" to="Frame/LeftSplit/EventSourceList/SourceManager" method="_build_menu_from_source"]
+[connection signal="request_add_graph_modal" from="Frame/LeftSplit/ContainerB/MenuBar" to="Modal/NewEventGraphModal" method="open"]
+[connection signal="request_load_graph" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="open_graph"]
+[connection signal="request_save" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="save_graph"]
+[connection signal="request_save_all" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="save_all_graphs"]
+[connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="GraphParser" method="parse_graph"]
+[connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/MenuBar" method="_on_graph_selected"]
+[connection signal="item_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_selected"]
 [connection signal="parse_requested" from="Frame/LeftSplit/EventSourceList/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
 [connection signal="picked_path" from="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/AddEventSourceModal" method="_dir_selected"]
 [connection signal="graph_created" from="Modal/NewEventGraphModal" to="EventGraphPool" method="add_graph"]
 [connection signal="picked_path" from="Modal/NewEventGraphModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/NewEventGraphModal" method="_assign_path"]
-[connection signal="graph_added" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_added"]
-[connection signal="graph_removed" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_removed"]
-[connection signal="graph_saved" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/EventList" method="_on_graph_saved"]
-[connection signal="parsing_complete" from="DirectoryParser" to="Frame/LeftSplit/EventSourceList/SourceManager" method="_build_menu_from_source"]
 
 [editable path="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker"]

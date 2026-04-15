@@ -48,8 +48,11 @@ func build() -> GenericPopupMenu:
 		if config.icon != null:
 			popup.set_item_icon(id, config.icon)
 		
-		if config.callback != null:
-			popup.set_item_metadata(id, config.callback)
+		if !config.press_callback.is_null():
+			popup.set_item_metadata(id, config.press_callback)
+		
+		if !config.verifier_callback.is_null():
+			popup.verifiers[id] = config.verifier_callback
 		
 		id += 1
 	
@@ -72,7 +75,11 @@ class EntryBuilder extends RefCounted:
 		return self
 	
 	func with_callback(callable : Callable) -> EntryBuilder:
-		config.callback = callable
+		config.press_callback = callable
+		return self
+	
+	func with_verifier(callable : Callable) -> EntryBuilder:
+		config.verifier_callback = callable
 		return self
 	
 	func with_shortcut(scankey : int) -> EntryBuilder:
@@ -106,19 +113,24 @@ class Configuration extends RefCounted:
 	var text : StringName
 	var divider : bool = false
 	var icon : Texture2D
-	var callback : Callable
+	
+	var press_callback : Callable
+	var verifier_callback : Callable
+	
 	var shortcut : Shortcut
 
 class GenericPopupMenu extends PopupMenu:
 	
 	## Adds method callback per entry
 	
+	var verifiers : Dictionary[int, Callable] = {}
+	
 	func _init() -> void:
 		id_pressed.connect(on_press)
 	
 	func _gui_input(event: InputEvent) -> void:
 		if event.is_pressed():
-			print(activate_item_by_event(event))
+			activate_item_by_event(event)
 	
 	func on_press(id : int) -> void:
 		var index : int = get_item_index(id)
@@ -126,3 +138,11 @@ class GenericPopupMenu extends PopupMenu:
 		
 		if meta is Callable:
 			meta.call()
+	
+	func check_validity() -> void:
+		for i in range(item_count):
+			var id := get_item_id(i)
+			if !verifiers.has(id):
+				continue
+			
+			set_item_disabled(i, !verifiers[id].call())

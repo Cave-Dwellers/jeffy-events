@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="JEP_EventGraph" format=3 uid="uid://shxkl2kf4v6b"]
+
+[ext_resource type="Script" uid="uid://wrht034bbam1" path="res://addons/jeffy_events/script/Event.gd" id="1_bqshq"]
+[ext_resource type="Script" uid="uid://lqyk281ucrq2" path="res://addons/jeffy_events/events/EventLabel.gd" id="2_0iqdn"]
+[ext_resource type="Script" uid="uid://c5esjyr207jgv" path="res://addons/jeffy_events/events/EventTerminator.gd" id="3_ejwy7"]
+[ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/EventGraph.gd" id="4_ryn2h"]
+
+[sub_resource type="Resource" id="Resource_bqshq"]
+script = ExtResource("2_0iqdn")
+position = Vector2(-100, 0)
+
+[sub_resource type="Resource" id="Resource_0iqdn"]
+script = ExtResource("3_ejwy7")
+position = Vector2(100, 0)
+
+[resource]
+script = ExtResource("4_ryn2h")
+_events = Array[ExtResource("1_bqshq")]([SubResource("Resource_bqshq"), SubResource("Resource_0iqdn")])

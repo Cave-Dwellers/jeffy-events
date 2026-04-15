@@ -14,8 +14,7 @@ class_name JEP_Event extends Resource
 func _event(ctx : Object = null) -> int
 
 @abstract
-## TBD: EGNBuilder and EGNInstructions
-func _get_instructions() -> Dictionary
+func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction
 
 ## Returns the human readable name of this event.
 func _get_name() -> StringName:

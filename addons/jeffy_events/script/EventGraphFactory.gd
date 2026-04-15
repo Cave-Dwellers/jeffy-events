@@ -8,8 +8,8 @@ static func create_empty() -> JEP_EventGraph:
 
 static func create_default_at_path(directory : String) -> JEP_EventGraph:
 	return Builder.start()\
-				.with_event_at(EventLabel.new(), Vector2.LEFT * 100)\
-				.with_event_at(EventTerminator.new(), Vector2.RIGHT * 100)\
+				.with_event_at(EventLabel.new(), Vector2.LEFT * 200)\
+				.with_event_at(EventTerminator.new(), Vector2.RIGHT * 200)\
 				.with_directory(directory)\
 				.build_and_save()
 
@@ -41,6 +41,6 @@ class Builder extends RefCounted:
 		var graph := build()
 		if !directory.is_empty():
 			graph.take_over_path(directory)
-			print(ResourceSaver.save(graph))
+			ResourceSaver.save(graph)
 			
 		return graph

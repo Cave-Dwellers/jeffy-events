@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="JEP_EventDatabase" format=3 uid="uid://dijpmppxhjsht"]
 
-[ext_resource type="Script" uid="uid://dfgsvhr3qav6c" path="res://addons/jeffy_events/script/editor/EventDatabase.gd" id="1_6d36r"]
-[ext_resource type="Script" uid="uid://j8g122kbp8ox" path="res://addons/jeffy_events/script/editor/Source.gd" id="2_6o3rl"]
+[ext_resource type="Script" uid="uid://dfgsvhr3qav6c" path="res://addons/jeffy_events/script/editor/sources/EventDatabase.gd" id="1_6d36r"]
+[ext_resource type="Script" uid="uid://j8g122kbp8ox" path="res://addons/jeffy_events/script/editor/sources/Source.gd" id="2_6o3rl"]
 
 [sub_resource type="Resource" id="Resource_6d36r"]
 script = ExtResource("2_6o3rl")
