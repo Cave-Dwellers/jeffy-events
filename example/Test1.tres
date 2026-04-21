@@ -1,31 +1,33 @@
-[gd_resource type="Resource" script_class="JEP_EventGraph" format=3 uid="uid://shxkl2kf4v6b"]
+[gd_resource type="Resource" script_class="JEP_EventGraph" format=3 uid="uid://ckf6s0fwo2bfm"]
 
 [ext_resource type="Script" uid="uid://wrht034bbam1" path="res://addons/jeffy_events/script/Event.gd" id="1_bqshq"]
 [ext_resource type="Script" uid="uid://lqyk281ucrq2" path="res://addons/jeffy_events/events/EventLabel.gd" id="2_0iqdn"]
 [ext_resource type="Script" uid="uid://c5esjyr207jgv" path="res://addons/jeffy_events/events/EventTerminator.gd" id="3_ejwy7"]
 [ext_resource type="Script" uid="uid://d1f2qorxx20m3" path="res://addons/jeffy_events/script/EventGraphConnection.gd" id="4_je2si"]
 [ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/EventGraph.gd" id="4_ryn2h"]
+[ext_resource type="Script" uid="uid://wgdvnrxa1oua" path="res://addons/jeffy_events/events/EventComment.gd" id="5_xu6y7"]
+
+[sub_resource type="Resource" id="Resource_qerwj"]
+script = ExtResource("4_je2si")
+to_event = 1
 
 [sub_resource type="Resource" id="Resource_je2si"]
-script = ExtResource("4_je2si")
-to_event = 1
+script = ExtResource("2_0iqdn")
+position = Vector2(-200, 0)
 
 [sub_resource type="Resource" id="Resource_xu6y7"]
-script = ExtResource("4_je2si")
-from_port = 1
-to_event = 1
-
-[sub_resource type="Resource" id="Resource_bqshq"]
-script = ExtResource("2_0iqdn")
-label = "TEst"
-number = 21
-position = Vector2(-208, -176)
-
-[sub_resource type="Resource" id="Resource_0iqdn"]
 script = ExtResource("3_ejwy7")
-position = Vector2(208, -176)
+position = Vector2(128, 0)
+
+[sub_resource type="Resource" id="Resource_cd4fe"]
+script = ExtResource("5_xu6y7")
+position = Vector2(128, -128)
+
+[sub_resource type="Resource" id="Resource_ak7ew"]
+script = ExtResource("3_ejwy7")
+position = Vector2(128, 112)
 
 [resource]
 script = ExtResource("4_ryn2h")
-_events = Array[ExtResource("1_bqshq")]([SubResource("Resource_bqshq"), SubResource("Resource_0iqdn")])
-_connections = Array[ExtResource("4_je2si")]([SubResource("Resource_je2si"), SubResource("Resource_xu6y7")])
+_events = Array[ExtResource("1_bqshq")]([SubResource("Resource_je2si"), SubResource("Resource_xu6y7"), SubResource("Resource_cd4fe"), SubResource("Resource_ak7ew")])
+_connections = Array[ExtResource("4_je2si")]([SubResource("Resource_qerwj")])

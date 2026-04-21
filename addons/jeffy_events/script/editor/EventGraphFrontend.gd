@@ -21,6 +21,8 @@ const PortColors : Dictionary[int, Color] = {
 	Ports.DataResource : Color.MEDIUM_PURPLE
 }
 
+@export var graph_parser : JEP_GraphParser
+
 var graph : JEP_EventGraph
 var selected : Array[JEP_EventGraphNode] :
 	get :
@@ -35,7 +37,13 @@ var selected : Array[JEP_EventGraphNode] :
 		return sel
 
 func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void:
+	if graph:
+		graph.event_added.disconnect(_on_event_added)
+	
 	graph = p_graph
+	graph.event_added.connect(_on_event_added)
+	
+	JEP_Print.info("New graph focused")
 	
 	for child : Node in get_children():
 		if child is GraphNode:
@@ -60,9 +68,29 @@ func _on_disconnection_request(from_path : StringName, from_port : int, to_path 
 	disconnect_node(from_path, from_port, to_path, to_port)
 	graph.remove_connection(int(from_path), from_port, int(to_path), to_port)
 
+func _on_event_added(event : JEP_Event, indice : int) -> void:
+	JEP_Print.info("Event added callback | indice %d" % indice)
+	var instruction : JEP_NodeInstruction = event._get_instruction(graph)
+	var node : JEP_EventGraphNode = graph_parser.parse_instruction(instruction, graph)
+	
+	node.name = str(indice)
+	add_child(node)
+
 func _on_nodes_moved() -> void:
 	for node : JEP_EventGraphNode in selected:
 		node.event.position = node.position_offset
+
+#region Drag And Drop
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	return data is JEP_Event
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+	data = data as JEP_Event
+	graph.add_event(data, (at_position + scroll_offset) / zoom)
+
+#endregion
+#region Clipboard
 
 func _on_copy_nodes() -> void:
 	pass
@@ -75,3 +103,5 @@ func _on_duplicate_nodes() -> void:
 
 func _on_paste_nodes() -> void:
 	pass
+
+#endregion

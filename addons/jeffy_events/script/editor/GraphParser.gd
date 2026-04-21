@@ -24,7 +24,7 @@ func parse_graph(graph : JEP_EventGraph) -> void:
 	
 	parsed.emit(graph, nodes)
 
-func parse_instruction(instruction : JEP_NodeInstruction, graph : JEP_EventGraph) -> GraphNode:
+func parse_instruction(instruction : JEP_NodeInstruction, graph : JEP_EventGraph) -> JEP_EventGraphNode:
 	var event : JEP_Event = instruction.event
 	var graph_node : JEP_EventGraphNode = JEP_EventGraphNode.new(graph, event)
 	

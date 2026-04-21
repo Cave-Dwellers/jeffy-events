@@ -83,12 +83,16 @@ func _handle_graph_connection(graph : JEP_EventGraph, connect : bool = true) -> 
 		if !graph.changed.is_connected(_graph_changed):
 			graph.changed.connect(_graph_changed.bind(graph))
 			for event : JEP_Event in graph._events:
+				if event.changed.is_connected(graph.emit_changed):
+					continue
 				event.changed.connect(graph.emit_changed)
 	else:
 		if graph.changed.is_connected(_graph_changed):
 			graph.changed.disconnect(_graph_changed)
-			for event : JEP_Event in graph._events:
-				event.changed.disconnect(graph.emit_changed)
+			#for event : JEP_Event in graph._events:
+				#if !event.changed.is_connected(graph.emit_changed):
+					#continue
+				#event.changed.disconnect(graph.emit_changed)
 	
 func _save_entry(entry : Entry) -> bool:
 	# Do not save unmodified graphs

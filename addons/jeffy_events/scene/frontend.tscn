@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://bkspwg5kx5wqx" path="res://addons/jeffy_events/script/editor/dock/EventListController.gd" id="9_e1yht"]
 [ext_resource type="Script" uid="uid://bw0ssjry4xhf8" path="res://addons/jeffy_events/script/editor/modal/AddEventSourceModal.gd" id="10_rwnnl"]
 [ext_resource type="Script" uid="uid://dd5b3xijau6u8" path="res://addons/jeffy_events/script/editor/DirectoryParser.gd" id="11_ajte1"]
+[ext_resource type="Script" uid="uid://favduvjohrvg" path="res://addons/jeffy_events/script/editor/dock/SourceTree.gd" id="12_qrvpx"]
 [ext_resource type="Script" uid="uid://yaeidctfmayd" path="res://addons/jeffy_events/script/editor/dock/LabelsListManager.gd" id="13_0fkv5"]
 [ext_resource type="PackedScene" uid="uid://ce1a5qj7tkxmb" path="res://addons/jeffy_events/scene/modal/confirmation_modal.tscn" id="13_jfkun"]
 [ext_resource type="PackedScene" uid="uid://deyds8jrfs6vo" path="res://addons/jeffy_events/scene/modal/file_picker.tscn" id="14_ekmjb"]
@@ -133,10 +134,13 @@ layout_mode = 2
 text = "No event sources found :("
 horizontal_alignment = 1
 
-[node name="SourceTree" type="Tree" parent="Frame/LeftSplit/EventSourceList/SourcesContainer" unique_id=1359476010]
+[node name="SourceTree" type="Tree" parent="Frame/LeftSplit/EventSourceList/SourcesContainer" unique_id=1359476010 node_paths=PackedStringArray("graph_parser", "graph_frontend")]
 layout_mode = 2
 size_flags_vertical = 3
 hide_root = true
+script = ExtResource("12_qrvpx")
+graph_parser = NodePath("../../../../../GraphParser")
+graph_frontend = NodePath("../../../../RightContainer/EventGraph")
 
 [node name="SourceManager" type="Node" parent="Frame/LeftSplit/EventSourceList" unique_id=656008482 node_paths=PackedStringArray("add_source_modal", "remove_source_modal", "source_tree", "no_sources_label", "add_source_button", "remove_source_button", "refresh_sources_button")]
 script = ExtResource("7_rwnnl")
@@ -157,7 +161,7 @@ tab_0/icon = ExtResource("3_hbwa6")
 tab_1/icon = ExtResource("4_c8yvv")
 tab_2/icon = ExtResource("5_c8yvv")
 
-[node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606]
+[node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606 node_paths=PackedStringArray("graph_parser")]
 layout_mode = 2
 snapping_distance = 16
 panning_scheme = 1
@@ -172,6 +176,7 @@ type_names = {
 6: "DataResource"
 }
 script = ExtResource("16_iri01")
+graph_parser = NodePath("../../../GraphParser")
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
 
@@ -496,6 +501,7 @@ source? This action cannot be undone."
 [connection signal="request_save_all" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="save_all_graphs"]
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="GraphParser" method="parse_graph"]
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/MenuBar" method="_on_graph_selected"]
+[connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/EventSourceList/SourcesContainer/SourceTree" method="_on_graph_selected"]
 [connection signal="item_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_selected"]
 [connection signal="parse_requested" from="Frame/LeftSplit/EventSourceList/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
 [connection signal="connection_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_connection_request"]

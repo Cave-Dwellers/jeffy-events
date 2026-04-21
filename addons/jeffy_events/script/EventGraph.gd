@@ -3,7 +3,7 @@ class_name JEP_EventGraph extends Resource
 
 ## Represents a set of events and how they are connected to eachother
 
-signal event_added(event : JEP_Event)
+signal event_added(event : JEP_Event, indice : int)
 signal event_removed(event : JEP_Event, indice : int)
 
 signal label_added(label : StringName)
@@ -30,7 +30,7 @@ func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO) -> void:
 	event.position = at
 	event.changed.connect(emit_changed)
 	
-	event_added.emit(event)
+	event_added.emit(event, _events.size() - 1)
 	emit_changed()
 
 ## Removes [param event] from the event array (if it exists)
@@ -67,7 +67,7 @@ func has_event_type(type : StringName) -> bool:
 	return false
 
 ## Gets the indice where [param event] is located. If it doesnt exist in the
-## graph, it will return -1 instead.
+## graph, it will return -1 instead
 func get_event_indice(event : JEP_Event) -> int:
 	return _events.find(event)
 
