@@ -160,6 +160,7 @@ tab_2/icon = ExtResource("5_c8yvv")
 [node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606]
 layout_mode = 2
 snapping_distance = 16
+panning_scheme = 1
 right_disconnects = true
 type_names = {
 0: "Flow",
@@ -497,6 +498,9 @@ source? This action cannot be undone."
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/MenuBar" method="_on_graph_selected"]
 [connection signal="item_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_selected"]
 [connection signal="parse_requested" from="Frame/LeftSplit/EventSourceList/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
+[connection signal="connection_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_connection_request"]
+[connection signal="disconnection_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_disconnection_request"]
+[connection signal="end_node_move" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_nodes_moved"]
 [connection signal="picked_path" from="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/AddEventSourceModal" method="_dir_selected"]
 [connection signal="graph_created" from="Modal/NewEventGraphModal" to="EventGraphPool" method="add_graph"]
 [connection signal="picked_path" from="Modal/NewEventGraphModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/NewEventGraphModal" method="_assign_path"]

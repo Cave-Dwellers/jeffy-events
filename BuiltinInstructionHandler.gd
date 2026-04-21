@@ -105,7 +105,7 @@ func handle_line_instruction(instruction : JEP_ElementInstruction.Line, event : 
 	input.text = event.get(property) as String
 	input.editing_toggled.connect(
 		func(on : bool) -> void:
-			if !on:
+			if on:
 				return
 			
 			event.set(property, input.text)

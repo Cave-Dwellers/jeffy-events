@@ -38,8 +38,7 @@ func add_graph(graph : JEP_EventGraph) -> void:
 		_graphs[graph.resource_path] = Entry.new(graph)
 		graph_added.emit(graph)
 		
-	if !graph.changed.is_connected(_graph_changed):
-		graph.changed.connect(_graph_changed.bind(graph), CONNECT_ONE_SHOT)
+	_handle_graph_connection(graph)
 
 func remove_graph(graph : JEP_EventGraph) -> void:
 	if !has(graph):
@@ -79,9 +78,30 @@ func _graph_changed(graph : JEP_EventGraph) -> void:
 	
 	_graphs[graph.resource_path].pending_save = true
 
+func _handle_graph_connection(graph : JEP_EventGraph, connect : bool = true) -> void:
+	if connect:
+		if !graph.changed.is_connected(_graph_changed):
+			graph.changed.connect(_graph_changed.bind(graph))
+			for event : JEP_Event in graph._events:
+				event.changed.connect(graph.emit_changed)
+	else:
+		if graph.changed.is_connected(_graph_changed):
+			graph.changed.disconnect(_graph_changed)
+			for event : JEP_Event in graph._events:
+				event.changed.disconnect(graph.emit_changed)
+	
 func _save_entry(entry : Entry) -> bool:
-	entry.pending_save = false
-	return ResourceSaver.save(entry.graph) == OK
+	# Do not save unmodified graphs
+	if !entry.pending_save:
+		return false
+	var result : bool = ResourceSaver.save(entry.graph) == OK
+	
+	if result:
+		entry.pending_save = false
+		graph_saved.emit(entry.graph)
+	else:
+		JEP_Print.toast_error("Something went wrong when saving graph %s" % entry.graph.resource_path)
+	return result
 
 ## Monitoring when graph files are removed
 func _on_resource_removed(resource : Resource) -> void:

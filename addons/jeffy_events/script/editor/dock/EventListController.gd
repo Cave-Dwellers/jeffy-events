@@ -21,6 +21,7 @@ func _on_graph_removed(graph : JEP_EventGraph) -> void:
 
 func _on_graph_saved(graph : JEP_EventGraph) -> void:
 	# We're just resetting the file name here
+	JEP_Print.info("Requesting graph as saved")
 	modify_entry(graph, _mark_graph_as_saved.bind(graph))
 
 func _on_graph_replaced(old: JEP_EventGraph, new: JEP_EventGraph) -> void:
@@ -30,6 +31,7 @@ func _on_graph_replaced(old: JEP_EventGraph, new: JEP_EventGraph) -> void:
 	_on_graph_added(new)
 
 func _mark_graph_as_saved(idx : int, graph : JEP_EventGraph) -> void:
+	JEP_Print.info("Marking graph as saved")
 	set_item_text(idx, format_path(graph))
 	graph.changed.connect(_mark_graph_as_unsaved.bind(idx), CONNECT_ONE_SHOT)
 
@@ -39,6 +41,7 @@ func _on_graph_selected(idx : int) -> void:
 		graph_selected.emit(meta)
 
 func _mark_graph_as_unsaved(idx : int) -> void:
+	JEP_Print.info("Graph at %d marked as unsaved" % idx)
 	var with_mark := "%s (*)" % get_item_text(idx) 
 	set_item_text(idx, with_mark)
 
