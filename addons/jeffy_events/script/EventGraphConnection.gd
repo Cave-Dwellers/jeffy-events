@@ -19,7 +19,7 @@ enum Type {
 @export_storage var to_port : int
 @export_storage var type : Type
 
-func _init(p_from_event : int, p_from_port : int, p_to_event : int, p_to_port : int, p_type : int) -> void:
+func _init(p_from_event : int = 0, p_from_port : int = 0, p_to_event : int = 0, p_to_port : int = 0, p_type : int = 0) -> void:
 	from_event = p_from_event
 	from_port = p_from_port
 	to_event = p_to_event

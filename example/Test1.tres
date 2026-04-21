@@ -6,6 +6,15 @@
 [ext_resource type="Script" uid="uid://d1f2qorxx20m3" path="res://addons/jeffy_events/script/EventGraphConnection.gd" id="4_je2si"]
 [ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/EventGraph.gd" id="4_ryn2h"]
 
+[sub_resource type="Resource" id="Resource_je2si"]
+script = ExtResource("4_je2si")
+to_event = 1
+
+[sub_resource type="Resource" id="Resource_xu6y7"]
+script = ExtResource("4_je2si")
+from_port = 1
+to_event = 1
+
 [sub_resource type="Resource" id="Resource_bqshq"]
 script = ExtResource("2_0iqdn")
 label = "TEst"
@@ -19,3 +28,4 @@ position = Vector2(208, -176)
 [resource]
 script = ExtResource("4_ryn2h")
 _events = Array[ExtResource("1_bqshq")]([SubResource("Resource_bqshq"), SubResource("Resource_0iqdn")])
+_connections = Array[ExtResource("4_je2si")]([SubResource("Resource_je2si"), SubResource("Resource_xu6y7")])

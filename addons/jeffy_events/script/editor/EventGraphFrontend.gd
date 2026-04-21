@@ -45,6 +45,8 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 		add_child(node)
 		
 	# Handle connections
+	for connection : JEP_EventGraphConnection in p_graph._connections:
+		connect_node(str(connection.from_event), connection.from_port, str(connection.to_event), connection.to_port)
 
 func _on_connection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	var from_node := get_node(NodePath(from_path)) as GraphNode

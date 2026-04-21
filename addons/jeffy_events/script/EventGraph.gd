@@ -22,7 +22,7 @@ signal connection_removed(at : int)
 ## Variables that are present in the graph
 #@export_storage var _variables : Array[VariableDefinition]
 ## Connections between events
-@export_storage var connections : Array[JEP_EventGraphConnection]
+@export_storage var _connections : Array[JEP_EventGraphConnection]
 
 ## Adds [param event] with the position [param at] to the event arary.
 func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO) -> void:
@@ -66,6 +66,8 @@ func has_event_type(type : StringName) -> bool:
 			return true
 	return false
 
+## Gets the indice where [param event] is located. If it doesnt exist in the
+## graph, it will return -1 instead.
 func get_event_indice(event : JEP_Event) -> int:
 	return _events.find(event)
 
@@ -100,8 +102,8 @@ func add_connection(from_event : int, from_port : int, to_event : int, to_port :
 	
 	var connection : JEP_EventGraphConnection = JEP_EventGraphConnection.new(from_event, from_port, to_event, to_port, type)
 	event_removed.connect(connection.connection_broken)
-	connections.append(connection)
-	print(connections)
+	_connections.append(connection)
+	print(_connections)
 	emit_changed()
 
 ## Removes a connection that matches the provided arguments, if it exists
@@ -110,26 +112,28 @@ func remove_connection(from_event : int, from_port : int, to_event : int, to_por
 	if at == -1:
 		return
 	
-	connections.remove_at(at)
+	_connections.remove_at(at)
 	emit_changed()
 
+## Removes connections associated with [param event_indice]. Shifts affected
+## connections back one
 func remove_connections(event_indice : int) -> void:
-	var filtered : Array = connections.filter(
+	var filtered : Array = _connections.filter(
 		func(connection : JEP_EventGraphConnection) -> bool:
 			return  connection.from_event == event_indice || \
 					connection.to_event == event_indice
 	)
 	
-	if filtered.size() == connections.size():
+	if filtered.size() == _connections.size():
 		return
 	
-	connections = filtered
+	_connections = filtered
 	emit_changed()
 
 ## Gets an [JEP_EventGraphConnection] object that matches the 
 ## provided arguments, if one exists
 func get_connection(from_event : int, from_port : int, to_event : int, to_port : int) -> JEP_EventGraphConnection:
-	for connection : JEP_EventGraphConnection in connections:
+	for connection : JEP_EventGraphConnection in _connections:
 		if !connection.equals(from_event, from_port, to_event, to_port):
 			continue
 		return connection
@@ -138,8 +142,8 @@ func get_connection(from_event : int, from_port : int, to_event : int, to_port :
 ## Gets the indice of an [JEP_EventGraphConnection] object that matches the 
 ## provided arguments, if one exists
 func get_connection_indice(from_event : int, from_port : int, to_event : int, to_port : int) -> int:
-	for i : int in range(connections.size()):
-		var connection : JEP_EventGraphConnection = connections[i]
+	for i : int in range(_connections.size()):
+		var connection : JEP_EventGraphConnection = _connections[i]
 		if !connection.equals(from_event, from_port, to_event, to_port):
 			continue
 		return i
