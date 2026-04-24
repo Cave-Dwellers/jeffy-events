@@ -2,8 +2,11 @@
 class_name JEP_EventGraphNode extends GraphNode
 
 var graph : JEP_EventGraph
-var event : JEP_Event
+var uuid : StringName
 
-func _init(p_graph : JEP_EventGraph, p_event : JEP_Event) -> void:
+func _init(p_graph : JEP_EventGraph, p_uuid : StringName) -> void:
 	graph = p_graph
-	event = p_event
+	uuid = p_uuid
+
+func get_event() -> JEP_Event:
+	return graph._events.get(uuid)

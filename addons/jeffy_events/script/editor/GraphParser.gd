@@ -11,22 +11,23 @@ var _HANDLERS = [JEP_BuiltinInstructionHandler.new()]
 signal parsed(graph : JEP_EventGraph, nodes : Array[GraphNode])
 
 func parse_graph(graph : JEP_EventGraph) -> void:
-	var events : Array[JEP_Event] = graph._events
+	var events : Dictionary[StringName, JEP_Event] = graph._events
 	var nodes : Array[GraphNode] = []
 	
-	for i : int in range(events.size()):
-		var event : JEP_Event = events[i]
+	for uuid : StringName in events.keys():
+		var event : JEP_Event = events[uuid]
 		var instruction : JEP_NodeInstruction = event._get_instruction(graph)
 		var graph_node := parse_instruction(instruction, graph)
 		
-		graph_node.name = str(i)
+		graph_node.name = uuid
 		nodes.append(graph_node)
 	
 	parsed.emit(graph, nodes)
 
 func parse_instruction(instruction : JEP_NodeInstruction, graph : JEP_EventGraph) -> JEP_EventGraphNode:
 	var event : JEP_Event = instruction.event
-	var graph_node : JEP_EventGraphNode = JEP_EventGraphNode.new(graph, event)
+	var uuid : StringName = graph.get_event_uuid(event)
+	var graph_node : JEP_EventGraphNode = JEP_EventGraphNode.new(graph, uuid)
 	
 	graph_node.custom_minimum_size = Vector2(100, 100)
 	graph_node.position_offset = event.position

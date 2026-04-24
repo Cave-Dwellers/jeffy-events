@@ -39,11 +39,13 @@ var selected : Array[JEP_EventGraphNode] :
 func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void:
 	if graph:
 		graph.event_added.disconnect(_on_event_added)
+		graph.connection_added.disconnect(_on_connection_added)
+		graph.connection_removed.disconnect(_on_connection_removed)
 	
 	graph = p_graph
 	graph.event_added.connect(_on_event_added)
-	
-	JEP_Print.info("New graph focused")
+	graph.connection_added.connect(_on_connection_added)
+	graph.connection_removed.connect(_on_connection_removed)
 	
 	for child : Node in get_children():
 		if child is GraphNode:
@@ -53,32 +55,40 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 		add_child(node)
 		
 	# Handle connections
-	for connection : JEP_EventGraphConnection in p_graph._connections:
-		connect_node(str(connection.from_event), connection.from_port, str(connection.to_event), connection.to_port)
+	for uuid : StringName in p_graph._connections.keys():
+		var array := p_graph._connections[uuid]
+		for connection : JEP_EventGraphConnection in array:
+			connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
 
 func _on_connection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	var from_node := get_node(NodePath(from_path)) as GraphNode
 	var from_port_type := from_node.get_output_port_type(from_port)
 	var connection_type := JEP_EventGraphConnection.Type.Flow if from_port_type == 0 else JEP_EventGraphConnection.Type.Data
 	
-	connect_node(from_path, from_port, to_path, to_port)
-	graph.add_connection(int(from_path), from_port, int(to_path), to_port, connection_type)
+	graph.add_connection(from_path, from_port, to_path, to_port, connection_type)
 	
 func _on_disconnection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
-	disconnect_node(from_path, from_port, to_path, to_port)
-	graph.remove_connection(int(from_path), from_port, int(to_path), to_port)
+	graph.remove_connection(from_path, from_port, to_path, to_port)
 
-func _on_event_added(event : JEP_Event, indice : int) -> void:
-	JEP_Print.info("Event added callback | indice %d" % indice)
+func _on_event_added(event : JEP_Event, uuid : StringName) -> void:
+	JEP_Print.info("Event added: uuid %s" % uuid)
 	var instruction : JEP_NodeInstruction = event._get_instruction(graph)
 	var node : JEP_EventGraphNode = graph_parser.parse_instruction(instruction, graph)
 	
-	node.name = str(indice)
+	node.name = uuid
 	add_child(node)
+
+func _on_connection_added(connection : JEP_EventGraphConnection) -> void:
+	connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
+	JEP_Print.info("Connection made: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
+
+func _on_connection_removed(connection : JEP_EventGraphConnection) -> void:
+	disconnect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
+	JEP_Print.info("Connection broken: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_nodes_moved() -> void:
 	for node : JEP_EventGraphNode in selected:
-		node.event.position = node.position_offset
+		node.get_event().position = node.position_offset
 
 #region Drag And Drop
 

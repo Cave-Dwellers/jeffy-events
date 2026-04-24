@@ -82,7 +82,7 @@ func _handle_graph_connection(graph : JEP_EventGraph, connect : bool = true) -> 
 	if connect:
 		if !graph.changed.is_connected(_graph_changed):
 			graph.changed.connect(_graph_changed.bind(graph))
-			for event : JEP_Event in graph._events:
+			for event : JEP_Event in graph._events.values():
 				if event.changed.is_connected(graph.emit_changed):
 					continue
 				event.changed.connect(graph.emit_changed)
