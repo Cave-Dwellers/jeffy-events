@@ -115,15 +115,28 @@ func remove_connection(from_uuid : StringName, from_port : int, to_uuid : String
 	if !connection:
 		return
 	
-	_connections[from_uuid].erase(connection)
+	remove_connection_object(from_uuid, connection)
+
+func remove_connection_object(uuid : StringName, connection : JEP_EventGraphConnection) -> void:
+	_connections[uuid].erase(connection)
 	connection_removed.emit(connection)
 	emit_changed()
 
 ## Removes connections associated with [param uuid].
 func remove_connections(uuid : StringName) -> void:
-	var connections_at : Array[JEP_EventGraphConnection] = _connections.get(uuid)
-	for connection : JEP_EventGraphConnection in connections_at:
+	# Remove connections going into uuid
+	var connections_to : Dictionary[StringName, Array] = get_connections_to(uuid)
+	for c_uuid : StringName in connections_to.keys():
+		for connection : JEP_EventGraphConnection in connections_to[c_uuid]:
+			remove_connection_object(c_uuid, connection)
+		if _connections[c_uuid].is_empty():
+			_connections.erase(c_uuid)
+	
+	# Remove connections originating from uuid
+	var connections_from : Array = _connections.get(uuid, [])
+	for connection : JEP_EventGraphConnection in connections_from:
 		connection_removed.emit(connection)
+	
 	_connections.erase(uuid)
 	emit_changed()
 	
@@ -139,6 +152,19 @@ func get_connection(from_uuid : StringName, from_port : int, to_uuid : StringNam
 			continue
 		return connection
 	return null
+
+## Returns a list of event UUIDs that are connected to [param uuid].
+func get_connections_to(uuid : StringName) -> Dictionary[StringName, Array]:
+	var uuids : Dictionary[StringName, Array] = {}
+	for array : Array in _connections.values():
+		for connection : JEP_EventGraphConnection in array:
+			if connection.to_uuid != uuid:
+				continue
+			
+			if !uuids.has(connection.from_uuid):
+				uuids[connection.from_uuid] = []
+			uuids[connection.from_uuid].append(connection)
+	return uuids
 
 ### Adds [param variable] with [param type], if it doesn't already exist 
 #func add_variable(variable : StringName, type : int) -> void:

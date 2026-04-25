@@ -1,6 +1,12 @@
 @tool
 class_name JEP_EventGraphFrontend extends GraphEdit
 
+## Displays a mutable representation of [JEP_EventGraph] data.
+##
+## The general design of this script is to hook the [JEP_EventGraph]
+## resource signals. Frontend updates are based on whether or not
+## changes go through on the resource itself
+
 enum Ports {
 	Flow,
 	DataVariant,
@@ -24,6 +30,7 @@ const PortColors : Dictionary[int, Color] = {
 @export var graph_parser : JEP_GraphParser
 
 var graph : JEP_EventGraph
+var uuid_to_node : Dictionary[StringName, JEP_EventGraphNode] = {}
 var selected : Array[JEP_EventGraphNode] :
 	get :
 		var sel : Array[JEP_EventGraphNode] = []
@@ -37,28 +44,52 @@ var selected : Array[JEP_EventGraphNode] :
 		return sel
 
 func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void:
+	# Signal connections
 	if graph:
 		graph.event_added.disconnect(_on_event_added)
+		graph.event_removed.disconnect(_on_event_removed)
 		graph.connection_added.disconnect(_on_connection_added)
 		graph.connection_removed.disconnect(_on_connection_removed)
 	
 	graph = p_graph
 	graph.event_added.connect(_on_event_added)
+	graph.event_removed.connect(_on_event_removed)
 	graph.connection_added.connect(_on_connection_added)
 	graph.connection_removed.connect(_on_connection_removed)
 	
+	# Remove old nodes
+	uuid_to_node.clear()
 	for child : Node in get_children():
 		if child is GraphNode:
 			child.queue_free()
 	
-	for node : GraphNode in nodes:
+	# Add new nodes
+	for node : JEP_EventGraphNode in nodes:
 		add_child(node)
+		uuid_to_node[node.uuid] = node
 		
 	# Handle connections
 	for uuid : StringName in p_graph._connections.keys():
 		var array := p_graph._connections[uuid]
 		for connection : JEP_EventGraphConnection in array:
 			connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
+
+func _draw() -> void:
+	if !graph:
+		return
+	
+	var font := get_theme_default_font()
+	var x := size.x - 256
+	var y := 16
+	
+	for uuid : StringName in graph._connections.keys():
+		draw_string(font, Vector2(x, y), uuid, 0, -1, 12)
+		y += 16
+		
+		var uuid_connections : Array = graph._connections[uuid]
+		for connection : JEP_EventGraphConnection in uuid_connections:
+			draw_string(font, Vector2(x + 32, y), "%d: %s...@%d" % [connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port], 0, -1, 12)
+			y += 16 
 
 func _on_connection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	var from_node := get_node(NodePath(from_path)) as GraphNode
@@ -70,21 +101,37 @@ func _on_connection_request(from_path : StringName, from_port : int, to_path : S
 func _on_disconnection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	graph.remove_connection(from_path, from_port, to_path, to_port)
 
+func _on_remove_request(nodes : Array[StringName]) -> void:
+	for uuid : StringName in nodes:
+		var node : JEP_EventGraphNode = uuid_to_node[uuid]
+		var event : JEP_Event = node.get_event()
+		graph.remove_event(event)
+
 func _on_event_added(event : JEP_Event, uuid : StringName) -> void:
 	JEP_Print.info("Event added: uuid %s" % uuid)
 	var instruction : JEP_NodeInstruction = event._get_instruction(graph)
 	var node : JEP_EventGraphNode = graph_parser.parse_instruction(instruction, graph)
 	
 	node.name = uuid
+	uuid_to_node[uuid] = node
 	add_child(node)
+
+func _on_event_removed(_event : JEP_Event, uuid : StringName) -> void:
+	JEP_Print.info("Event removed: uuid %s" % uuid)
+	var node : JEP_EventGraphNode = uuid_to_node[uuid]
+	
+	uuid_to_node.erase(uuid)
+	node.queue_free()
 
 func _on_connection_added(connection : JEP_EventGraphConnection) -> void:
 	connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
+	queue_redraw()
 	JEP_Print.info("Connection made: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_connection_removed(connection : JEP_EventGraphConnection) -> void:
 	disconnect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
-	JEP_Print.info("Connection broken: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
+	queue_redraw()
+	JEP_Print.info("Connection broken: %s...@%d x %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_nodes_moved() -> void:
 	for node : JEP_EventGraphNode in selected:

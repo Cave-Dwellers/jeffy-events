@@ -505,6 +505,7 @@ source? This action cannot be undone."
 [connection signal="item_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_selected"]
 [connection signal="parse_requested" from="Frame/LeftSplit/EventSourceList/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
 [connection signal="connection_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_connection_request"]
+[connection signal="delete_nodes_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_remove_request"]
 [connection signal="disconnection_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_disconnection_request"]
 [connection signal="end_node_move" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_nodes_moved"]
 [connection signal="picked_path" from="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/AddEventSourceModal" method="_dir_selected"]
