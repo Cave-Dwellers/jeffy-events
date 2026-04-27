@@ -73,20 +73,24 @@ func get_event_uuid(event : JEP_Event) -> StringName:
 	return &"" 
 
 ## Adds [param label] to the graph, if it doesn't already exist
-func add_label(label : StringName) -> void:
+func add_label(label : StringName) -> bool:
 	if !has_label(label):
 		_labels.append(label)
 		
 		label_added.emit(label)
 		emit_changed()
+		return true
+	return false
 
 ## Removes [param label] from the graph, if it exists
-func remove_label(label : StringName) -> void:
+func remove_label(label : StringName) -> bool:
 	if has_label(label):
 		_labels.erase(label)
 		
 		label_removed.emit(label)
 		emit_changed()
+		return true
+	return false
 
 ## Returns true if this graph contains [param label]
 func has_label(label : StringName) -> bool:

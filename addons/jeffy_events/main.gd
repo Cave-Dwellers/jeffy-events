@@ -12,15 +12,6 @@ var frontend : JEP_Frontend
 ## Reference to the plugin dock
 var jep_dock : EditorDock
 
-func _get_plugin_name() -> String:
-	return "JeffyEvents"
-
-func _get_plugin_icon() -> Texture2D:
-	return ICO_FRONTEND
-
-func _handles(object: Object) -> bool:
-	return object is JEP_EventGraph
-
 func _enter_tree() -> void:
 	create_dock()
 	
@@ -55,6 +46,15 @@ func create_dock() -> void:
 	
 	# Mark as ready
 	frontend._dock_ready()
+
+func _get_plugin_name() -> String:
+	return "JeffyEvents"
+
+func _get_plugin_icon() -> Texture2D:
+	return ICO_FRONTEND
+
+func _handles(object: Object) -> bool:
+	return object is JEP_EventGraph
 
 func _save_external_data() -> void:
 	frontend.save_requested.emit()

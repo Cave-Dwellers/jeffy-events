@@ -4,6 +4,10 @@ class_name JEP_Event extends Resource
 ## An abstract interface that is provided
 ## a custom context object at runtime.
 
+## Base instruction handlers, used by built in events
+const NODE := preload("uid://mewxu2y1d8q2")
+const ELEMENT := preload("uid://b0rgkngbx133o")
+
 ## The position of this event in an [class EventGraph]
 @export_storage var position : Vector2 :
 	set(value) :
@@ -16,6 +20,11 @@ class_name JEP_Event extends Resource
 ## may be null depending on how the Event is being called
 func _event(ctx : Object = null) -> int
 
+#@abstract
+### Method called by [JEP_EventGraphExecutor] when data
+### on a port needs to be resolved.
+#func _resolve_data(variable : StringName) -> Variant
+
 @abstract
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction
 
@@ -26,6 +35,13 @@ func _get_name() -> StringName:
 ## Returns a description that describes this event.
 func _get_description() -> StringName:
 	return &""
+
+## Returns true if this event is only a data holder,
+## meaning that it does not contain any flow ports.
+## This is used to determine whether or not data exchange
+## is immediate (pull) or if it is lazy (cached)
+func is_data() -> bool:
+	return false
 
 ## Returns the class name of this script
 func get_class() -> String:

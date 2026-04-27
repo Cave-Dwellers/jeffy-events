@@ -1,15 +1,23 @@
 [gd_resource type="Resource" script_class="JEP_EventGraph" format=3 uid="uid://bc1hh0p2r7ibd"]
 
 [ext_resource type="Script" uid="uid://wrht034bbam1" path="res://addons/jeffy_events/script/Event.gd" id="1_nu8t6"]
-[ext_resource type="Script" uid="uid://c5esjyr207jgv" path="res://addons/jeffy_events/events/EventTerminator.gd" id="2_2kpud"]
+[ext_resource type="Script" uid="uid://c5esjyr207jgv" path="res://addons/jeffy_events/events/flow/EventTerminator.gd" id="2_2kpud"]
 [ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/EventGraph.gd" id="3_4aeu4"]
+[ext_resource type="Script" uid="uid://wgdvnrxa1oua" path="res://addons/jeffy_events/events/action/EventComment.gd" id="3_f7ulf"]
 
 [sub_resource type="Resource" id="Resource_f7ulf"]
 script = ExtResource("2_2kpud")
-position = Vector2(300, 0)
+position = Vector2(240, -224)
+
+[sub_resource type="Resource" id="Resource_xwd2d"]
+script = ExtResource("3_f7ulf")
+text = "This is a comment block! I'm inside of an example graph!"
+position = Vector2(240, -384)
 
 [resource]
 script = ExtResource("3_4aeu4")
 _events = Dictionary[StringName, ExtResource("1_nu8t6")]({
-&"61f6333d-3cfd-49fb-9588-788e43cba9e2": SubResource("Resource_f7ulf")
+&"61f6333d-3cfd-49fb-9588-788e43cba9e2": SubResource("Resource_f7ulf"),
+&"aeb38653-4b65-4996-9b21-ddefd712c140": SubResource("Resource_xwd2d")
 })
+_labels = Array[StringName]([&"Start", &"Start2"])

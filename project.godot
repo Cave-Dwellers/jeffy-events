@@ -26,6 +26,13 @@ gdscript/warnings/inferred_declaration=1
 
 enabled=PackedStringArray("res://addons/jeffy_events/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://addons/jeffy_events/events/action/": "red",
+"res://addons/jeffy_events/events/flow/": "blue"
+}
+
 [importer_defaults]
 
 texture={

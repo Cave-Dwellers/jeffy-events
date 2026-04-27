@@ -8,6 +8,7 @@ const ICO_SAVE := preload("res://addons/jeffy_events/asset/icon/Save.svg")
 signal request_add_graph_modal()
 signal request_load_graph(path : String)
 signal request_save(graph : JEP_EventGraph)
+signal request_close(graph : JEP_EventGraph)
 signal request_save_all()
 
 var file_popup : JEP_PopupMenuBuilder.GenericPopupMenu
@@ -24,7 +25,7 @@ func _on_dock_ready() -> void:
 			.with_entry(&"Save Graph as...", 	create_entry().with_callback(_on_graph_save_as).with_verifier(_has_graph_selected))\
 			.with_entry(&"Save All", 			create_entry().with_callback(_on_graph_save_all).with_shortcut(KEY_MASK_CTRL | KEY_S))\
 			.with_divider()\
-			.with_entry(&"Close", 				create_entry().with_callback(_on_graph_close))\
+			.with_entry(&"Close", 				create_entry().with_callback(_on_graph_close).with_shortcut(KEY_MASK_CTRL | KEY_W))\
 			
 			.build()
 	add_child(file_popup)
@@ -68,4 +69,4 @@ func _graph_load_file_selected(path : String) -> void:
 	request_load_graph.emit(path)
 
 func _on_graph_close() -> void:
-	pass
+	request_close.emit(selected_graph)

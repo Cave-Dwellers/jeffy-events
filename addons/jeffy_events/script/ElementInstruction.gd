@@ -86,9 +86,33 @@ class Line extends Property:
 		_max_character_count = limit
 		return self
 
+class EnumLine extends Property:
+	var _strings : PackedStringArray = []
+	
+	func _get_type() -> Array[int]:
+		return [TYPE_STRING, TYPE_STRING_NAME]
+	
+	func _get_port_type() -> int:
+		return 3
+	
+	func with_strings(array : PackedStringArray) -> EnumLine:
+		_strings = array
+		return self
+
 class CodeLine extends Property:
+	var _flat : bool
+	var _placeholder_text : StringName
+	
 	func _get_type() -> Array[int]:
 		return [TYPE_STRING]
 	
 	func _get_port_type() -> int:
 		return 3
+	
+	func as_flat() -> CodeLine:
+		_flat = true
+		return self
+	
+	func with_placeholder(text : StringName) -> CodeLine:
+		_placeholder_text = text
+		return self

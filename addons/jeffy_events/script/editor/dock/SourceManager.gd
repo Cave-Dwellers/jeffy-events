@@ -118,7 +118,7 @@ func _build_branch_from_dict(dict : Dictionary, parent : TreeItem) -> void:
 		
 		# If dictionary value, build another branch
 		if value is Dictionary:
-			entry.set_text(0, file_name)
+			entry.set_text(0, file_name.capitalize())
 			entry.set_icon(0, ICO_SOURCE)
 			_build_branch_from_dict(value, entry)
 			

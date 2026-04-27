@@ -6,6 +6,7 @@ class_name JEP_AbstractListManager extends Node
 
 func _on_add() -> void:
 	var instance := entry_template.duplicate()
+	instance.visible = true
 	_configure_new_entry(instance)
 	entry_container.add_child(instance)
 
