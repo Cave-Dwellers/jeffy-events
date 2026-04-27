@@ -26,7 +26,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	
 	var event : JEP_Event = script.new()
 	var instruction : JEP_NodeInstruction = event._get_instruction(current_graph)
-	var node : JEP_EventGraphNode = graph_parser.parse_instruction(instruction, current_graph)
+	var node : JEP_EventGraphNode = JEP_EventGraphNode.new(instruction, current_graph)
 	
 	node.modulate = Color(1, 1, 1, 0.5)
 	node.scale = Vector2.ONE * graph_frontend.zoom

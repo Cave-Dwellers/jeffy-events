@@ -110,7 +110,7 @@ func _on_remove_request(nodes : Array[StringName]) -> void:
 func _on_event_added(event : JEP_Event, uuid : StringName) -> void:
 	JEP_Print.info("Event added: uuid %s" % uuid)
 	var instruction : JEP_NodeInstruction = event._get_instruction(graph)
-	var node : JEP_EventGraphNode = graph_parser.parse_instruction(instruction, graph)
+	var node : JEP_EventGraphNode = JEP_EventGraphNode.new(instruction, graph)
 	
 	node.name = uuid
 	uuid_to_node[uuid] = node

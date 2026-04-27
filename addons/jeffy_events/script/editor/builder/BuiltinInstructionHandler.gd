@@ -146,6 +146,7 @@ func handle_code_line_instruction(instruction : JEP_ElementInstruction.CodeLine,
 
 func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
+	var value : Variant = event.get(property)
 	var input : OptionButton = configure_input(OptionButton.new())
 	
 	# Enum keys tend to be long, so element should have more
@@ -163,7 +164,7 @@ func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine,
 		var entry : String = strings.get(i)
 		input.add_item(entry, i)
 		
-		if property == entry:
+		if value == entry:
 			input.select(input.get_item_index(i))
 	
 	input.item_selected.connect(

@@ -5,7 +5,7 @@ func _event(ctx : Object = null) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
-	return JEP_NodeInstruction.new(self)\
+	return JEP_NodeInstruction.new(graph, self)\
 			.with_element(JEP_ElementInstruction.Port.new().with_input())
 
 func _get_name() -> StringName:

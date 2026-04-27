@@ -1,12 +1,9 @@
 @tool
 class_name JEP_GraphParser extends Node
 
-## Creates an event graph node from [class JEP_NodeInstruction], based
-## on user provided [class JEP_InstructionHandler]. You can add new 
+## Creates an event graph node from [JEP_NodeInstruction], based
+## on user provided [JEP_InstructionHandler]. You can add new 
 ## instruction handlers using the plugin's frontend.
-
-## TODO: registry system for this shit
-var _HANDLERS = [JEP_BuiltinInstructionHandler.new()]
 
 signal parsed(graph : JEP_EventGraph, nodes : Array[GraphNode])
 
@@ -17,29 +14,9 @@ func parse_graph(graph : JEP_EventGraph) -> void:
 	for uuid : StringName in events.keys():
 		var event : JEP_Event = events[uuid]
 		var instruction : JEP_NodeInstruction = event._get_instruction(graph)
-		var graph_node := parse_instruction(instruction, graph)
+		var graph_node := JEP_EventGraphNode.new(instruction, graph)
 		
 		graph_node.name = uuid
 		nodes.append(graph_node)
 	
 	parsed.emit(graph, nodes)
-
-func parse_instruction(instruction : JEP_NodeInstruction, graph : JEP_EventGraph) -> JEP_EventGraphNode:
-	var event : JEP_Event = instruction.event
-	var uuid : StringName = graph.get_event_uuid(event)
-	var graph_node : JEP_EventGraphNode = JEP_EventGraphNode.new(graph, uuid)
-	
-	graph_node.position_offset = event.position
-	graph_node.slot_sizes_changed.connect(graph_node.reset_size)
-	
-	for handler : JEP_InstructionHandler in _HANDLERS:
-		graph_node = handler._handle_node_instruction(instruction, graph_node)
-	
-	for element_instruction : JEP_ElementInstruction in instruction.elements:
-		parse_element_instruction(graph_node, event, element_instruction)
-	
-	return graph_node
-
-func parse_element_instruction(graph_node : GraphNode, event : JEP_Event, instruction : JEP_ElementInstruction) -> void:
-	for handler : JEP_InstructionHandler in _HANDLERS:
-		handler._handle_element_instruction(instruction, event, graph_node)
