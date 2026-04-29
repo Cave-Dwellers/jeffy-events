@@ -10,7 +10,7 @@ var completed_uuids : Array[StringName] = []
 
 ## Can be overwritten in a super class to provide a "context object" to all
 ## events. See markdown docs for more info
-func _get_context_object() -> Object:
+func get_context_object() -> Object:
 	return null
 
 func play(label : String = "") -> void:
@@ -36,12 +36,14 @@ func play(label : String = "") -> void:
 		return
 	
 	_execute(copy, start)
-	
+
+#region Internal
+
 func _execute(e_graph : JEP_EventGraph, uuid : StringName) -> void:
 	var event : JEP_Event = e_graph._events[uuid]
 	_resolve_data(e_graph, uuid)
 	
-	var out_port : int = await event._event(_get_context_object())
+	var out_port : int = await event._event(get_context_object())
 	completed_uuids.append(uuid)
 	_traverse(out_port, e_graph, uuid)
 
@@ -88,3 +90,5 @@ func _traverse(port : int, e_graph : JEP_EventGraph, from_uuid : StringName) -> 
 		return
 	
 	_execute(e_graph, next_uuid)
+
+#endregion

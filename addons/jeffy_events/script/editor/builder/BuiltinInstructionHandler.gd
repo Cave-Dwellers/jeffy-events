@@ -1,7 +1,7 @@
 @tool
 class_name JEP_BuiltinInstructionHandler extends JEP_InstructionHandler
 
-func _handle_node_instruction(instruction : JEP_NodeInstruction, node : GraphNode) -> GraphNode:
+func _handle_node_instruction(instruction : JEP_NodeInstruction, node : JEP_EventGraphNode) -> GraphNode:
 	var event : JEP_Event = instruction.event
 	node.title = event._get_name()
 	node.tooltip_text = event._get_description()
@@ -18,7 +18,7 @@ func _handle_node_instruction(instruction : JEP_NodeInstruction, node : GraphNod
 	
 	return node
 
-func _handle_element_instruction(instruction : JEP_ElementInstruction, event : JEP_Event, node : GraphNode) -> Control:
+func _handle_element_instruction(instruction : JEP_ElementInstruction, event : JEP_Event, node : JEP_EventGraphNode) -> Control:
 	var container : HBoxContainer = HBoxContainer.new()
 	container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	container.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -38,7 +38,7 @@ func _handle_element_instruction(instruction : JEP_ElementInstruction, event : J
 		handle_property_instruction(instruction, event, node, container, container.get_index())
 	return container
 
-func handle_port_instruction(instruction : JEP_ElementInstruction.Port, node : GraphNode, id : int) -> void:
+func handle_port_instruction(instruction : JEP_ElementInstruction.Port, node : JEP_EventGraphNode, id : int) -> void:
 	# Godot's graph element nodes assign their ports based on child
 	# element index
 	var type : int = 0
@@ -63,23 +63,27 @@ func handle_port_instruction(instruction : JEP_ElementInstruction.Port, node : G
 func handle_property_instruction(
 	instruction : JEP_ElementInstruction.Property,
 	event : JEP_Event,
-	node : GraphNode, 
+	node : JEP_EventGraphNode, 
 	element : HBoxContainer,
 	id : int
 	) -> void:
 	
 	if instruction is JEP_ElementInstruction.Number:
-		handle_number_instruction(instruction, event, element)
+		handle_number_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.Line:
-		handle_line_instruction(instruction, event, element)
+		handle_line_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.CodeLine:
-		handle_code_line_instruction(instruction, event, element)
+		handle_code_line_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.EnumLine:
-		handle_enum_line_instruction(instruction, event, element)
+		handle_enum_line_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.Bool:
-		handle_bool_instruction(instruction, event, element)
+		handle_bool_instruction(instruction, node, event, element)
 
-func handle_number_instruction(instruction : JEP_ElementInstruction.Number, event : JEP_Event, element : HBoxContainer) -> void:
+func handle_number_instruction(
+	instruction : JEP_ElementInstruction.Number, 
+	node : JEP_EventGraphNode,
+	event : JEP_Event,
+	element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
 	var input : SpinBox = configure_input(SpinBox.new())
 	
@@ -97,10 +101,20 @@ func handle_number_instruction(instruction : JEP_ElementInstruction.Number, even
 			event.set(property, value)
 			event.emit_changed()
 	)
+	node.slot_connection_updated.connect(
+		func(slot : int, connected : bool) -> void:
+			var at : int = element.get_index()
+			if slot == at:
+				input.editable = !connected
+	)
 	
 	element.add_child(input)
 
-func handle_line_instruction(instruction : JEP_ElementInstruction.Line, event : JEP_Event, element : HBoxContainer) -> void:
+func handle_line_instruction(
+	instruction : JEP_ElementInstruction.Line, 
+	node : JEP_EventGraphNode,
+	event : JEP_Event,
+	element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
 	var input : LineEdit = configure_input(LineEdit.new())
 	
@@ -116,10 +130,20 @@ func handle_line_instruction(instruction : JEP_ElementInstruction.Line, event : 
 			event.set(property, input.text)
 			event.emit_changed()
 	)
+	node.slot_connection_updated.connect(
+		func(slot : int, connected : bool) -> void:
+			var at : int = element.get_index()
+			if slot == at:
+				input.editable = !connected
+	)
 	
 	element.add_child(input)
 	
-func handle_code_line_instruction(instruction : JEP_ElementInstruction.CodeLine, event : JEP_Event, element : HBoxContainer) -> void:
+func handle_code_line_instruction(
+	instruction : JEP_ElementInstruction.CodeLine,
+	node : JEP_EventGraphNode,
+	event : JEP_Event,
+	element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
 	var input : CodeEdit = configure_input(CodeEdit.new())
 	
@@ -144,10 +168,20 @@ func handle_code_line_instruction(instruction : JEP_ElementInstruction.CodeLine,
 			event.set(property, input.text)
 			event.emit_changed()
 	)
+	node.slot_connection_updated.connect(
+		func(slot : int, connected : bool) -> void:
+			var at : int = element.get_index()
+			if slot == at:
+				input.editable = !connected
+	)
 	
 	element.add_child(input)
 
-func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine, event : JEP_Event, element : HBoxContainer) -> void:
+func handle_enum_line_instruction(
+	instruction : JEP_ElementInstruction.EnumLine,
+	node : JEP_EventGraphNode,
+	event : JEP_Event,
+	element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
 	var value : Variant = event.get(property)
 	var input : OptionButton = configure_input(OptionButton.new())
@@ -178,6 +212,12 @@ func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine,
 			event.set(property, input.get_item_text(at))
 			event.emit_changed()
 	)
+	node.slot_connection_updated.connect(
+		func(slot : int, connected : bool) -> void:
+			var at : int = element.get_index()
+			if slot == at:
+				input.disabled = connected
+	)
 	
 	# If no default value, select first option in enum
 	if input.get_selected_id() == -1:
@@ -185,7 +225,11 @@ func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine,
 	
 	element.add_child(input)
 
-func handle_bool_instruction(instruction : JEP_ElementInstruction.Bool, event : JEP_Event, element : HBoxContainer) -> void:
+func handle_bool_instruction(
+	instruction : JEP_ElementInstruction.Bool,
+	node : JEP_EventGraphNode,
+	event : JEP_Event,
+	element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
 	var input : CheckBox = configure_input(CheckBox.new())
 	
@@ -197,6 +241,12 @@ func handle_bool_instruction(instruction : JEP_ElementInstruction.Bool, event : 
 		func(on : bool) -> void:
 			event.set(property, on)
 			event.emit_changed()
+	)
+	node.slot_connection_updated.connect(
+		func(slot : int, connected : bool) -> void:
+			var at : int = element.get_index()
+			if slot == at:
+				input.disabled = connected
 	)
 	
 	element.add_child(input)

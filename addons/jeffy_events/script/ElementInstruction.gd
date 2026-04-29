@@ -31,6 +31,10 @@ class DataSource extends Port:
 	func with_type(port_type : int) -> DataSource:
 		_port_type = port_type
 		return self
+	
+	func without_input() -> DataSource:
+		_has_in = false
+		return self
 
 class Property extends Port:
 	var _property : StringName

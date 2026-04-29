@@ -1,6 +1,9 @@
 @tool
 class_name JEP_EventGraphNode extends GraphNode
 
+## Fired when a connection is made to a left slot
+signal slot_connection_updated(slot : int, connected : bool)
+
 ## TODO: registry system for this shit
 var _HANDLERS = [JEP_BuiltinInstructionHandler.new()]
 
@@ -33,8 +36,6 @@ func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	
 	for element_instruction : JEP_ElementInstruction in instruction.elements:
 		parse_element_instruction(self, event, element_instruction)
-	
-	reset_size.call_deferred()
 
 func parse_element_instruction(graph_node : GraphNode, event : JEP_Event, instruction : JEP_ElementInstruction) -> void:
 	for handler : JEP_InstructionHandler in _HANDLERS:

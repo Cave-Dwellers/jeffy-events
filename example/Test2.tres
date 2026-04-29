@@ -8,18 +8,32 @@
 [ext_resource type="Script" uid="uid://xka8okc0yn6l" path="res://addons/jeffy_events/events/action/EventPrint.gd" id="4_4aeu4"]
 [ext_resource type="Script" uid="uid://di5yjl8wqc0md" path="res://addons/jeffy_events/events/data/EventStringConst.gd" id="6_83igj"]
 [ext_resource type="Script" uid="uid://lqyk281ucrq2" path="res://addons/jeffy_events/events/flow/EventLabel.gd" id="7_fluda"]
+[ext_resource type="Script" uid="uid://b3svnoqewbbxj" path="res://addons/jeffy_events/events/math/EventStringConcat.gd" id="8_83igj"]
 
 [sub_resource type="Resource" id="Resource_83igj"]
 script = ExtResource("1_hcm4s")
 from_uuid = &"098f8073-a05b-4021-b35f-456d57de74bb"
-to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-to_port = 1
+to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 type = 1
 
 [sub_resource type="Resource" id="Resource_hcm4s"]
 script = ExtResource("1_hcm4s")
 from_uuid = &"2a176d3d-447c-4553-ab72-8ce6967c2d47"
 to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+
+[sub_resource type="Resource" id="Resource_nbus4"]
+script = ExtResource("1_hcm4s")
+from_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
+to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+to_port = 1
+type = 1
+
+[sub_resource type="Resource" id="Resource_5rd6q"]
+script = ExtResource("1_hcm4s")
+from_uuid = &"b150feb5-4c76-4734-92ec-5355022b746d"
+to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
+to_port = 1
+type = 1
 
 [sub_resource type="Resource" id="Resource_fluda"]
 script = ExtResource("1_hcm4s")
@@ -28,8 +42,8 @@ to_uuid = &"61f6333d-3cfd-49fb-9588-788e43cba9e2"
 
 [sub_resource type="Resource" id="Resource_ihk5q"]
 script = ExtResource("6_83igj")
-value = "print statement"
-position = Vector2(-400, -224)
+value = "super "
+position = Vector2(-608, -224)
 
 [sub_resource type="Resource" id="Resource_q4mnr"]
 script = ExtResource("7_fluda")
@@ -40,14 +54,23 @@ position = Vector2(-394.5, -385.5)
 script = ExtResource("2_2kpud")
 position = Vector2(240, -224)
 
+[sub_resource type="Resource" id="Resource_2uakf"]
+script = ExtResource("8_83igj")
+position = Vector2(-336, -224)
+
 [sub_resource type="Resource" id="Resource_xwd2d"]
 script = ExtResource("3_f7ulf")
 text = "This is a comment block! I'm inside of an example graph!"
 position = Vector2(240, -400)
 
+[sub_resource type="Resource" id="Resource_aqg6s"]
+script = ExtResource("6_83igj")
+value = "print!"
+position = Vector2(-608, -96)
+
 [sub_resource type="Resource" id="Resource_3eejo"]
 script = ExtResource("4_4aeu4")
-to_print = "This is a %s!"
+to_print = "This is a %s"
 placeholders = Dictionary[StringName, Variant]({
 &"%s": null
 })
@@ -59,12 +82,16 @@ _events = Dictionary[StringName, ExtResource("1_nu8t6")]({
 &"098f8073-a05b-4021-b35f-456d57de74bb": SubResource("Resource_ihk5q"),
 &"2a176d3d-447c-4553-ab72-8ce6967c2d47": SubResource("Resource_q4mnr"),
 &"61f6333d-3cfd-49fb-9588-788e43cba9e2": SubResource("Resource_f7ulf"),
+&"a8a197d2-8cc9-4a75-9b17-525186a4bcf1": SubResource("Resource_2uakf"),
 &"aeb38653-4b65-4996-9b21-ddefd712c140": SubResource("Resource_xwd2d"),
+&"b150feb5-4c76-4734-92ec-5355022b746d": SubResource("Resource_aqg6s"),
 &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee": SubResource("Resource_3eejo")
 })
 _labels = Array[StringName]([&"Start", &"Start2"])
 _connections = Dictionary[StringName, Array]({
 &"098f8073-a05b-4021-b35f-456d57de74bb": [SubResource("Resource_83igj")],
 &"2a176d3d-447c-4553-ab72-8ce6967c2d47": [SubResource("Resource_hcm4s")],
+&"a8a197d2-8cc9-4a75-9b17-525186a4bcf1": [SubResource("Resource_nbus4")],
+&"b150feb5-4c76-4734-92ec-5355022b746d": [SubResource("Resource_5rd6q")],
 &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee": [SubResource("Resource_fluda")]
 })

@@ -74,6 +74,7 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 		var array := p_graph._connections[uuid]
 		for connection : JEP_EventGraphConnection in array:
 			connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
+			_signal_node_connection(connection, true)
 
 func _draw() -> void:
 	if !graph:
@@ -126,16 +127,28 @@ func _on_event_removed(_event : JEP_Event, uuid : StringName) -> void:
 func _on_connection_added(connection : JEP_EventGraphConnection) -> void:
 	connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
 	queue_redraw()
+	
+	_signal_node_connection(connection, true)
+	
 	JEP_Print.info("Connection made: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_connection_removed(connection : JEP_EventGraphConnection) -> void:
 	disconnect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
 	queue_redraw()
+	
+	_signal_node_connection(connection, false)
+	
 	JEP_Print.info("Connection broken: %s...@%d x %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_nodes_moved() -> void:
 	for node : JEP_EventGraphNode in selected:
 		node.get_event().position = node.position_offset
+
+func _signal_node_connection(connection : JEP_EventGraphConnection, connected : bool) -> void:
+	var to_node : JEP_EventGraphNode = get_node(NodePath(connection.to_uuid))
+	var to_slot : int = to_node.get_input_port_slot(connection.to_port)
+	to_node.slot_connection_updated.emit(to_slot, connected)
+
 
 #region Drag And Drop
 
