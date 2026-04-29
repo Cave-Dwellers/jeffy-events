@@ -21,13 +21,23 @@ class Port extends JEP_ElementInstruction:
 		_id = p_id
 		return self
 
-class Property extends JEP_ElementInstruction:
-	var _has_in : bool = true
-	var _has_out : bool 
+class DataSource extends Port:
+	var _port_type : int
+	
+	func _init(p_label : StringName) -> void:
+		_label = p_label
+		_has_in = true
+	
+	func with_type(port_type : int) -> DataSource:
+		_port_type = port_type
+		return self
+
+class Property extends Port:
 	var _property : StringName
 	
 	func _init(p_property : StringName) -> void:
 		_property = p_property
+		_has_in = true
 		_label = _property.capitalize()
 	
 	func _get_type() -> Array[int]:
@@ -38,10 +48,6 @@ class Property extends JEP_ElementInstruction:
 	
 	func without_input() -> Property:
 		_has_in = false
-		return self
-	
-	func with_output() -> Property:
-		_has_out = true
 		return self
 
 class Number extends Property:

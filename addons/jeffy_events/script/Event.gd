@@ -15,15 +15,20 @@ const ELEMENT := preload("uid://b0rgkngbx133o")
 		emit_changed()
 
 @abstract
-## Method called by [class EventGraphExecutor] when this
-## event is reached in an [clas EventGraph]. The argument
+## Method called by [JEP_EventGraphPlayer] when this
+## event is reached in an [JEP_EventGraph]. The argument
 ## may be null depending on how the Event is being called
 func _event(ctx : Object = null) -> int
 
-#@abstract
-### Method called by [JEP_EventGraphExecutor] when data
-### on a port needs to be resolved.
-#func _resolve_data(variable : StringName) -> Variant
+## Method called by [JEP_EventGraphExecutor] when data
+## on a port needs to be resolved.
+func _pull_data(port : int) -> Variant:
+	return null
+
+## Method called by [JEP_EventGraphExecutor] when data
+## is resolved from one of the event's inputs.
+func _accept_data(port : int, data : Variant) -> void:
+	pass
 
 @abstract
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction

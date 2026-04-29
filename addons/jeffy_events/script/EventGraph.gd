@@ -102,7 +102,7 @@ func has_label(label : StringName) -> bool:
 func add_connection(from_uuid : StringName, from_port : int, to_uuid : StringName, to_port : int, type : JEP_EventGraphConnection.Type) -> void:
 	var size : int = _events.size()
 	if !_events.has(from_uuid) || !_events.has(to_uuid):
-		printerr("Invalid connection attempt | %d %d %d %d" % [from_uuid, from_port, to_uuid, to_port])
+		printerr("Invalid connection attempt | %s %d %s %d" % [from_uuid, from_port, to_uuid, to_port])
 		return
 	
 	var connection : JEP_EventGraphConnection = JEP_EventGraphConnection.new(from_uuid, from_port, to_uuid, to_port, type)
@@ -129,12 +129,11 @@ func remove_connection_object(uuid : StringName, connection : JEP_EventGraphConn
 ## Removes connections associated with [param uuid].
 func remove_connections(uuid : StringName) -> void:
 	# Remove connections going into uuid
-	var connections_to : Dictionary[StringName, Array] = get_connections_to(uuid)
-	for c_uuid : StringName in connections_to.keys():
-		for connection : JEP_EventGraphConnection in connections_to[c_uuid]:
-			remove_connection_object(c_uuid, connection)
-		if _connections[c_uuid].is_empty():
-			_connections.erase(c_uuid)
+	var connections_to : Array[JEP_EventGraphConnection] = get_connections_to(uuid)
+	for connection : JEP_EventGraphConnection in connections_to:
+		remove_connection_object(connection.from_uuid, connection)
+		if _connections[connection.from_uuid].is_empty():
+			_connections.erase(connection.from_uuid)
 	
 	# Remove connections originating from uuid
 	var connections_from : Array = _connections.get(uuid, [])
@@ -158,17 +157,34 @@ func get_connection(from_uuid : StringName, from_port : int, to_uuid : StringNam
 	return null
 
 ## Returns a list of event UUIDs that are connected to [param uuid].
-func get_connections_to(uuid : StringName) -> Dictionary[StringName, Array]:
-	var uuids : Dictionary[StringName, Array] = {}
+func get_connections_to(uuid : StringName) -> Array[JEP_EventGraphConnection]:
+	var connections : Array[JEP_EventGraphConnection] = []
 	for array : Array in _connections.values():
 		for connection : JEP_EventGraphConnection in array:
 			if connection.to_uuid != uuid:
 				continue
+			connections.append(connection)
+	return connections
+
+## Returns the first connection found that is into [param uuid] at port [param port].
+func get_connection_to_port(uuid : StringName, port : int) -> JEP_EventGraphConnection:
+	var connection : JEP_EventGraphConnection
+	for array : Array in _connections.values():
+		for c : JEP_EventGraphConnection in array:
+			if connection.to_uuid != uuid:
+				continue
 			
-			if !uuids.has(connection.from_uuid):
-				uuids[connection.from_uuid] = []
-			uuids[connection.from_uuid].append(connection)
-	return uuids
+			if connection.to_port != port:
+				continue
+			
+			return c
+	return null
+
+## Returns all data connections going into [param uuid]
+func get_data_connections_to(uuid : StringName) -> Array[JEP_EventGraphConnection]:
+	var connections : Array[JEP_EventGraphConnection] = get_connections_to(uuid)
+	connections = connections.filter(func(c : JEP_EventGraphConnection) -> bool: return c.is_data())
+	return connections
 
 ### Adds [param variable] with [param type], if it doesn't already exist 
 #func add_variable(variable : StringName, type : int) -> void:

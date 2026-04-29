@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="JeffyEvents"
+run/main_scene="uid://cx88vqdkttnsf"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -30,6 +31,7 @@ enabled=PackedStringArray("res://addons/jeffy_events/plugin.cfg")
 
 folder_colors={
 "res://addons/jeffy_events/events/action/": "red",
+"res://addons/jeffy_events/events/data/": "yellow",
 "res://addons/jeffy_events/events/flow/": "blue"
 }
 

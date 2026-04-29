@@ -39,3 +39,7 @@ func equals(p_from_uuid : StringName, p_from_port : int, p_to_uuid : StringName,
 		&& from_port == p_from_port\
 		&& to_uuid == p_to_uuid\
 		&& to_port == p_to_port
+
+## Returns true if the connection is data, rather than flow
+func is_data() -> bool:
+	return type == Type.Data

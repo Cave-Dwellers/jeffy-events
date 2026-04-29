@@ -62,11 +62,12 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 	for child : Node in get_children():
 		if child is GraphNode:
 			child.queue_free()
+			await child.tree_exited
 	
 	# Add new nodes
 	for node : JEP_EventGraphNode in nodes:
 		add_child(node)
-		uuid_to_node[node.uuid] = node
+		uuid_to_node[node._uuid] = node
 		
 	# Handle connections
 	for uuid : StringName in p_graph._connections.keys():
@@ -109,8 +110,7 @@ func _on_remove_request(nodes : Array[StringName]) -> void:
 
 func _on_event_added(event : JEP_Event, uuid : StringName) -> void:
 	JEP_Print.info("Event added: uuid %s" % uuid)
-	var instruction : JEP_NodeInstruction = event._get_instruction(graph)
-	var node : JEP_EventGraphNode = JEP_EventGraphNode.new(instruction, graph)
+	var node : JEP_EventGraphNode = JEP_EventGraphNode.new(event, graph)
 	
 	node.name = uuid
 	uuid_to_node[uuid] = node

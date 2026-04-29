@@ -13,8 +13,7 @@ func parse_graph(graph : JEP_EventGraph) -> void:
 	
 	for uuid : StringName in events.keys():
 		var event : JEP_Event = events[uuid]
-		var instruction : JEP_NodeInstruction = event._get_instruction(graph)
-		var graph_node := JEP_EventGraphNode.new(instruction, graph)
+		var graph_node := JEP_EventGraphNode.new(event, graph)
 		
 		graph_node.name = uuid
 		nodes.append(graph_node)

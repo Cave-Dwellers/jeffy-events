@@ -41,11 +41,23 @@ func _handle_element_instruction(instruction : JEP_ElementInstruction, event : J
 func handle_port_instruction(instruction : JEP_ElementInstruction.Port, node : GraphNode, id : int) -> void:
 	# Godot's graph element nodes assign their ports based on child
 	# element index
+	var type : int = 0
+	if instruction is JEP_ElementInstruction.Property:
+		type = instruction._get_port_type()
+	if instruction is JEP_ElementInstruction.DataSource:
+		type = instruction._port_type
+	var color : Color = JEP_EventGraphFrontend.PortColors[type]
+	
 	if instruction._has_in:
 		node.set_slot_enabled_left(id, true)
+		node.set_slot_type_left(id, type)
+		node.set_slot_color_left(id, color)
+		node.set_slot_metadata_left(id, instruction._id)
 	
 	if instruction._has_out:
 		node.set_slot_enabled_right(id, true)
+		node.set_slot_type_right(id, type)
+		node.set_slot_color_right(id, color)
 		node.set_slot_metadata_right(id, instruction._id)
 
 func handle_property_instruction(
@@ -55,14 +67,6 @@ func handle_property_instruction(
 	element : HBoxContainer,
 	id : int
 	) -> void:
-	
-	if instruction._has_in:
-		var type : int = instruction._get_port_type()
-		var color : Color = JEP_EventGraphFrontend.PortColors[type]
-		
-		node.set_slot_enabled_left(id, true)
-		node.set_slot_type_left(id, type)
-		node.set_slot_color_left(id, color)
 	
 	if instruction is JEP_ElementInstruction.Number:
 		handle_number_instruction(instruction, event, element)
@@ -135,9 +139,8 @@ func handle_code_line_instruction(instruction : JEP_ElementInstruction.CodeLine,
 		child.queue_free()
 	
 	input.text = event.get(property) as String
-	input.text_changed.connect(
+	input.focus_exited.connect(
 		func() -> void:
-			element.size.y = 0
 			event.set(property, input.text)
 			event.emit_changed()
 	)
