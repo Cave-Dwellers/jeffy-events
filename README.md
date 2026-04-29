@@ -27,23 +27,25 @@ Not a finalized list
       - [ ] Closing graphs
       - [x] Save monitoring (mark as unsaved) 
   - [ ] Graph menu
-    - [ ] Change monitoring (switching focused graph on demand)
-    - [ ] Graph pane
-    - [ ] Labels pane
+    - [x] Change monitoring (switching focused graph on demand)
+    - [x] Graph pane
+    - [x] Labels pane
     - [ ] Variables pane
   - [ ] Event frontend
-    - [ ] UI instructions
-      - [ ] Instruction builder class
-      - [ ] Property builder classes
-    - [ ] Instruction parsing
+    - [x] UI instructions
+      - [x] Instruction builder class
+      - [x] Property builder classes
+    - [x] Instruction parsing
   - [ ] UndoRedo support
 - [ ] Backend
-  - [ ] EventGraphExecutor
-    - [ ] Traversal
-    - [ ] Dependency resolution
+  - [x] EventGraphExecutor
+    - [x] Traversal
+    - [x] Dependency resolution
   - [x] Event 
 
 ## Design quirks
-Regarding how UI is generated; GDScript does not offer preprocessor directives, which means that UI generation code is compiled and included in release builds of your game. Instead of directly building UI, and therefore referencing editor specific classes in exported builds (bad, throws lots of errors!) It will instead create a list of instructions formatted in JSON, which has no references to editor specific classes (good!) Unfortunately, this adds a bit of additional complexity when it comes to adding your own custom builder classes; you must create both the JSON instruction set and code to parse and construct UI based on those instructions.
+Regarding how UI is generated; GDScript does not offer preprocessor directives, which means that UI generation code is compiled and included in release builds of your game. Instead of directly building UI, and therefore referencing editor specific classes in exported builds (bad, throws lots of errors!) We use basic objects that hold instructions on how to construct the frontend for an event. These are called node (for the graph node itself) and element (for the elements in the graph node) instruction sets. These are parsed by an instruction handler class.
+
+While somewhat complex, this flexibility allows for granular control over how individual events are configured to display, as well as the ease of making reusable elements akin to Godot's built in inspector menu
 
 TBD
