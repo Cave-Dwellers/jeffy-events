@@ -77,6 +77,7 @@ func handle_number_instruction(
 	var property : StringName = instruction._property
 	var input : SpinBox = configure_input(SpinBox.new())
 	
+	input.step = instruction._step
 	if typeof(event.get(property)) == TYPE_INT || instruction._rounded:
 		input.rounded = true
 		input.step = roundi(input.step)
@@ -94,7 +95,8 @@ func handle_number_instruction(
 	node.add_connection_listener(
 		element.get_index(), input, 
 		func(inp : Control, connected : bool) -> void:
-			inp.set(&"editable", !connected),
+			inp.set(&"editable", !connected)
+			inp.visible = !connected,
 	)
 	
 	element.add_child(input)
@@ -122,7 +124,8 @@ func handle_line_instruction(
 	node.add_connection_listener(
 		element.get_index(), input, 
 		func(inp : Control, connected : bool) -> void:
-			inp.set(&"editable", !connected),
+			inp.set(&"editable", !connected)
+			inp.visible = !connected,
 	)
 	
 	element.add_child(input)
@@ -159,7 +162,8 @@ func handle_code_line_instruction(
 	node.add_connection_listener(
 		element.get_index(), input, 
 		func(inp : Control, connected : bool) -> void:
-			inp.set(&"editable", !connected),
+			inp.set(&"editable", !connected)
+			inp.visible = !connected,
 	)
 	
 	element.add_child(input)
@@ -202,7 +206,8 @@ func handle_enum_line_instruction(
 	node.add_connection_listener(
 		element.get_index(), input, 
 		func(inp : Control, connected : bool) -> void:
-			inp.set(&"disabled", connected),
+			inp.set(&"disabled", connected)
+			inp.visible = !connected,
 	)
 	
 	# If no default value, select first option in enum
@@ -232,7 +237,8 @@ func handle_bool_instruction(
 	node.add_connection_listener(
 		element.get_index(), input, 
 		func(inp : Control, connected : bool) -> void:
-			inp.set(&"disabled", connected),
+			inp.set(&"disabled", connected)
+			inp.visible = !connected,
 	)
 	
 	element.add_child(input)

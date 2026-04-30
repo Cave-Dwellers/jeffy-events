@@ -56,6 +56,7 @@ class Property extends Port:
 
 class Number extends Property:
 	var _rounded : bool
+	var _step : float = 1
 	var _has_range : bool
 	var _range_min : float
 	var _range_max : float
@@ -68,6 +69,10 @@ class Number extends Property:
 	
 	func with_rounding() -> Number:
 		_rounded = true
+		return self
+	
+	func with_step(step : float) -> Number:
+		_step = step
 		return self
 	
 	func with_range(p_min : float, p_max : float) -> Number:

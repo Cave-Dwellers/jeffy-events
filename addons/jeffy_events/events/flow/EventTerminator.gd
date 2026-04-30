@@ -6,7 +6,7 @@ func _event(ctx : Object = null) -> int:
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
 	return JEP_NodeInstruction.new(graph, self)\
-			.with_element(JEP_ElementInstruction.Port.new().with_input())
+			.with_element(JEP_ElementInstruction.Port.new().with_input().with_label("Terminate Flow"))
 
 func _get_name() -> StringName:
 	return &"Terminator"
