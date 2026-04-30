@@ -196,6 +196,39 @@ func get_data_connections_to(uuid : StringName) -> Array[JEP_EventGraphConnectio
 	connections = connections.filter(func(c : JEP_EventGraphConnection) -> bool: return c.is_data())
 	return connections
 
+## Fixes any errors, such as invalid connections, within the graph
+func sanitize() -> void:
+	# Map of instructions [Event uuid -> instruction set]
+	var instruction_cache : Dictionary[StringName, JEP_NodeInstruction]
+	for uuid : StringName in _connections.keys():
+		var array : Array = _connections.get(uuid, [])
+		if array.is_empty():
+			_connections.erase(uuid)
+			continue
+		
+		for connection : JEP_EventGraphConnection in array:
+			_sanitize_connection(connection, instruction_cache)
+		
+func _sanitize_connection(connection : JEP_EventGraphConnection, cache : Dictionary) -> void:
+	# Check one, check if either event is null
+	var uuid_1 : StringName = connection.from_uuid
+	var uuid_2 : StringName = connection.to_uuid
+	var event_1 : JEP_Event = _events.get(uuid_1, null)
+	var event_2 : JEP_Event = _events.get(uuid_2, null)
+	
+	if !event_1:
+		remove_event_from_uuid(uuid_1)
+	if !event_2:
+		remove_event_from_uuid(uuid_2)
+	
+	# Check two, check if connection goes to valid ports
+	var ins_1 : JEP_NodeInstruction = cache.get_or_add(uuid_1, event_1._get_instruction(self))
+	var ins_2 : JEP_NodeInstruction = cache.get_or_add(uuid_2, event_2._get_instruction(self))
+	var output_count : int = ins_1.get_output_port_count()
+	var input_count : int = ins_2.get_input_port_count()
+	if output_count <= connection.from_port || input_count <= connection.to_port:
+		remove_connection_object(connection)
+
 ### Adds [param variable] with [param type], if it doesn't already exist 
 #func add_variable(variable : StringName, type : int) -> void:
 	#if !has_variable(variable):

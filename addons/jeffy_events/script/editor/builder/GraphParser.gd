@@ -11,6 +11,8 @@ func parse_graph(graph : JEP_EventGraph) -> void:
 	var events : Dictionary[StringName, JEP_Event] = graph._events
 	var nodes : Array[GraphNode] = []
 	
+	graph.sanitize()
+	
 	for uuid : StringName in events.keys():
 		var event : JEP_Event = events[uuid]
 		var graph_node := JEP_EventGraphNode.new(event, graph)

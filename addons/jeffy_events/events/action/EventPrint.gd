@@ -14,7 +14,7 @@ func _event(ctx : Object = null) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
-	var regex : RegEx = RegEx.create_from_string("%[diuoxXfFeEgGaAcspn%]")
+	var regex : RegEx = RegEx.create_from_string("\\{([^}]+)\\}")
 	var matches : Array[RegExMatch] = regex.search_all(to_print)
 	
 	placeholders.clear()

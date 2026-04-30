@@ -20,3 +20,23 @@ func dynamic() -> JEP_NodeInstruction:
 func with_element(instruction : JEP_ElementInstruction) -> JEP_NodeInstruction:
 	elements.append(instruction)
 	return self
+
+## Returns the amount of input ports defined in this instruction
+func get_input_port_count() -> int:
+	var count : int = 0
+	for element : JEP_ElementInstruction in elements:
+		if element is not JEP_ElementInstruction.Port:
+			continue
+		element = element as JEP_ElementInstruction.Port
+		count += int(element._has_in)
+	return count
+
+## Returns the amount of output ports defined in this instruction
+func get_output_port_count() -> int:
+	var count : int = 0
+	for element : JEP_ElementInstruction in elements:
+		if element is not JEP_ElementInstruction.Port:
+			continue
+		element = element as JEP_ElementInstruction.Port
+		count += int(element._has_out)
+	return count
