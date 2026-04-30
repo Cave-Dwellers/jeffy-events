@@ -105,10 +105,19 @@ func add_connection(from_uuid : StringName, from_port : int, to_uuid : StringNam
 		printerr("Invalid connection attempt | %s %d %s %d" % [from_uuid, from_port, to_uuid, to_port])
 		return
 	
+	# Need to remove existing flow connection if one exists at
+	# this port already
+	for other_connection : JEP_EventGraphConnection in _connections.get(from_uuid, []):
+		if other_connection.from_port != from_port:
+			continue
+		if other_connection.is_data():
+			continue
+		remove_connection_object(other_connection)
+	
 	var connection : JEP_EventGraphConnection = JEP_EventGraphConnection.new(from_uuid, from_port, to_uuid, to_port, type)
 	if !_connections.has(from_uuid):
 		_connections.set(from_uuid, [])
-		
+	
 	_connections[from_uuid].append(connection)
 	connection_added.emit(connection)
 	emit_changed()

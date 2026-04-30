@@ -221,6 +221,7 @@ func handle_bool_instruction(
 	
 	input.toggle_mode = true
 	input.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	input.size_flags_horizontal = Control.SIZE_SHRINK_END
 	input.button_pressed = event.get(property) as bool
 	
 	input.toggled.connect(
@@ -240,14 +241,3 @@ func configure_input(node : Control) -> Control:
 	node.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	node.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return node
-
-func slot_updater(callable : Callable, node : JEP_EventGraphNode, element : Control, input : Control) -> void:
-	node.slot_connection_updated.connect(_slot_updated.bind(callable, element, input))
-
-func _slot_updated(slot : int, connection : bool, callable : Callable, element : Control, input : Control) -> void:
-	if !is_instance_valid(element) || !is_instance_valid(input):
-		return
-	
-	var idx : int = element.get_index()
-	if slot == idx:
-		callable.call(input, connection)
