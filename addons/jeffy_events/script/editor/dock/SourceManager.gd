@@ -3,6 +3,17 @@ class_name JEP_SourceManager extends Node
 
 ## Orchestrates source actions (adding, removal, reloading)
 
+const FOLDER_COLORS : Dictionary[String, Color] = {
+	"red" = Color(1.0, 0.271, 0.271),
+	"orange" = Color(1.0, 0.561, 0.271),
+	"yellow" = Color(1.0, 0.890, 0.271),
+	"green" = Color(0.502, 1.0, 0.271),
+	"teal" = Color(0.271, 1.0, 0.635),
+	"blue" = Color(0.271, 0.843, 1.0),
+	"purple" = Color(0.502, 0.271, 1.0),
+	"pink" = Color(1.0, 0.271, 0.588),
+	"gray" = Color(0.616, 0.616, 0.616),
+}
 const SOURCES : JEP_EventDatabase = preload("res://addons/jeffy_events/sources.tres")
 const ICO_SOURCE : Texture2D = preload("res://addons/jeffy_events/asset/icon/Folder.svg")
 const ICO_EVENT : Texture2D = preload("res://addons/jeffy_events/asset/icon/Object.svg")
@@ -83,6 +94,9 @@ func _refresh_sources() -> void:
 	source_tree.clear()
 	source_tree.create_item().set_text(0, "root")
 	
+	# Get folder colors
+	JEP_FolderColorAPI.rebuild_cache()
+	
 	# Show "No sources!" if we have none tracked
 	if !SOURCES.has_sources():
 		no_sources_label.visible = true
@@ -111,16 +125,26 @@ func _build_menu_from_source(result : Dictionary, source : JEP_Source) -> void:
 	
 	_build_branch_from_dict(result, parent)
 
-func _build_branch_from_dict(dict : Dictionary, parent : TreeItem) -> void:
+func _build_branch_from_dict(dict : Dictionary, parent : TreeItem, color : Color = Color.WHITE) -> void:
 	for file_name : String in dict.keys():
+		# Skip "private" entries
+		if file_name.begins_with("__"):
+			continue
+		
 		var value = dict[file_name]
 		var entry := parent.create_child()
 		
 		# If dictionary value, build another branch
 		if value is Dictionary:
+			var folder_color = value.get("__COLOR", Color.WHITE)
+			var folder_color_bg : Color = Color(folder_color, 0.05)
+			
 			entry.set_text(0, file_name.capitalize())
 			entry.set_icon(0, ICO_SOURCE)
-			_build_branch_from_dict(value, entry)
+			entry.set_icon_modulate(0, folder_color)
+			entry.set_custom_color(0, folder_color)
+			entry.set_custom_bg_color(0, folder_color_bg)
+			_build_branch_from_dict(value, entry, folder_color)
 			
 			# Cut this iteration off early
 			continue
@@ -131,4 +155,5 @@ func _build_branch_from_dict(dict : Dictionary, parent : TreeItem) -> void:
 		entry.set_tooltip_text(0, value.desc)
 		entry.set_metadata(0, value.event_script)
 		entry.set_icon(0, ICO_EVENT)
+		entry.set_icon_modulate(0, color)
 		

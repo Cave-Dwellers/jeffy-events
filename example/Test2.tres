@@ -51,6 +51,10 @@ script = ExtResource("7_fluda")
 label = "Start"
 position = Vector2(-608, -384)
 
+[sub_resource type="Resource" id="Resource_4s03x"]
+script = ExtResource("9_fluda")
+position = Vector2(-608, -512)
+
 [sub_resource type="Resource" id="Resource_f7ulf"]
 script = ExtResource("2_2kpud")
 position = Vector2(240, -224)
@@ -71,15 +75,11 @@ position = Vector2(-608, -96)
 
 [sub_resource type="Resource" id="Resource_3eejo"]
 script = ExtResource("4_4aeu4")
-to_print = "This is a %s"
+to_print = "This is a {placeholder}"
 placeholders = Dictionary[StringName, Variant]({
-&"%s": null
+&"placeholder": null
 })
 position = Vector2(-81.5, -386.5)
-
-[sub_resource type="Resource" id="Resource_4s03x"]
-script = ExtResource("9_fluda")
-position = Vector2(-608, -512)
 
 [resource]
 script = ExtResource("3_4aeu4")

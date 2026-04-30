@@ -5,11 +5,7 @@ class_name EventPrint extends JEP_Event
 @export_storage var placeholders : Dictionary[StringName, Variant]
 
 func _event(ctx : Object = null) -> int:
-	for placeholder : Variant in placeholders.values():
-		if placeholder == null:
-			push_warning("Cant format string, missing argument!")
-			break
-		to_print = to_print % placeholder
+	to_print = to_print.format(placeholders) 
 	print("[JeffyEvents] %s" % to_print)
 	return 0
 
@@ -19,7 +15,9 @@ func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
 	
 	placeholders.clear()
 	for entry : RegExMatch in matches: 
-		placeholders[entry.strings[0]] = null
+		var string : String = entry.strings[0]
+		string = string.lstrip('{').rstrip('}')
+		placeholders[string] = null
 	
 	var builder : JEP_NodeInstruction =\
 				NODE.new(graph, self).dynamic()\

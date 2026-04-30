@@ -20,15 +20,18 @@ func _parse_directory(directory : String) -> Dictionary:
 	while file != "":
 		# Create full path
 		var current_file := file
-		var full_path := directory.path_join(current_file)
-		
-		# print("Processing - %s" % full_path)
+		var full_path := directory.path_join(current_file) + "/"
 		
 		# Check if file is actually a directory
 		if dir.current_is_dir():
 			# Get directory
 			var folder_name : String = full_path.rsplit("/", false, 1)[1]
-			dictionary[folder_name] = _parse_directory(full_path + "/")
+			dictionary.set(folder_name, _parse_directory(full_path))
+			
+			# Add folder color
+			var color : Color = JEP_FolderColorAPI.get_color(full_path)
+			var add_to : Dictionary = dictionary.get(folder_name)
+			add_to.set("__COLOR", color)
 			
 			# We still need to advance to the next file
 			file = dir.get_next()
