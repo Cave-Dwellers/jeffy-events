@@ -68,6 +68,7 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 	for node : JEP_EventGraphNode in nodes:
 		add_child(node)
 		uuid_to_node[node._uuid] = node
+		node.built.connect(_graph_node_rebuilt.bind(), CONNECT_DEFERRED)
 		
 	# Handle connections
 	for uuid : StringName in p_graph._connections.keys():
@@ -92,6 +93,30 @@ func _draw() -> void:
 		for connection : JEP_EventGraphConnection in uuid_connections:
 			draw_string(font, Vector2(x + 32, y), "%d: %s...@%d" % [connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port], 0, -1, 12)
 			y += 16 
+
+func _graph_node_rebuilt(node : JEP_EventGraphNode) -> void:
+	var connections_to := graph.get_connections_to(node._uuid)
+	var connections_broken : int = 0
+	
+	for connection : JEP_EventGraphConnection in connections_to:
+		# If port count changed, and we're past it, remove
+		if node.get_input_port_count() <= connection.to_port:
+			if graph.remove_connection_object(connection):
+				connections_broken += 1
+			continue
+		
+		var from_node : JEP_EventGraphNode = get_node(NodePath(connection.from_uuid))
+		var from_type : int = from_node.get_output_port_type(connection.from_port)
+		var to_type : int = node.get_input_port_type(connection.to_port)
+		
+		# If types changed, remove
+		if from_type != to_type:
+			if graph.remove_connection_object(connection):
+				connections_broken += 1
+			continue
+	
+	if connections_broken > 0:
+		JEP_Print.toast_warn("%d event connection%s broken" % [connections_broken, "s were" if connections_broken > 1 else " was"])
 
 func _on_connection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	var from_node := get_node(NodePath(from_path)) as GraphNode
@@ -147,8 +172,7 @@ func _on_nodes_moved() -> void:
 func _signal_node_connection(connection : JEP_EventGraphConnection, connected : bool) -> void:
 	var to_node : JEP_EventGraphNode = get_node(NodePath(connection.to_uuid))
 	var to_slot : int = to_node.get_input_port_slot(connection.to_port)
-	to_node.slot_connection_updated.emit(to_slot, connected)
-
+	to_node.input_update(to_slot, connected)
 
 #region Drag And Drop
 

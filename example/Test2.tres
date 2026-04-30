@@ -16,12 +16,12 @@ from_uuid = &"098f8073-a05b-4021-b35f-456d57de74bb"
 to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 type = 1
 
-[sub_resource type="Resource" id="Resource_hcm4s"]
+[sub_resource type="Resource" id="Resource_nbus4"]
 script = ExtResource("1_hcm4s")
 from_uuid = &"2a176d3d-447c-4553-ab72-8ce6967c2d47"
 to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
 
-[sub_resource type="Resource" id="Resource_nbus4"]
+[sub_resource type="Resource" id="Resource_6se7u"]
 script = ExtResource("1_hcm4s")
 from_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
@@ -90,8 +90,8 @@ _events = Dictionary[StringName, ExtResource("1_nu8t6")]({
 _labels = Array[StringName]([&"Start", &"Start2"])
 _connections = Dictionary[StringName, Array]({
 &"098f8073-a05b-4021-b35f-456d57de74bb": [SubResource("Resource_83igj")],
-&"2a176d3d-447c-4553-ab72-8ce6967c2d47": [SubResource("Resource_hcm4s")],
-&"a8a197d2-8cc9-4a75-9b17-525186a4bcf1": [SubResource("Resource_nbus4")],
+&"2a176d3d-447c-4553-ab72-8ce6967c2d47": [SubResource("Resource_nbus4")],
+&"a8a197d2-8cc9-4a75-9b17-525186a4bcf1": [SubResource("Resource_6se7u")],
 &"b150feb5-4c76-4734-92ec-5355022b746d": [SubResource("Resource_5rd6q")],
 &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee": [SubResource("Resource_fluda")]
 })

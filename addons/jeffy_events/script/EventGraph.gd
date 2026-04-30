@@ -114,24 +114,25 @@ func add_connection(from_uuid : StringName, from_port : int, to_uuid : StringNam
 	emit_changed()
 
 ## Removes a connection that matches the provided arguments, if it exists
-func remove_connection(from_uuid : StringName, from_port : int, to_uuid : StringName, to_port : int) -> void:
+func remove_connection(from_uuid : StringName, from_port : int, to_uuid : StringName, to_port : int) -> bool:
 	var connection : JEP_EventGraphConnection = get_connection(from_uuid, from_port, to_uuid, to_port)	
 	if !connection:
-		return
+		return false
 	
-	remove_connection_object(from_uuid, connection)
+	return remove_connection_object(connection)
 
-func remove_connection_object(uuid : StringName, connection : JEP_EventGraphConnection) -> void:
-	_connections[uuid].erase(connection)
+func remove_connection_object(connection : JEP_EventGraphConnection) -> bool:
+	_connections[connection.from_uuid].erase(connection)
 	connection_removed.emit(connection)
 	emit_changed()
+	return true
 
 ## Removes connections associated with [param uuid].
 func remove_connections(uuid : StringName) -> void:
 	# Remove connections going into uuid
 	var connections_to : Array[JEP_EventGraphConnection] = get_connections_to(uuid)
 	for connection : JEP_EventGraphConnection in connections_to:
-		remove_connection_object(connection.from_uuid, connection)
+		remove_connection_object(connection)
 		if _connections[connection.from_uuid].is_empty():
 			_connections.erase(connection.from_uuid)
 	

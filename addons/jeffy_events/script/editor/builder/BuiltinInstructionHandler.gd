@@ -6,16 +6,6 @@ func _handle_node_instruction(instruction : JEP_NodeInstruction, node : JEP_Even
 	node.title = event._get_name()
 	node.tooltip_text = event._get_description()
 	
-	if !instruction.is_static:
-		# event.changed...
-		pass
-	
-	#for element_instruction : JEP_ElementInstruction in instruction.elements:
-		#var control : Control = Control.new()
-		#control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		#
-		#var element := _handle_element_instruction(element_instruction, event, node, control)
-	
 	return node
 
 func _handle_element_instruction(instruction : JEP_ElementInstruction, event : JEP_Event, node : JEP_EventGraphNode) -> Control:
@@ -101,11 +91,10 @@ func handle_number_instruction(
 			event.set(property, value)
 			event.emit_changed()
 	)
-	node.slot_connection_updated.connect(
-		func(slot : int, connected : bool) -> void:
-			var at : int = element.get_index()
-			if slot == at:
-				input.editable = !connected
+	node.add_connection_listener(
+		element.get_index(), input, 
+		func(inp : Control, connected : bool) -> void:
+			inp.set(&"editable", !connected),
 	)
 	
 	element.add_child(input)
@@ -130,11 +119,10 @@ func handle_line_instruction(
 			event.set(property, input.text)
 			event.emit_changed()
 	)
-	node.slot_connection_updated.connect(
-		func(slot : int, connected : bool) -> void:
-			var at : int = element.get_index()
-			if slot == at:
-				input.editable = !connected
+	node.add_connection_listener(
+		element.get_index(), input, 
+		func(inp : Control, connected : bool) -> void:
+			inp.set(&"editable", !connected),
 	)
 	
 	element.add_child(input)
@@ -168,11 +156,10 @@ func handle_code_line_instruction(
 			event.set(property, input.text)
 			event.emit_changed()
 	)
-	node.slot_connection_updated.connect(
-		func(slot : int, connected : bool) -> void:
-			var at : int = element.get_index()
-			if slot == at:
-				input.editable = !connected
+	node.add_connection_listener(
+		element.get_index(), input, 
+		func(inp : Control, connected : bool) -> void:
+			inp.set(&"editable", !connected),
 	)
 	
 	element.add_child(input)
@@ -212,11 +199,10 @@ func handle_enum_line_instruction(
 			event.set(property, input.get_item_text(at))
 			event.emit_changed()
 	)
-	node.slot_connection_updated.connect(
-		func(slot : int, connected : bool) -> void:
-			var at : int = element.get_index()
-			if slot == at:
-				input.disabled = connected
+	node.add_connection_listener(
+		element.get_index(), input, 
+		func(inp : Control, connected : bool) -> void:
+			inp.set(&"disabled", connected),
 	)
 	
 	# If no default value, select first option in enum
@@ -242,11 +228,10 @@ func handle_bool_instruction(
 			event.set(property, on)
 			event.emit_changed()
 	)
-	node.slot_connection_updated.connect(
-		func(slot : int, connected : bool) -> void:
-			var at : int = element.get_index()
-			if slot == at:
-				input.disabled = connected
+	node.add_connection_listener(
+		element.get_index(), input, 
+		func(inp : Control, connected : bool) -> void:
+			inp.set(&"disabled", connected),
 	)
 	
 	element.add_child(input)
@@ -255,4 +240,14 @@ func configure_input(node : Control) -> Control:
 	node.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	node.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return node
+
+func slot_updater(callable : Callable, node : JEP_EventGraphNode, element : Control, input : Control) -> void:
+	node.slot_connection_updated.connect(_slot_updated.bind(callable, element, input))
+
+func _slot_updated(slot : int, connection : bool, callable : Callable, element : Control, input : Control) -> void:
+	if !is_instance_valid(element) || !is_instance_valid(input):
+		return
 	
+	var idx : int = element.get_index()
+	if slot == idx:
+		callable.call(input, connection)
