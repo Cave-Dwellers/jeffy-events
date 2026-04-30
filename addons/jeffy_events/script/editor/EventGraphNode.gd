@@ -1,6 +1,8 @@
 @tool
 class_name JEP_EventGraphNode extends GraphNode
 
+const THEME : Theme = preload("res://addons/jeffy_events/asset/theme.tres")
+
 ## Fired when the node is built
 signal built(node : JEP_EventGraphNode)
 
@@ -19,6 +21,21 @@ func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	slot_sizes_changed.connect(reset_size)
 	position_offset = event.position
 	connection_listeners = []
+	
+	# Set titlebar color
+	var script : GDScript = _event.get_script()
+	var path : String = script.resource_path.get_base_dir() + "/"
+	var color : Color = JEP_FolderColorAPI.get_color(path).darkened(0.5)
+	
+	if color != Color.WHITE:
+		var titlebar : StyleBoxFlat = THEME.get_stylebox(&"titlebar", &"GraphNode").duplicate()
+		var titlebar_selected : StyleBoxFlat = THEME.get_stylebox(&"titlebar_selected", &"GraphNode").duplicate()
+		
+		titlebar.bg_color = color
+		titlebar_selected.bg_color = color
+		
+		add_theme_stylebox_override(&"titlebar", titlebar)
+		add_theme_stylebox_override(&"titlebar_selected", titlebar_selected)
 	
 	parse_instruction(event, graph)
 

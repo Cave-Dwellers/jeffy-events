@@ -30,10 +30,10 @@ enabled=PackedStringArray("res://addons/jeffy_events/plugin.cfg")
 [file_customization]
 
 folder_colors={
-"res://addons/jeffy_events/events/action/": "red",
-"res://addons/jeffy_events/events/data/": "yellow",
+"res://addons/jeffy_events/events/action/": "green",
+"res://addons/jeffy_events/events/data/": "red",
 "res://addons/jeffy_events/events/flow/": "blue",
-"res://addons/jeffy_events/events/math/": "purple"
+"res://addons/jeffy_events/events/math/": "orange"
 }
 
 [importer_defaults]
