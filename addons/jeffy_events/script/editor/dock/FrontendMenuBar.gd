@@ -23,9 +23,9 @@ func _on_dock_ready() -> void:
 			.with_entry(&"Open", 				create_entry().with_icon(ICO_LOAD).with_callback(_on_graph_load))\
 			.with_entry(&"Save Graph", 			create_entry().with_icon(ICO_SAVE).with_callback(_on_graph_save).with_verifier(_has_graph_selected))\
 			.with_entry(&"Save Graph as...", 	create_entry().with_callback(_on_graph_save_as).with_verifier(_has_graph_selected))\
-			.with_entry(&"Save All", 			create_entry().with_callback(_on_graph_save_all).with_shortcut(KEY_MASK_CTRL | KEY_S))\
+			.with_entry(&"Save All", 			create_entry().with_callback(_on_graph_save_all).with_verifier(_has_graph_selected).with_shortcut(KEY_MASK_CTRL | KEY_S))\
 			.with_divider()\
-			.with_entry(&"Close", 				create_entry().with_callback(_on_graph_close).with_shortcut(KEY_MASK_CTRL | KEY_W))\
+			.with_entry(&"Close", 				create_entry().with_callback(_on_graph_close).with_verifier(_has_graph_selected).with_shortcut(KEY_MASK_CTRL | KEY_W))\
 			
 			.build()
 	add_child(file_popup)

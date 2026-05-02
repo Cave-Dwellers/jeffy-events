@@ -32,12 +32,14 @@ func with_input_node(control : Control) -> JEP_PopupMenuBuilder:
 
 func build() -> GenericPopupMenu:
 	var popup := GenericPopupMenu.new()
-	var id : int = 0
+	var id : int = -1
 	popup.name = name
 	
 	for config : Configuration in entries:
+		id += 1
 		if config.divider:
 			popup.add_separator(config.text, id)
+			
 			continue
 		
 		popup.add_item(config.text, id)
@@ -53,8 +55,6 @@ func build() -> GenericPopupMenu:
 		
 		if !config.verifier_callback.is_null():
 			popup.verifiers[id] = config.verifier_callback
-		
-		id += 1
 	
 	focus_node.gui_input.connect(popup._gui_input)
 	return popup
