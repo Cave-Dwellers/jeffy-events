@@ -140,7 +140,7 @@ size_flags_vertical = 3
 hide_root = true
 script = ExtResource("12_qrvpx")
 graph_parser = NodePath("../../../../../GraphParser")
-graph_frontend = NodePath("../../../../RightContainer/EventGraph")
+graph_frontend = NodePath("../../../../RightContainer/EventGraphContainer/EventGraph")
 
 [node name="SourceManager" type="Node" parent="Frame/LeftSplit/EventSourceList" unique_id=656008482 node_paths=PackedStringArray("add_source_modal", "remove_source_modal", "source_tree", "no_sources_label", "add_source_button", "remove_source_button", "refresh_sources_button")]
 script = ExtResource("7_rwnnl")
@@ -161,7 +161,12 @@ tab_0/icon = ExtResource("3_hbwa6")
 tab_1/icon = ExtResource("4_c8yvv")
 tab_2/icon = ExtResource("5_c8yvv")
 
-[node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer" unique_id=366992606 node_paths=PackedStringArray("graph_parser")]
+[node name="EventGraphContainer" type="PanelContainer" parent="Frame/RightContainer" unique_id=428068706]
+layout_mode = 2
+metadata/_tab_index = 0
+metadata/_tab_name = "Event Graph"
+
+[node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer/EventGraphContainer" unique_id=366992606 node_paths=PackedStringArray("graph_parser", "no_graph_label")]
 layout_mode = 2
 snapping_distance = 16
 panning_scheme = 1
@@ -175,12 +180,12 @@ type_names = {
 5: "DataNodePath",
 6: "DataResource"
 }
+show_grid_buttons = false
 script = ExtResource("16_iri01")
-graph_parser = NodePath("../../../GraphParser")
-metadata/_tab_index = 0
-metadata/_tab_name = "Event Graph"
+graph_parser = NodePath("../../../../GraphParser")
+no_graph_label = NodePath("../NoGraph")
 
-[node name="GraphNode" type="GraphNode" parent="Frame/RightContainer/EventGraph" unique_id=1249941130]
+[node name="GraphNode" type="GraphNode" parent="Frame/RightContainer/EventGraphContainer/EventGraph" unique_id=1249941130]
 visible = false
 layout_mode = 0
 offset_left = 255.5
@@ -200,9 +205,15 @@ slot/0/right_color = Color(1, 1, 1, 1)
 slot/0/right_icon = null
 slot/0/draw_stylebox = true
 
-[node name="ColorRect" type="ColorRect" parent="Frame/RightContainer/EventGraph/GraphNode" unique_id=1505961032]
+[node name="ColorRect" type="ColorRect" parent="Frame/RightContainer/EventGraphContainer/EventGraph/GraphNode" unique_id=1505961032]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="NoGraph" type="Label" parent="Frame/RightContainer/EventGraphContainer" unique_id=1088393090]
+visible = false
+layout_mode = 2
+text = "Create or load a graph to start editing."
+horizontal_alignment = 1
 
 [node name="Labels" type="PanelContainer" parent="Frame/RightContainer" unique_id=1529908744]
 visible = false
@@ -567,28 +578,30 @@ source? This action cannot be undone."
 [connection signal="dock_ready" from="." to="EventGraphPool" method="_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/LeftSplit/ContainerB/MenuBar" method="_on_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/LeftSplit/EventSourceList/SourceManager" method="_on_dock_ready"]
+[connection signal="dock_ready" from="." to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/RightContainer/Labels/LabelsManager" method="_dock_ready"]
 [connection signal="graph_added" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_added"]
 [connection signal="graph_removed" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_removed"]
 [connection signal="graph_replaced" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_replaced"]
 [connection signal="graph_saved" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_saved"]
-[connection signal="parsed" from="GraphParser" to="Frame/RightContainer/EventGraph" method="on_graph_parsed"]
+[connection signal="parsed" from="GraphParser" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="on_graph_parsed"]
 [connection signal="parsing_complete" from="DirectoryParser" to="Frame/LeftSplit/EventSourceList/SourceManager" method="_build_menu_from_source"]
 [connection signal="request_add_graph_modal" from="Frame/LeftSplit/ContainerB/MenuBar" to="Modal/NewEventGraphModal" method="open"]
 [connection signal="request_close" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="remove_graph"]
 [connection signal="request_load_graph" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="open_graph"]
 [connection signal="request_save" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="save_graph"]
 [connection signal="request_save_all" from="Frame/LeftSplit/ContainerB/MenuBar" to="EventGraphPool" method="save_all_graphs"]
-[connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="GraphParser" method="parse_graph"]
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/MenuBar" method="_on_graph_selected"]
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/EventSourceList/SourcesContainer/SourceTree" method="_on_graph_selected"]
+[connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_graph_selected"]
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/RightContainer/Labels/LabelsManager" method="_on_graph_focused"]
 [connection signal="item_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_selected"]
 [connection signal="parse_requested" from="Frame/LeftSplit/EventSourceList/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
-[connection signal="connection_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_connection_request"]
-[connection signal="delete_nodes_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_remove_request"]
-[connection signal="disconnection_request" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_disconnection_request"]
-[connection signal="end_node_move" from="Frame/RightContainer/EventGraph" to="Frame/RightContainer/EventGraph" method="_on_nodes_moved"]
+[connection signal="connection_request" from="Frame/RightContainer/EventGraphContainer/EventGraph" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_connection_request"]
+[connection signal="delete_nodes_request" from="Frame/RightContainer/EventGraphContainer/EventGraph" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_remove_request"]
+[connection signal="disconnection_request" from="Frame/RightContainer/EventGraphContainer/EventGraph" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_disconnection_request"]
+[connection signal="end_node_move" from="Frame/RightContainer/EventGraphContainer/EventGraph" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_nodes_moved"]
+[connection signal="graph_refresh_requested" from="Frame/RightContainer/EventGraphContainer/EventGraph" to="GraphParser" method="parse_graph"]
 [connection signal="text_submitted" from="Frame/RightContainer/Labels/Margin/Scroll/Sort/AddEntry/LineEdit" to="Frame/RightContainer/Labels/LabelsManager" method="_text_submitted"]
 [connection signal="pressed" from="Frame/RightContainer/Labels/Margin/Scroll/Sort/AddEntry/Button" to="Frame/RightContainer/Labels/LabelsManager" method="_add_label"]
 [connection signal="picked_path" from="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/AddEventSourceModal" method="_dir_selected"]

@@ -3,7 +3,7 @@ class_name JEP_EventListController extends ItemList
 
 ## Updates list based on [class JEP_EventGraphPool] signals
 
-## Fired when a graph has been selected
+## Fired when a graph has been selected. Sometimes is null
 signal graph_selected(graph : JEP_EventGraph)
 
 const ICO_GRAPH : Texture2D = preload("res://addons/jeffy_events/asset/icon/EventGraph.svg")
@@ -17,7 +17,21 @@ func _on_graph_added(graph : JEP_EventGraph) -> void:
 	_on_graph_selected(idx)
 
 func _on_graph_removed(graph : JEP_EventGraph) -> void:
-	modify_entry(graph, remove_item)
+	if graph.changed.is_connected(_mark_graph_as_unsaved):
+		graph.changed.disconnect(_mark_graph_as_unsaved)
+	
+	modify_entry(graph, 
+		func(index : int) -> void:
+			remove_item(index)
+			
+			if item_count > 0:
+				if index >= item_count:
+					index -= item_count - index + 1
+				select(index)
+				item_selected.emit(index)
+			else:
+				graph_selected.emit(null)
+	)
 
 func _on_graph_saved(graph : JEP_EventGraph) -> void:
 	# We're just resetting the file name here

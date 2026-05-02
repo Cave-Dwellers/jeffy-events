@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://b3svnoqewbbxj" path="res://addons/jeffy_events/events/math/EventStringConcat.gd" id="8_83igj"]
 [ext_resource type="Script" uid="uid://cd078cttvc0ax" path="res://addons/jeffy_events/events/math/EventNumberOp.gd" id="9_fluda"]
 [ext_resource type="Script" uid="uid://cla4iqrtk7p75" path="res://addons/jeffy_events/events/data/EventIntConst.gd" id="10_3eejo"]
+[ext_resource type="Script" uid="uid://bi10lh41f6m86" path="res://addons/jeffy_events/events/flow/EventJumpToLabel.gd" id="11_2uakf"]
+[ext_resource type="Script" uid="uid://bxp2n7nhtdtfe" path="res://addons/jeffy_events/events/math/EventStringify.gd" id="12_5rd6q"]
 
 [sub_resource type="Resource" id="Resource_83igj"]
 script = ExtResource("1_hcm4s")
@@ -25,6 +27,30 @@ to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
 
 [sub_resource type="Resource" id="Resource_6se7u"]
 script = ExtResource("1_hcm4s")
+from_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
+to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+to_port = 2
+type = 1
+
+[sub_resource type="Resource" id="Resource_f0uuc"]
+script = ExtResource("1_hcm4s")
+from_uuid = &"80171447-e888-43f9-b676-832172e7fd48"
+to_uuid = &"8f9143b6-6548-448e-b777-a59f15a86fbc"
+type = 1
+
+[sub_resource type="Resource" id="Resource_nox8m"]
+script = ExtResource("1_hcm4s")
+from_uuid = &"87a3af34-3899-43af-ad82-705983e3770c"
+to_uuid = &"61f6333d-3cfd-49fb-9588-788e43cba9e2"
+
+[sub_resource type="Resource" id="Resource_m32jf"]
+script = ExtResource("1_hcm4s")
+from_uuid = &"8f9143b6-6548-448e-b777-a59f15a86fbc"
+to_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
+type = 1
+
+[sub_resource type="Resource" id="Resource_fqy15"]
+script = ExtResource("1_hcm4s")
 from_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
 to_port = 1
@@ -37,16 +63,10 @@ to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 to_port = 1
 type = 1
 
-[sub_resource type="Resource" id="Resource_fluda"]
+[sub_resource type="Resource" id="Resource_peopf"]
 script = ExtResource("1_hcm4s")
 from_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-to_uuid = &"61f6333d-3cfd-49fb-9588-788e43cba9e2"
-
-[sub_resource type="Resource" id="Resource_f0uuc"]
-script = ExtResource("1_hcm4s")
-from_uuid = &"80171447-e888-43f9-b676-832172e7fd48"
-to_uuid = &"8f9143b6-6548-448e-b777-a59f15a86fbc"
-type = 1
+to_uuid = &"7b4a3667-e4ab-4d6d-953b-f695f3b1f8db"
 
 [sub_resource type="Resource" id="Resource_ihk5q"]
 script = ExtResource("6_83igj")
@@ -58,9 +78,36 @@ script = ExtResource("7_fluda")
 label = "Start"
 position = Vector2(-608, -384)
 
+[sub_resource type="Resource" id="Resource_ngit7"]
+script = ExtResource("12_5rd6q")
+input = null
+position = Vector2(-336, 32)
+
 [sub_resource type="Resource" id="Resource_f7ulf"]
 script = ExtResource("2_2kpud")
-position = Vector2(240, -224)
+position = Vector2(-32, -512)
+
+[sub_resource type="Resource" id="Resource_2xbqy"]
+script = ExtResource("11_2uakf")
+label = "AnotherStart"
+position = Vector2(240, -240)
+
+[sub_resource type="Resource" id="Resource_6pnnt"]
+script = ExtResource("10_3eejo")
+value = 4
+position = Vector2(-848, 96)
+
+[sub_resource type="Resource" id="Resource_7cxs8"]
+script = ExtResource("7_fluda")
+label = "AnotherStart"
+position = Vector2(-304, -512)
+
+[sub_resource type="Resource" id="Resource_4s03x"]
+script = ExtResource("9_fluda")
+operation = "Multiply"
+number_1 = 7.0
+number_2 = 5.0
+position = Vector2(-592, 48)
 
 [sub_resource type="Resource" id="Resource_2uakf"]
 script = ExtResource("8_83igj")
@@ -73,49 +120,40 @@ position = Vector2(240, -384)
 
 [sub_resource type="Resource" id="Resource_aqg6s"]
 script = ExtResource("6_83igj")
-value = "print!"
+value = "placeholder"
 position = Vector2(-608, -96)
 
 [sub_resource type="Resource" id="Resource_3eejo"]
 script = ExtResource("4_4aeu4")
 to_print = "This is a {placeholder}. Heres an awesome {number}"
-placeholders = Dictionary[StringName, Variant]({
-&"number": null,
-&"placeholder": null
-})
+keys = Array[StringName]([&"placeholder", &"number"])
 position = Vector2(-32, -384)
-
-[sub_resource type="Resource" id="Resource_4s03x"]
-script = ExtResource("9_fluda")
-operation = "Multiply"
-number_1 = 7.0
-number_2 = 5.0
-position = Vector2(-336, -32)
-
-[sub_resource type="Resource" id="Resource_6pnnt"]
-script = ExtResource("10_3eejo")
-value = 4
-position = Vector2(-607.03, 25.981989)
 
 [resource]
 script = ExtResource("3_4aeu4")
 _events = Dictionary[StringName, ExtResource("1_nu8t6")]({
 &"098f8073-a05b-4021-b35f-456d57de74bb": SubResource("Resource_ihk5q"),
 &"2a176d3d-447c-4553-ab72-8ce6967c2d47": SubResource("Resource_q4mnr"),
+&"2a66ac6f-52be-4713-8c9e-cdfebb95930d": SubResource("Resource_ngit7"),
 &"61f6333d-3cfd-49fb-9588-788e43cba9e2": SubResource("Resource_f7ulf"),
+&"7b4a3667-e4ab-4d6d-953b-f695f3b1f8db": SubResource("Resource_2xbqy"),
 &"80171447-e888-43f9-b676-832172e7fd48": SubResource("Resource_6pnnt"),
+&"87a3af34-3899-43af-ad82-705983e3770c": SubResource("Resource_7cxs8"),
 &"8f9143b6-6548-448e-b777-a59f15a86fbc": SubResource("Resource_4s03x"),
 &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1": SubResource("Resource_2uakf"),
 &"aeb38653-4b65-4996-9b21-ddefd712c140": SubResource("Resource_xwd2d"),
 &"b150feb5-4c76-4734-92ec-5355022b746d": SubResource("Resource_aqg6s"),
 &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee": SubResource("Resource_3eejo")
 })
-_labels = Array[StringName]([&"Start", &"Start2"])
+_labels = Array[StringName]([&"Start", &"AnotherStart"])
 _connections = Dictionary[StringName, Array]({
 &"098f8073-a05b-4021-b35f-456d57de74bb": [SubResource("Resource_83igj")],
 &"2a176d3d-447c-4553-ab72-8ce6967c2d47": [SubResource("Resource_nbus4")],
+&"2a66ac6f-52be-4713-8c9e-cdfebb95930d": [SubResource("Resource_6se7u")],
 &"80171447-e888-43f9-b676-832172e7fd48": [SubResource("Resource_f0uuc")],
-&"a8a197d2-8cc9-4a75-9b17-525186a4bcf1": [SubResource("Resource_6se7u")],
+&"87a3af34-3899-43af-ad82-705983e3770c": [SubResource("Resource_nox8m")],
+&"8f9143b6-6548-448e-b777-a59f15a86fbc": [SubResource("Resource_m32jf")],
+&"a8a197d2-8cc9-4a75-9b17-525186a4bcf1": [SubResource("Resource_fqy15")],
 &"b150feb5-4c76-4734-92ec-5355022b746d": [SubResource("Resource_5rd6q")],
-&"f48d5b16-a6a7-4225-a3d9-911b44ab4cee": [SubResource("Resource_fluda")]
+&"f48d5b16-a6a7-4225-a3d9-911b44ab4cee": [SubResource("Resource_peopf")]
 })

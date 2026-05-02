@@ -15,6 +15,7 @@ func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
 	return NODE.new(graph, self)\
 			.with_element(ELEMENT.DataSource.new(&"Output").without_input().with_type(2).with_output(0))\
 			.with_element(ELEMENT.EnumLine.new(&"operation").with_strings(OPERATIONS).without_input())\
+			.with_element(ELEMENT.Bool.new(&"rounded").without_input())\
 			.with_element(ELEMENT.Number.new(&"number_1").with_step(0.1))\
 			.with_element(ELEMENT.Number.new(&"number_2").with_step(0.1))
 
@@ -30,13 +31,18 @@ func _accept_data(port : int, data : Variant) -> void:
 func _pull_data(port : int) -> Variant:
 	if port != 0:
 		return null
+		
+	var result : Variant
 	match operation:
-		"Add": return number_1 + number_2
-		"Subtract": return number_1 - number_2
-		"Multiply": return number_1 * number_2
-		"Divide": return number_1 / number_2
-		"Modulo": return int(number_1) % int(number_2) # Will always be rounded
-	return null
+		"Add": result = number_1 + number_2
+		"Subtract": result = number_1 - number_2
+		"Multiply": result = number_1 * number_2
+		"Divide": result = number_1 / number_2
+		"Modulo": result = int(number_1) % int(number_2) # Will always be rounded
+	
+	if rounded:
+		result = roundi(result)
+	return result
 
 func is_data() -> bool:
 	return true

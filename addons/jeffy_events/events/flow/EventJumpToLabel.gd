@@ -7,9 +7,9 @@ func _event(ctx : Object = null) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
-	return JEP_NodeInstruction.new(graph, self)\
-			.with_element(JEP_ElementInstruction.Port.new().with_input())\
-			.with_element(JEP_ElementInstruction.Line.new(&"label"))
+	return NODE.new(graph, self).dynamic()\
+			.with_element(ELEMENT.Port.new().with_input().with_label("Terminate Flow"))\
+			.with_element(ELEMENT.EnumLine.new(&"label").with_strings(graph._labels).without_input())
 
 func _get_name() -> StringName:
 	return &"Jump To Label"
