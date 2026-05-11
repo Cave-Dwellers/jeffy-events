@@ -12,15 +12,15 @@ signal label_removed(label : StringName)
 signal connection_added(connection : JEP_EventGraphConnection)
 signal connection_removed(connection : JEP_EventGraphConnection)
 
-#signal variable_added(variable : VariableDefinition)
-#signal variable_removed(variable : VariableDefinition)
+signal variable_added(variable : JEP_EventGraphVariable)
+signal variable_removed(variable : JEP_EventGraphVariable)
 
 ## Events that are present in the graph (event UUID -> event)
 @export_storage var _events : Dictionary[StringName, JEP_Event]
 ## Labels that are present in the graph
 @export_storage var _labels : Array[StringName]
 ## Variables that are present in the graph
-#@export_storage var _variables : Array[VariableDefinition]
+@export_storage var _variables : Array[JEP_EventGraphVariable]
 ## Connections between events (event UUID -> array of outgoing connections)
 @export_storage var _connections : Dictionary[StringName, Array]
 
@@ -229,36 +229,37 @@ func _sanitize_connection(connection : JEP_EventGraphConnection, cache : Diction
 	if output_count <= connection.from_port || input_count <= connection.to_port:
 		remove_connection_object(connection)
 
-### Adds [param variable] with [param type], if it doesn't already exist 
-#func add_variable(variable : StringName, type : int) -> void:
-	#if !has_variable(variable):
-		#var def : VariableDefinition = VariableDefinition.new(variable, type)
-		#_variables.append(def)
-		#
-		#variable_added.emit(def)
-		#emit_changed()
-#
-### Removes [param variable] from the graph, if it exists
-#func remove_variable(variable : StringName) -> void:
-	#if has_variable(variable):
-		#var at : int = _variables.find_custom(func(v : VariableDefinition) -> bool: return v.name == variable)
-		#var def : StringName = _variables.pop_at(at)
-		#
-		#variable_removed.emit(def)
-		#emit_changed()
-#
-### Returns true if this graph contains [param variable]
-#func has_variable(variable : StringName) -> bool:
-	#return _variables.any(
-		#func(v : VariableDefinition) -> bool: return v.name == variable)
-#
-#class VariableDefinition extends Resource:
-	#
-	### A definition of a variable
-	#
-	#var name : StringName
-	#var type : int
-	#
-	#func _init(p_name : StringName, p_type : int) -> void:
-		#self.name = p_name
-		#self.type = p_type
+## Adds [param variable] with [param type], if it doesn't already exist 
+func add_variable(variable : StringName, type : int) -> void:
+	if !has_variable(variable):
+		var def : JEP_EventGraphVariable = JEP_EventGraphVariable.new(variable, type)
+		_variables.append(def)
+		
+		variable_added.emit(def)
+		emit_changed()
+
+## Removes [param variable] from the graph, if it exists
+func remove_variable(variable : StringName) -> void:
+	if has_variable(variable):
+		var at : int = _variables.find_custom(func(v : JEP_EventGraphVariable) -> bool: return v.name == variable)
+		var def : StringName = _variables.pop_at(at)
+		
+		variable_removed.emit(def)
+		emit_changed()
+
+## Returns true if this graph contains [param variable]
+func has_variable(variable : StringName) -> bool:
+	return _variables.any(
+		func(v : JEP_EventGraphVariable) -> bool: return v.name == variable)
+
+## Returns the variable resource instance named [param variable], or null
+## if it does not exist
+func get_variable_or_null(variable : StringName) -> JEP_EventGraphVariable:
+	var result : Variant = _variables.find_custom(
+		func(v : JEP_EventGraphVariable) -> bool:
+			return v.name == variable
+	)
+	
+	if result == -1:
+		return null
+	return result as JEP_EventGraphVariable
