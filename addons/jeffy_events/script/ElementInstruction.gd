@@ -1,6 +1,7 @@
 @tool
 class_name JEP_ElementInstruction extends RefCounted
 
+const Ports := JEP_PortInfo.Ports
 var _label : String
 
 func with_label(text : String) -> JEP_ElementInstruction:
@@ -48,7 +49,7 @@ class Property extends Port:
 		return [TYPE_NIL]
 		
 	func _get_port_type() -> int:
-		return -1
+		return Ports.Flow
 	
 	func without_input() -> Property:
 		_has_in = false
@@ -65,7 +66,7 @@ class Number extends Property:
 		return [TYPE_INT, TYPE_FLOAT]
 	
 	func _get_port_type() -> int:
-		return 2
+		return Ports.DataNumber
 	
 	func with_rounding() -> Number:
 		_rounded = true
@@ -86,7 +87,7 @@ class Bool extends Property:
 		return [TYPE_BOOL]
 	
 	func _get_port_type() -> int:
-		return 4
+		return Ports.DataBool
 
 class Line extends Property:
 	var _max_character_count : int = -1
@@ -95,7 +96,7 @@ class Line extends Property:
 		return [TYPE_STRING, TYPE_STRING_NAME]
 	
 	func _get_port_type() -> int:
-		return 3
+		return Ports.DataString
 	
 	func with_character_limit(limit : int) -> Line:
 		_max_character_count = limit
@@ -108,7 +109,7 @@ class EnumLine extends Property:
 		return [TYPE_STRING, TYPE_STRING_NAME]
 	
 	func _get_port_type() -> int:
-		return 3
+		return Ports.DataString
 	
 	func with_strings(array : PackedStringArray) -> EnumLine:
 		_strings = array
@@ -122,7 +123,7 @@ class CodeLine extends Property:
 		return [TYPE_STRING]
 	
 	func _get_port_type() -> int:
-		return 3
+		return Ports.DataString
 	
 	func as_flat() -> CodeLine:
 		_flat = true

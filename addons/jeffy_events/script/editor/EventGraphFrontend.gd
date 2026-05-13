@@ -29,6 +29,12 @@ var selected : Array[JEP_EventGraphNode] :
 		return sel
 
 func _dock_ready() -> void:
+	# Add port types
+	var type_indice : int = 0
+	for type_name : String in JEP_PortInfo.Ports.keys():
+		type_names[type_indice] = type_name
+		type_indice += 1
+	
 	# Add connection support for variant
 	add_valid_connection_type(Ports.DataNumber, Ports.DataVariant)
 	add_valid_connection_type(Ports.DataString, Ports.DataVariant)

@@ -172,15 +172,6 @@ layout_mode = 2
 snapping_distance = 16
 panning_scheme = 1
 right_disconnects = true
-type_names = {
-0: "Flow",
-1: "DataVariant",
-2: "DataNumber",
-3: "DataString",
-4: "DataBool",
-5: "DataNodePath",
-6: "DataResource"
-}
 show_grid_buttons = false
 script = ExtResource("16_iri01")
 graph_parser = NodePath("../../../../GraphParser")
