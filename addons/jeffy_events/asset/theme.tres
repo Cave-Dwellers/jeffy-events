@@ -741,8 +741,9 @@ corner_detail = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ip2ow"]
 content_margin_left = 14.0
+content_margin_right = 8.0
 bg_color = Color(0.18717611, 0.18717614, 0.18717608, 1)
-expand_margin_left = 8.0
+shadow_color = Color(0, 0, 0, 0)
 
 [sub_resource type="DPITexture" id="DPITexture_ihigr"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"none\" stroke=\"#fff\" stroke-opacity=\".898\" stroke-width=\"2\" d=\"m3 3 10 10M3 13 13 3\"/></svg>

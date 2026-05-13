@@ -9,25 +9,7 @@ class_name JEP_EventGraphFrontend extends GraphEdit
 
 signal graph_refresh_requested(graph : JEP_EventGraph)
 
-enum Ports {
-	Flow,
-	DataVariant,
-	DataNumber,
-	DataString,
-	DataBool,
-	DataNodePath,
-	DataResource
-}
-
-const PortColors : Dictionary[int, Color] = {
-	Ports.Flow : Color.WHITE,
-	Ports.DataVariant : Color(0.251, 0.5, 0.1355, 1),
-	Ports.DataNumber : Color(0.1355, 0.4215, 0.5, 1),
-	Ports.DataString : Color(0.5, 0.445, 0.1355, 1),
-	Ports.DataBool : Color(0.5, 0.1355, 0.1355, 1),
-	Ports.DataNodePath : Color(0.5, 0.2805, 0.1355, 1),
-	Ports.DataResource : Color(0.251, 0.1355, 0.5, 1)
-}
+const Ports := JEP_PortInfo.Ports
 
 @export var graph_parser : JEP_GraphParser
 @export var no_graph_label : Label

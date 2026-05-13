@@ -156,14 +156,13 @@ refresh_sources_button = NodePath("../SourcesManagement/RefreshSources")
 [node name="RightContainer" type="TabContainer" parent="Frame" unique_id=1030618837]
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 2
+current_tab = 0
 tab_0/title = "Event Graph"
 tab_0/icon = ExtResource("3_hbwa6")
 tab_1/icon = ExtResource("4_c8yvv")
 tab_2/icon = ExtResource("5_c8yvv")
 
 [node name="EventGraphContainer" type="PanelContainer" parent="Frame/RightContainer" unique_id=428068706]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
@@ -282,6 +281,7 @@ entry_template = NodePath("../Margin/Scroll/Sort/LabelEntry")
 entry_container = NodePath("../Margin/Scroll/Sort/EntryContainer")
 
 [node name="Variables" type="PanelContainer" parent="Frame/RightContainer" unique_id=1684929755]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -306,6 +306,7 @@ theme_override_constants/separation = 2
 layout_mode = 2
 
 [node name="VariableEntry" type="HBoxContainer" parent="Frame/RightContainer/Variables/Margin/Scroll/Sort" unique_id=2057708860]
+visible = false
 layout_mode = 2
 
 [node name="Label" type="LineEdit" parent="Frame/RightContainer/Variables/Margin/Scroll/Sort/VariableEntry" unique_id=697628649]

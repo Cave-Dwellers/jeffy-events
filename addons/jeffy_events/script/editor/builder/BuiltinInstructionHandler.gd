@@ -36,7 +36,7 @@ func handle_port_instruction(instruction : JEP_ElementInstruction.Port, node : J
 		type = instruction._get_port_type()
 	if instruction is JEP_ElementInstruction.DataSource:
 		type = instruction._port_type
-	var color : Color = JEP_EventGraphFrontend.PortColors[type]
+	var color : Color = JEP_PortInfo.PortColors[type]
 	
 	if instruction._has_in:
 		node.set_slot_enabled_left(id, true)

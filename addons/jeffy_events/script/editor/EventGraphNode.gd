@@ -25,7 +25,7 @@ func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	# Set titlebar color
 	var script : GDScript = _event.get_script()
 	var path : String = script.resource_path.get_base_dir() + "/"
-	var color : Color = JEP_FolderColorAPI.get_color(path).darkened(0.5)
+	var color : Color = JEP_FolderColorAPI.get_color(path).darkened(0.2)
 	
 	if color != Color.WHITE:
 		var titlebar : StyleBoxFlat = THEME.get_stylebox(&"titlebar", &"GraphNode").duplicate()
