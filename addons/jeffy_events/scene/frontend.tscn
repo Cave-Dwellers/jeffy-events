@@ -22,6 +22,7 @@
 [ext_resource type="Script" uid="uid://s45vx7u1plvo" path="res://addons/jeffy_events/script/editor/modal/NewEventGraphModal.gd" id="15_ekmjb"]
 [ext_resource type="Script" uid="uid://boo6sfqamn6ry" path="res://addons/jeffy_events/script/editor/EventGraphPool.gd" id="16_4qmgu"]
 [ext_resource type="Script" uid="uid://dxtqd13lb6pv6" path="res://addons/jeffy_events/script/editor/EventGraphFrontend.gd" id="16_iri01"]
+[ext_resource type="Script" uid="uid://brt7n3qb0mm7r" path="res://addons/jeffy_events/script/editor/dock/VariablesListManager.gd" id="19_03hwm"]
 
 [node name="Frontend" type="Control" unique_id=401715599]
 custom_minimum_size = Vector2(0, 128)
@@ -155,13 +156,14 @@ refresh_sources_button = NodePath("../SourcesManagement/RefreshSources")
 [node name="RightContainer" type="TabContainer" parent="Frame" unique_id=1030618837]
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 0
+current_tab = 2
 tab_0/title = "Event Graph"
 tab_0/icon = ExtResource("3_hbwa6")
 tab_1/icon = ExtResource("4_c8yvv")
 tab_2/icon = ExtResource("5_c8yvv")
 
 [node name="EventGraphContainer" type="PanelContainer" parent="Frame/RightContainer" unique_id=428068706]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
@@ -280,7 +282,6 @@ entry_template = NodePath("../Margin/Scroll/Sort/LabelEntry")
 entry_container = NodePath("../Margin/Scroll/Sort/EntryContainer")
 
 [node name="Variables" type="PanelContainer" parent="Frame/RightContainer" unique_id=1684929755]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -305,7 +306,6 @@ theme_override_constants/separation = 2
 layout_mode = 2
 
 [node name="VariableEntry" type="HBoxContainer" parent="Frame/RightContainer/Variables/Margin/Scroll/Sort" unique_id=2057708860]
-visible = false
 layout_mode = 2
 
 [node name="Label" type="LineEdit" parent="Frame/RightContainer/Variables/Margin/Scroll/Sort/VariableEntry" unique_id=697628649]
@@ -314,6 +314,7 @@ size_flags_horizontal = 3
 theme_type_variation = &"LabelLineEdit"
 text = "Label"
 editable = false
+right_icon = ExtResource("3_hbwa6")
 
 [node name="Button" type="Button" parent="Frame/RightContainer/Variables/Margin/Scroll/Sort/VariableEntry" unique_id=2075315039]
 layout_mode = 2
@@ -328,22 +329,23 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "New Variable..."
 max_length = 30
-editable = false
 
 [node name="Type" type="OptionButton" parent="Frame/RightContainer/Variables/Margin/Scroll/Sort/AddEntry" unique_id=1527022636]
 layout_mode = 2
 size_flags_horizontal = 3
-disabled = true
-selected = 0
-item_count = 1
-popup/item_0/text = "String"
-popup/item_0/id = 0
 
 [node name="Add" type="Button" parent="Frame/RightContainer/Variables/Margin/Scroll/Sort/AddEntry" unique_id=1491156665]
 layout_mode = 2
-disabled = true
 icon = ExtResource("1_gudbx")
 flat = true
+
+[node name="VariablesManager" type="Node" parent="Frame/RightContainer/Variables" unique_id=224479103 node_paths=PackedStringArray("line_edit", "type_dropdown", "add_button", "entry_template", "entry_container")]
+script = ExtResource("19_03hwm")
+line_edit = NodePath("../Margin/Scroll/Sort/AddEntry/LineEdit")
+type_dropdown = NodePath("../Margin/Scroll/Sort/AddEntry/Type")
+add_button = NodePath("../Margin/Scroll/Sort/AddEntry/Add")
+entry_template = NodePath("../Margin/Scroll/Sort/VariableEntry")
+entry_container = NodePath("../Margin/Scroll/Sort/EntryContainer")
 
 [node name="Modal" type="Node" parent="." unique_id=1424297605]
 
@@ -580,6 +582,7 @@ source? This action cannot be undone."
 [connection signal="dock_ready" from="." to="Frame/LeftSplit/EventSourceList/SourceManager" method="_on_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/RightContainer/Labels/LabelsManager" method="_dock_ready"]
+[connection signal="dock_ready" from="." to="Frame/RightContainer/Variables/VariablesManager" method="_dock_ready"]
 [connection signal="graph_added" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_added"]
 [connection signal="graph_removed" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_removed"]
 [connection signal="graph_replaced" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_replaced"]
@@ -595,6 +598,7 @@ source? This action cannot be undone."
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/EventSourceList/SourcesContainer/SourceTree" method="_on_graph_selected"]
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_graph_selected"]
 [connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/RightContainer/Labels/LabelsManager" method="_on_graph_focused"]
+[connection signal="graph_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/RightContainer/Variables/VariablesManager" method="_on_graph_focused"]
 [connection signal="item_selected" from="Frame/LeftSplit/ContainerB/GraphList" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_selected"]
 [connection signal="parse_requested" from="Frame/LeftSplit/EventSourceList/SourceManager" to="DirectoryParser" method="get_events_in_directory"]
 [connection signal="connection_request" from="Frame/RightContainer/EventGraphContainer/EventGraph" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_connection_request"]
@@ -604,6 +608,7 @@ source? This action cannot be undone."
 [connection signal="graph_refresh_requested" from="Frame/RightContainer/EventGraphContainer/EventGraph" to="GraphParser" method="parse_graph"]
 [connection signal="text_submitted" from="Frame/RightContainer/Labels/Margin/Scroll/Sort/AddEntry/LineEdit" to="Frame/RightContainer/Labels/LabelsManager" method="_text_submitted"]
 [connection signal="pressed" from="Frame/RightContainer/Labels/Margin/Scroll/Sort/AddEntry/Button" to="Frame/RightContainer/Labels/LabelsManager" method="_add_label"]
+[connection signal="pressed" from="Frame/RightContainer/Variables/Margin/Scroll/Sort/AddEntry/Add" to="Frame/RightContainer/Variables/VariablesManager" method="_add_variable"]
 [connection signal="picked_path" from="Modal/AddEventSourceModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/AddEventSourceModal" method="_dir_selected"]
 [connection signal="graph_created" from="Modal/NewEventGraphModal" to="EventGraphPool" method="add_graph"]
 [connection signal="picked_path" from="Modal/NewEventGraphModal/Panel/Margin/Sort/Path/FilePicker" to="Modal/NewEventGraphModal" method="_assign_path"]

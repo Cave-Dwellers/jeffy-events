@@ -11,13 +11,13 @@ func _dock_ready() -> void:
 
 func _on_graph_focused(p_graph : JEP_EventGraph) -> void:
 	graph = p_graph
+	for entry : Node in entry_container.get_children():
+		entry.queue_free()
+	
 	if !graph:
 		set_element_mode(false)
 		return
 	set_element_mode(true)
-	
-	for entry : Node in entry_container.get_children():
-		entry.queue_free()
 	
 	for label : StringName in graph._labels:
 		line_edit.text = label

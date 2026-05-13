@@ -24,7 +24,7 @@ signal variable_removed(variable : JEP_EventGraphVariable)
 ## Connections between events (event UUID -> array of outgoing connections)
 @export_storage var _connections : Dictionary[StringName, Array]
 
-## Adds [param event] with the position [param at] to the event arary.
+## Adds [param event] with the position [param at] to the event array
 func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO) -> void:
 	var uuid : StringName = JEP_UUID.v4()
 	
@@ -36,6 +36,7 @@ func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO) -> void:
 		event_added.emit(event, uuid)
 		emit_changed()
 
+## Adds several events at once
 func add_events(events : Array[JEP_Event]) -> void:
 	for event : JEP_Event in events:
 		add_event(event)
@@ -230,22 +231,26 @@ func _sanitize_connection(connection : JEP_EventGraphConnection, cache : Diction
 		remove_connection_object(connection)
 
 ## Adds [param variable] with [param type], if it doesn't already exist 
-func add_variable(variable : StringName, type : int) -> void:
+func add_variable(variable : StringName, type : int) -> bool:
 	if !has_variable(variable):
 		var def : JEP_EventGraphVariable = JEP_EventGraphVariable.new(variable, type)
 		_variables.append(def)
 		
 		variable_added.emit(def)
 		emit_changed()
+		return true
+	return false
 
 ## Removes [param variable] from the graph, if it exists
-func remove_variable(variable : StringName) -> void:
+func remove_variable(variable : StringName) -> bool:
 	if has_variable(variable):
 		var at : int = _variables.find_custom(func(v : JEP_EventGraphVariable) -> bool: return v.name == variable)
 		var def : StringName = _variables.pop_at(at)
 		
 		variable_removed.emit(def)
 		emit_changed()
+		return true
+	return false
 
 ## Returns true if this graph contains [param variable]
 func has_variable(variable : StringName) -> bool:

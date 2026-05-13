@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://cla4iqrtk7p75" path="res://addons/jeffy_events/events/data/EventIntConst.gd" id="10_3eejo"]
 [ext_resource type="Script" uid="uid://bi10lh41f6m86" path="res://addons/jeffy_events/events/flow/EventJumpToLabel.gd" id="11_2uakf"]
 [ext_resource type="Script" uid="uid://bxp2n7nhtdtfe" path="res://addons/jeffy_events/events/math/EventStringify.gd" id="12_5rd6q"]
+[ext_resource type="Script" uid="uid://ox74uk5v5wod" path="res://addons/jeffy_events/script/EventGraphVariable.gd" id="13_ihk5q"]
 
 [sub_resource type="Resource" id="Resource_83igj"]
 script = ExtResource("1_hcm4s")

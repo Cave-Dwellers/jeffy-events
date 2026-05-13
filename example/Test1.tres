@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://c5esjyr207jgv" path="res://addons/jeffy_events/events/flow/EventTerminator.gd" id="3_gfdb1"]
 [ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/EventGraph.gd" id="3_je2si"]
 [ext_resource type="Script" uid="uid://lqyk281ucrq2" path="res://addons/jeffy_events/events/flow/EventLabel.gd" id="4_qerwj"]
+[ext_resource type="Script" uid="uid://ox74uk5v5wod" path="res://addons/jeffy_events/script/EventGraphVariable.gd" id="5_xu6y7"]
 
 [sub_resource type="Resource" id="Resource_xu6y7"]
 script = ExtResource("1_je2si")
@@ -30,6 +31,16 @@ position = Vector2(-176, 240)
 script = ExtResource("3_gfdb1")
 position = Vector2(256, 160)
 
+[sub_resource type="Resource" id="Resource_cd4fe"]
+script = ExtResource("5_xu6y7")
+name = &"Test"
+type = 2
+
+[sub_resource type="Resource" id="Resource_ak7ew"]
+script = ExtResource("5_xu6y7")
+name = &"NodePath"
+type = 22
+
 [resource]
 script = ExtResource("3_je2si")
 _events = Dictionary[StringName, ExtResource("1_24mdn")]({
@@ -38,6 +49,7 @@ _events = Dictionary[StringName, ExtResource("1_24mdn")]({
 &"e6b8155f-dda8-424b-97a9-5eb4c177d71e": SubResource("Resource_je2si")
 })
 _labels = Array[StringName]([&"start", &"another_start", &"label_3"])
+_variables = Array[ExtResource("5_xu6y7")]([SubResource("Resource_cd4fe"), SubResource("Resource_ak7ew")])
 _connections = Dictionary[StringName, Array]({
 &"99e4fadd-873a-4e12-a5ed-aa84faf48917": [SubResource("Resource_xu6y7")],
 &"afddd198-b0c8-4fbd-89c3-a20f8fac79ae": [SubResource("Resource_qerwj")]
