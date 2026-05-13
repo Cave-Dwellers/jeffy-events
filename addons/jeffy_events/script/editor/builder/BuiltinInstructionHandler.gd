@@ -42,13 +42,11 @@ func handle_port_instruction(instruction : JEP_ElementInstruction.Port, node : J
 		node.set_slot_enabled_left(id, true)
 		node.set_slot_type_left(id, type)
 		node.set_slot_color_left(id, color)
-		node.set_slot_metadata_left(id, instruction._id)
 	
 	if instruction._has_out:
 		node.set_slot_enabled_right(id, true)
 		node.set_slot_type_right(id, type)
 		node.set_slot_color_right(id, color)
-		node.set_slot_metadata_right(id, instruction._id)
 
 func handle_property_instruction(
 	instruction : JEP_ElementInstruction.Property,

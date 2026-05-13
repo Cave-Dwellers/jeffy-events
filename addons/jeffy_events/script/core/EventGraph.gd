@@ -245,7 +245,7 @@ func add_variable(variable : StringName, type : int) -> bool:
 func remove_variable(variable : StringName) -> bool:
 	if has_variable(variable):
 		var at : int = _variables.find_custom(func(v : JEP_EventGraphVariable) -> bool: return v.name == variable)
-		var def : StringName = _variables.pop_at(at)
+		var def : JEP_EventGraphVariable = _variables.pop_at(at)
 		
 		variable_removed.emit(def)
 		emit_changed()

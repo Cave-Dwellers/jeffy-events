@@ -1,15 +1,17 @@
 [gd_scene format=3 uid="uid://cx88vqdkttnsf"]
 
-[ext_resource type="Script" uid="uid://beaffmgx6d5nq" path="res://addons/jeffy_events/script/EventGraphPlayer.gd" id="1_1faq4"]
+[ext_resource type="Script" uid="uid://beaffmgx6d5nq" path="res://addons/jeffy_events/script/core/player/EventGraphPlayer.gd" id="1_1faq4"]
 [ext_resource type="Resource" uid="uid://bc1hh0p2r7ibd" path="res://example/Test2.tres" id="2_ab40s"]
 
 [sub_resource type="GDScript" id="GDScript_t555h"]
 resource_name = "Example2"
 script/source = "extends Node
 
+@export var value : int = 10
+
 func _ready() -> void:
 	$JEP_EventGraphPlayer.finished.connect(print.bind(\"Execution completed!\"))
-	$JEP_EventGraphPlayer.play(\"Start\")
+	$JEP_EventGraphPlayer.play(\"Start\", {&\"amount\" : value} as Dictionary[StringName, Variant])
 "
 
 [node name="Example2" type="Node" unique_id=489760161]

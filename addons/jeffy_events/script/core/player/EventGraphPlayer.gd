@@ -6,17 +6,33 @@ signal finished()
 
 @export var graph : JEP_EventGraph
 
-var completed_uuids : Array[StringName] = []
+var _context_object : JEP_GraphContext
+var _completed_uuids : Array[StringName] = []
+var _variables : Dictionary[StringName, Variant] = {}
 
 ## Can be overwritten in a super class to provide a "context object" to all
 ## events. See markdown docs for more info
-func get_context_object() -> Object:
-	return null
+func get_context_object() -> JEP_GraphContext:
+	if !_context_object:
+		_context_object = JEP_GraphContext.new(self)
+	return _context_object
 
-func play(label : String = "") -> void:
+## Assigns a variable dictionary to this graph player. The dictionary is
+## made read-only once it is bound 
+func bind_variables(variables : Dictionary[StringName, Variant]) -> void:
+	_variables = variables
+	_variables.make_read_only()
+
+## Plays an event graph starting at [param label]. Variables can be provided
+## if the graph requires them
+func play(label : String = "", variables : Dictionary[StringName, Variant] = {}) -> void:
 	if !graph:
 		push_warning("%s | No graph provided" % name)
 		return
+	
+	if Engine.is_editor_hint() || OS.has_feature(&"debug"):
+		_verify_variables(variables)
+	bind_variables(variables)
 	
 	var copy : JEP_EventGraph = graph.duplicate()
 	var start : StringName
@@ -39,12 +55,32 @@ func play(label : String = "") -> void:
 
 #region Internal
 
+## Throws assertions if variables are missing, throwaway, or improperly supplied
+func _verify_variables(variables : Dictionary[StringName, Variant] = {}) -> void:
+	var to_supply : Array[String] = []
+	for v : JEP_EventGraphVariable in graph._variables:
+		# Add to list
+		to_supply.append(v.name)
+		
+		# Variable should be supplied
+		assert(variables.has(v.name), "%s | Variable %s is not supplied" % [name, v.name])
+		if !variables.has(v.name):
+			continue
+		
+		# Variable data should match the data type
+		var data : Variant = variables.get(v.name);
+		assert(typeof(data) == v.type, "%s | Variable %s was supplied incorrect data type. %s should be %s instead" % [name, v.name, type_string(typeof(data)), type_string(v.type)])
+	
+	for key : String in variables.keys():
+		# Variable should be defined in graph
+		assert(to_supply.has(key), "%s | Variable %s does not exist in graph, consider extending JEP_GraphContext instead" % [name, key])
+		
 func _execute(e_graph : JEP_EventGraph, uuid : StringName) -> void:
 	var event : JEP_Event = e_graph._events[uuid]
 	_resolve_data(e_graph, uuid)
 	
 	var out_port : int = await event._event(get_context_object())
-	completed_uuids.append(uuid)
+	_completed_uuids.append(uuid)
 	_traverse(out_port, e_graph, uuid)
 
 func _resolve_data(e_graph : JEP_EventGraph, uuid : StringName, visited : Array = []) -> void:
@@ -65,10 +101,10 @@ func _resolve_data(e_graph : JEP_EventGraph, uuid : StringName, visited : Array 
 			# Otherwise, we should warn if the event has not been
 			# processed just yet before pulling whatever data is
 			# present
-			if !completed_uuids.has(connection.from_uuid):
+			if !_completed_uuids.has(connection.from_uuid):
 				push_warning("[JeffyEvents] Data pull form unprocessed %s event" % from_event._get_name())
 		
-		var data : Variant = from_event._pull_data(connection.from_port)
+		var data : Variant = from_event._pull_data(connection.from_port, get_context_object())
 		event._accept_data(connection.to_port, data)
 
 func _traverse(port : int, e_graph : JEP_EventGraph, from_uuid : StringName) -> void:
@@ -77,7 +113,7 @@ func _traverse(port : int, e_graph : JEP_EventGraph, from_uuid : StringName) -> 
 	var next_uuid : StringName
 	
 	if connections.is_empty() || from_event is EventTerminator:
-		finished.emit()
+		_finish()
 		return
 	
 	for connection : JEP_EventGraphConnection in connections:
@@ -90,5 +126,10 @@ func _traverse(port : int, e_graph : JEP_EventGraph, from_uuid : StringName) -> 
 		return
 	
 	_execute(e_graph, next_uuid)
+
+func _finish() -> void:
+	finished.emit()
+	_completed_uuids.clear()
+	_context_object = null
 
 #endregion

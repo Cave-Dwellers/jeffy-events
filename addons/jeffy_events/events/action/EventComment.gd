@@ -3,7 +3,7 @@ class_name EventComment extends JEP_Event
 
 @export_storage var text : String
 
-func _event(ctx : Object = null) -> int:
+func _event(ctx : JEP_GraphContext) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:

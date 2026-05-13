@@ -11,15 +11,13 @@ func with_label(text : String) -> JEP_ElementInstruction:
 class Port extends JEP_ElementInstruction:
 	var _has_in : bool
 	var _has_out : bool
-	var _id : int
 	
 	func with_input() -> Port:
 		_has_in = true
 		return self
 	
-	func with_output(p_id : int) -> Port:
+	func with_output() -> Port:
 		_has_out = true
-		_id = p_id
 		return self
 
 class DataSource extends Port:

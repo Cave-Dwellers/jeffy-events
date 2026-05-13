@@ -1,7 +1,7 @@
 @tool
 class_name EventTerminator extends JEP_Event
 
-func _event(ctx : Object = null) -> int:
+func _event(ctx : JEP_GraphContext) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:

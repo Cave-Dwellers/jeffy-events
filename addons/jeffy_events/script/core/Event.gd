@@ -18,11 +18,11 @@ const ELEMENT := preload("uid://b0rgkngbx133o")
 ## Method called by [JEP_EventGraphPlayer] when this
 ## event is reached in an [JEP_EventGraph]. The argument
 ## may be null depending on how the Event is being called
-func _event(ctx : Object = null) -> int
+func _event(ctx : JEP_GraphContext) -> int
 
 ## Method called by [JEP_EventGraphExecutor] when data
 ## on a port needs to be resolved.
-func _pull_data(port : int) -> Variant:
+func _pull_data(port : int, ctx : JEP_GraphContext) -> Variant:
 	return null
 
 ## Method called by [JEP_EventGraphExecutor] when data

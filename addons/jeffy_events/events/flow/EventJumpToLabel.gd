@@ -3,7 +3,7 @@ class_name EventJumpToLabel extends JEP_Event
 
 @export_storage var label : String
 
-func _event(ctx : Object = null) -> int:
+func _event(ctx : JEP_GraphContext) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:

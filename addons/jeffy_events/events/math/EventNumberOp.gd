@@ -8,12 +8,12 @@ const OPERATIONS : Array[String] = ["Add", "Subtract", "Multiply", "Divide", "Mo
 @export_storage var number_2 : float = 0.0
 @export_storage var rounded : bool = true
 
-func _event(ctx : Object = null) -> int:
+func _event(ctx : JEP_GraphContext) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
 	return NODE.new(graph, self)\
-			.with_element(ELEMENT.DataSource.new(&"Output").without_input().with_type(2).with_output(0))\
+			.with_element(ELEMENT.DataSource.new(&"Output").without_input().with_type(2).with_output())\
 			.with_element(ELEMENT.EnumLine.new(&"operation").with_strings(OPERATIONS).without_input())\
 			.with_element(ELEMENT.Bool.new(&"rounded").without_input())\
 			.with_element(ELEMENT.Number.new(&"number_1").with_step(0.1))\
@@ -28,7 +28,7 @@ func _accept_data(port : int, data : Variant) -> void:
 	if port == 1:
 		number_2 = data
 
-func _pull_data(port : int) -> Variant:
+func _pull_data(port : int, ctx : JEP_GraphContext) -> Variant:
 	if port != 0:
 		return null
 		

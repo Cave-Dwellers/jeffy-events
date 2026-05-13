@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="JEP_EventGraph" format=3 uid="uid://ckf6s0fwo2bfm"]
 
-[ext_resource type="Script" uid="uid://wrht034bbam1" path="res://addons/jeffy_events/script/Event.gd" id="1_24mdn"]
-[ext_resource type="Script" uid="uid://d1f2qorxx20m3" path="res://addons/jeffy_events/script/EventGraphConnection.gd" id="1_je2si"]
+[ext_resource type="Script" uid="uid://wrht034bbam1" path="res://addons/jeffy_events/script/core/Event.gd" id="1_24mdn"]
+[ext_resource type="Script" uid="uid://d1f2qorxx20m3" path="res://addons/jeffy_events/script/core/EventGraphConnection.gd" id="1_je2si"]
 [ext_resource type="Script" uid="uid://c5esjyr207jgv" path="res://addons/jeffy_events/events/flow/EventTerminator.gd" id="3_gfdb1"]
-[ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/EventGraph.gd" id="3_je2si"]
+[ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/core/EventGraph.gd" id="3_je2si"]
 [ext_resource type="Script" uid="uid://lqyk281ucrq2" path="res://addons/jeffy_events/events/flow/EventLabel.gd" id="4_qerwj"]
-[ext_resource type="Script" uid="uid://ox74uk5v5wod" path="res://addons/jeffy_events/script/EventGraphVariable.gd" id="5_xu6y7"]
+[ext_resource type="Script" uid="uid://ox74uk5v5wod" path="res://addons/jeffy_events/script/core/EventGraphVariable.gd" id="5_xu6y7"]
 
 [sub_resource type="Resource" id="Resource_xu6y7"]
 script = ExtResource("1_je2si")

@@ -6,7 +6,7 @@ class_name EventPrint extends JEP_Event
 
 var format : Dictionary = {}
 
-func _event(ctx : Object = null) -> int:
+func _event(ctx : JEP_GraphContext) -> int:
 	to_print = to_print.format(format) 
 	print("[JeffyEvents] %s" % to_print)
 	return 0
@@ -26,7 +26,7 @@ func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
 				.with_element(
 						ELEMENT.Port.new()\
 							.with_input()\
-							.with_output(0)
+							.with_output()
 							.with_label("Flow")
 				)\
 				.with_element(

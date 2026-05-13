@@ -4,12 +4,12 @@ class_name EventStringConcatenate extends JEP_Event
 @export_storage var line_1 : String
 @export_storage var line_2 : String
 
-func _event(ctx : Object = null) -> int:
+func _event(ctx : JEP_GraphContext) -> int:
 	return 0
 
 func _get_instruction(graph : JEP_EventGraph) -> JEP_NodeInstruction:
 	return NODE.new(graph, self)\
-			.with_element(ELEMENT.DataSource.new(&"Output").without_input().with_type(3).with_output(0))\
+			.with_element(ELEMENT.DataSource.new(&"Output").without_input().with_type(3).with_output())\
 			.with_element(ELEMENT.Line.new(&"line_1"))\
 			.with_element(ELEMENT.Line.new(&"line_2"))
 
@@ -22,7 +22,7 @@ func _accept_data(port : int, data : Variant) -> void:
 	if port == 1:
 		line_2 = data
 
-func _pull_data(port : int) -> Variant:
+func _pull_data(port : int, ctx : JEP_GraphContext) -> Variant:
 	if port == 0:
 		return line_1 + line_2
 	return null
