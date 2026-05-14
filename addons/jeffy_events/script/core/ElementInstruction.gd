@@ -12,6 +12,9 @@ class Port extends JEP_ElementInstruction:
 	var _has_in : bool
 	var _has_out : bool
 	
+	func _init(p_label : StringName = &"") -> void:
+		_label = p_label
+	
 	func with_input() -> Port:
 		_has_in = true
 		return self
@@ -129,4 +132,30 @@ class CodeLine extends Property:
 	
 	func with_placeholder(text : StringName) -> CodeLine:
 		_placeholder_text = text
+		return self
+
+class NodePathField extends Property:
+	var _scope : Array[String] = []
+	
+	func _get_type() -> Array[int]:
+		return [TYPE_NODE_PATH]
+	
+	func _get_port_type() -> int:
+		return Ports.DataNodePath
+	
+	func with_scope(classes : Array[String]) -> NodePathField:
+		_scope = classes
+		return self
+
+class ResourceField extends Property:
+	var _scope : String
+	
+	func _get_type() -> Array[int]:
+		return [TYPE_OBJECT]
+	
+	func _get_port_type() -> int:
+		return Ports.DataResource
+	
+	func with_scope(clazz : String) -> ResourceField:
+		_scope = clazz
 		return self

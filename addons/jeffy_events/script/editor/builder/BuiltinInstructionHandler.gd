@@ -66,6 +66,8 @@ func handle_property_instruction(
 		handle_enum_line_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.Bool:
 		handle_bool_instruction(instruction, node, event, element)
+	if instruction is JEP_ElementInstruction.NodePathField:
+		handle_node_path_instruction(instruction, node, event, element)
 
 func handle_number_instruction(
 	instruction : JEP_ElementInstruction.Number, 
@@ -231,6 +233,43 @@ func handle_bool_instruction(
 		func(on : bool) -> void:
 			event.set(property, on)
 			event.emit_changed()
+	)
+	node.add_connection_listener(
+		element.get_index(), input, 
+		func(inp : Control, connected : bool) -> void:
+			inp.set(&"disabled", connected)
+			inp.visible = !connected,
+	)
+	
+	element.add_child(input)
+
+func handle_node_path_instruction(
+	instruction : JEP_ElementInstruction.NodePathField,
+	node : JEP_EventGraphNode,
+	event : JEP_Event,
+	element : HBoxContainer) -> void:
+	var property : StringName = instruction._property
+	var value : NodePath = event.get(property) as NodePath
+	var input : Button = configure_input(Button.new())
+	
+	input.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS_FORCE
+	
+	var set_text : Callable = \
+		func(new_path : NodePath) -> void:
+			if !new_path.is_empty():
+				input.text = new_path.get_name(new_path.get_name_count() - 1)
+			else:
+				input.text = &"Assign..."
+	set_text.call(value)
+	
+	var on_node_select : Callable = \
+		func(path : NodePath) -> void:
+			event.set(property, path)
+			set_text.call(path)
+			event.emit_changed()
+	
+	input.pressed.connect(
+		EditorInterface.popup_node_selector.bind(on_node_select, instruction._scope)
 	)
 	node.add_connection_listener(
 		element.get_index(), input, 

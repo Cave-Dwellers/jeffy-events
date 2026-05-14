@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://beaffmgx6d5nq" path="res://addons/jeffy_events/script/core/player/EventGraphPlayer.gd" id="1_1faq4"]
 [ext_resource type="Resource" uid="uid://bc1hh0p2r7ibd" path="res://example/Test2.tres" id="2_ab40s"]
+[ext_resource type="Texture2D" uid="uid://dk0r4j8y0pkrh" path="res://icon.svg" id="3_ab40s"]
 
 [sub_resource type="GDScript" id="GDScript_t555h"]
 resource_name = "Example2"
@@ -21,3 +22,8 @@ script = SubResource("GDScript_t555h")
 script = ExtResource("1_1faq4")
 graph = ExtResource("2_ab40s")
 metadata/_custom_type_script = "uid://beaffmgx6d5nq"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=274351513]
+position = Vector2(669.5, 303)
+scale = Vector2(4.0859375, 1)
+texture = ExtResource("3_ab40s")

@@ -25,8 +25,29 @@ func _init(player : JEP_EventGraphPlayer) -> void:
 ## lead to nothing if a graph is executed in a
 ## different scene
 ##
-## If you have game objects you need access to for
+## If you have game objects you need access to for several
 ## events, it may be better to extend the [JEP_GraphContext]
 ## and [JEP_EventGraphPlayer] to provide those objects
 func get_node_or_null(path : NodePath) -> Node:
-	return current_scene.get_node_or_null(path)
+	if path.is_empty():
+		return null
+	
+	# Jeff - paths are defined relative to the currently
+	# open scene in the editor. Sometimes the executor can be 
+	# nested in an instance, so we recursively search for the 
+	# root of the path.
+	#
+	# TODO - It might be better to have our own way of retrieving
+	# objects from a graph, rather than using nodepaths. Node groups
+	# might be the answer, but that may be prone to its own issues
+	return _find_node(graph_player.owner, path)
+
+func _find_node(from : Node, path : NodePath) -> Node:
+	var node : Node = from.get_node_or_null(path)
+	if node:
+		return node
+	
+	if from.get_parent():
+		return null
+	return _find_node(from.get_parent(), path)
+	

@@ -11,9 +11,16 @@
 [ext_resource type="Script" uid="uid://cd078cttvc0ax" path="res://addons/jeffy_events/events/math/EventNumberOp.gd" id="9_fluda"]
 [ext_resource type="Script" uid="uid://bi10lh41f6m86" path="res://addons/jeffy_events/events/flow/EventJumpToLabel.gd" id="11_2uakf"]
 [ext_resource type="Script" uid="uid://bxp2n7nhtdtfe" path="res://addons/jeffy_events/events/math/EventStringify.gd" id="12_5rd6q"]
+[ext_resource type="Script" uid="uid://du0lhkq5hy1xq" path="res://addons/jeffy_events/events/action/EventWait.gd" id="13_aqg6s"]
 [ext_resource type="Script" uid="uid://ox74uk5v5wod" path="res://addons/jeffy_events/script/core/EventGraphVariable.gd" id="13_nbus4"]
 [ext_resource type="Script" uid="uid://digsibe5l4qk0" path="res://addons/jeffy_events/events/data/EventVariableInput.gd" id="13_q4mnr"]
+[ext_resource type="Script" uid="uid://dagalxrvqwtjr" path="res://addons/jeffy_events/events/action/EventRemoveNode.gd" id="14_6se7u"]
 [ext_resource type="Script" uid="uid://b7k4pww3auvo8" path="res://addons/jeffy_events/script/core/EventGraph.gd" id="14_aqg6s"]
+
+[sub_resource type="Resource" id="Resource_egcq3"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"02b22bfd-ce26-4e21-bedd-e2cf5edc8478"
+to_uuid = &"61f6333d-3cfd-49fb-9588-788e43cba9e2"
 
 [sub_resource type="Resource" id="Resource_83igj"]
 script = ExtResource("1_ihk5q")
@@ -21,15 +28,45 @@ from_uuid = &"098f8073-a05b-4021-b35f-456d57de74bb"
 to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 type = 1
 
+[sub_resource type="Resource" id="Resource_ahsei"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"24174a08-69c1-46e6-be09-4364d7fe70a8"
+to_uuid = &"02b22bfd-ce26-4e21-bedd-e2cf5edc8478"
+
+[sub_resource type="Resource" id="Resource_f0uuc"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"2a176d3d-447c-4553-ab72-8ce6967c2d47"
+to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+
+[sub_resource type="Resource" id="Resource_fqy15"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
+to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+to_port = 2
+type = 1
+
+[sub_resource type="Resource" id="Resource_nbus4"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"437b78b5-c760-4b09-bc36-c1b4627c1db0"
+to_uuid = &"8f9143b6-6548-448e-b777-a59f15a86fbc"
+type = 1
+
 [sub_resource type="Resource" id="Resource_nox8m"]
 script = ExtResource("1_ihk5q")
 from_uuid = &"87a3af34-3899-43af-ad82-705983e3770c"
-to_uuid = &"61f6333d-3cfd-49fb-9588-788e43cba9e2"
+to_uuid = &"24174a08-69c1-46e6-be09-4364d7fe70a8"
 
 [sub_resource type="Resource" id="Resource_m32jf"]
 script = ExtResource("1_ihk5q")
 from_uuid = &"8f9143b6-6548-448e-b777-a59f15a86fbc"
 to_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
+type = 1
+
+[sub_resource type="Resource" id="Resource_6pnnt"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
+to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+to_port = 1
 type = 1
 
 [sub_resource type="Resource" id="Resource_5rd6q"]
@@ -39,40 +76,25 @@ to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 to_port = 1
 type = 1
 
-[sub_resource type="Resource" id="Resource_nbus4"]
-script = ExtResource("1_ihk5q")
-from_uuid = &"437b78b5-c760-4b09-bc36-c1b4627c1db0"
-to_uuid = &"8f9143b6-6548-448e-b777-a59f15a86fbc"
-type = 1
-
-[sub_resource type="Resource" id="Resource_f0uuc"]
-script = ExtResource("1_ihk5q")
-from_uuid = &"2a176d3d-447c-4553-ab72-8ce6967c2d47"
-to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-
-[sub_resource type="Resource" id="Resource_6pnnt"]
-script = ExtResource("1_ihk5q")
-from_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
-to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-to_port = 1
-type = 1
-
 [sub_resource type="Resource" id="Resource_peopf"]
 script = ExtResource("1_ihk5q")
 from_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
 to_uuid = &"7b4a3667-e4ab-4d6d-953b-f695f3b1f8db"
 
-[sub_resource type="Resource" id="Resource_fqy15"]
-script = ExtResource("1_ihk5q")
-from_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
-to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-to_port = 2
-type = 1
+[sub_resource type="Resource" id="Resource_4nt7k"]
+script = ExtResource("14_6se7u")
+node_path = NodePath("Sprite2D")
+position = Vector2(496, -80)
 
 [sub_resource type="Resource" id="Resource_ihk5q"]
 script = ExtResource("6_83igj")
 value = "super "
 position = Vector2(-608, -224)
+
+[sub_resource type="Resource" id="Resource_lf8kn"]
+script = ExtResource("13_aqg6s")
+time = 2.0
+position = Vector2(240, -80)
 
 [sub_resource type="Resource" id="Resource_q4mnr"]
 script = ExtResource("7_fluda")
@@ -90,7 +112,7 @@ position = Vector2(-896, 128)
 
 [sub_resource type="Resource" id="Resource_f7ulf"]
 script = ExtResource("2_2kpud")
-position = Vector2(-32, -512)
+position = Vector2(752, -80)
 
 [sub_resource type="Resource" id="Resource_2xbqy"]
 script = ExtResource("11_2uakf")
@@ -100,7 +122,7 @@ position = Vector2(240, -240)
 [sub_resource type="Resource" id="Resource_7cxs8"]
 script = ExtResource("7_fluda")
 label = "AnotherStart"
-position = Vector2(-304, -512)
+position = Vector2(-32, -80)
 
 [sub_resource type="Resource" id="Resource_4s03x"]
 script = ExtResource("9_fluda")
@@ -136,7 +158,9 @@ type = 2
 [resource]
 script = ExtResource("14_aqg6s")
 _events = Dictionary[StringName, ExtResource("2_q4mnr")]({
+&"02b22bfd-ce26-4e21-bedd-e2cf5edc8478": SubResource("Resource_4nt7k"),
 &"098f8073-a05b-4021-b35f-456d57de74bb": SubResource("Resource_ihk5q"),
+&"24174a08-69c1-46e6-be09-4364d7fe70a8": SubResource("Resource_lf8kn"),
 &"2a176d3d-447c-4553-ab72-8ce6967c2d47": SubResource("Resource_q4mnr"),
 &"2a66ac6f-52be-4713-8c9e-cdfebb95930d": SubResource("Resource_ngit7"),
 &"437b78b5-c760-4b09-bc36-c1b4627c1db0": SubResource("Resource_eh6du"),
@@ -152,7 +176,9 @@ _events = Dictionary[StringName, ExtResource("2_q4mnr")]({
 _labels = Array[StringName]([&"Start", &"AnotherStart"])
 _variables = Array[ExtResource("13_nbus4")]([SubResource("Resource_6se7u")])
 _connections = Dictionary[StringName, Array]({
+&"02b22bfd-ce26-4e21-bedd-e2cf5edc8478": [SubResource("Resource_egcq3")],
 &"098f8073-a05b-4021-b35f-456d57de74bb": [SubResource("Resource_83igj")],
+&"24174a08-69c1-46e6-be09-4364d7fe70a8": [SubResource("Resource_ahsei")],
 &"2a176d3d-447c-4553-ab72-8ce6967c2d47": [SubResource("Resource_f0uuc")],
 &"2a66ac6f-52be-4713-8c9e-cdfebb95930d": [SubResource("Resource_fqy15")],
 &"437b78b5-c760-4b09-bc36-c1b4627c1db0": [SubResource("Resource_nbus4")],

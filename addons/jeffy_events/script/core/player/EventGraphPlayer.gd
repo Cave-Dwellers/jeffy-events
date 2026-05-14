@@ -30,9 +30,10 @@ func play(label : String = "", variables : Dictionary[StringName, Variant] = {})
 		push_warning("%s | No graph provided" % name)
 		return
 	
+	if !variables.is_empty():
+		bind_variables(variables)
 	if Engine.is_editor_hint() || OS.has_feature(&"debug"):
-		_verify_variables(variables)
-	bind_variables(variables)
+		_verify_variables(_variables)
 	
 	var copy : JEP_EventGraph = graph.duplicate()
 	var start : StringName
@@ -112,8 +113,7 @@ func _traverse(port : int, e_graph : JEP_EventGraph, from_uuid : StringName) -> 
 	var connections : Array = e_graph._connections.get(from_uuid, [])
 	var next_uuid : StringName
 	
-	if connections.is_empty() || from_event is EventTerminator:
-		_finish()
+	if !_handle_special_event(port, e_graph, from_uuid):
 		return
 	
 	for connection : JEP_EventGraphConnection in connections:
@@ -126,6 +126,21 @@ func _traverse(port : int, e_graph : JEP_EventGraph, from_uuid : StringName) -> 
 		return
 	
 	_execute(e_graph, next_uuid)
+
+func _handle_special_event(port : int, e_graph : JEP_EventGraph, from_uuid : StringName) -> bool:
+	var from_event : JEP_Event = e_graph._events[from_uuid]
+	var connections : Array = e_graph._connections.get(from_uuid, [])
+
+	if from_event is EventJumpToLabel:
+		var label : String = from_event.label
+		play(label)
+		return false
+	
+	if connections.is_empty() || from_event is EventTerminator:
+		_finish()
+		return false
+	
+	return true
 
 func _finish() -> void:
 	finished.emit()
