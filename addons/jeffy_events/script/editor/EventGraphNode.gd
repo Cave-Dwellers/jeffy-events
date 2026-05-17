@@ -9,6 +9,7 @@ signal built(node : JEP_EventGraphNode)
 ## TODO: registry system for this shit
 var _HANDLERS = [JEP_BuiltinInstructionHandler.new()]
 
+var _is_building : bool = false
 var _event : JEP_Event
 var _uuid : StringName
 
@@ -40,6 +41,11 @@ func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	parse_instruction(event, graph)
 
 func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
+	# Dont let this be called several times in a frame
+	if _is_building:
+		return
+	_is_building = true
+	
 	# Remove existing
 	connection_listeners.clear()
 	for child in get_children():
@@ -50,8 +56,7 @@ func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	
 	var instruction := event._get_instruction(graph)
 	if !instruction.is_static:
-		
-		graph.changed.connect(parse_instruction.bind(event, graph), CONNECT_ONE_SHOT)
+		event.changed.connect(parse_instruction.bind(event, graph), CONNECT_ONE_SHOT | CONNECT_DEFERRED)
 	
 	for handler : JEP_InstructionHandler in _HANDLERS:
 		handler._handle_node_instruction(instruction, self)
@@ -60,6 +65,7 @@ func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 		parse_element_instruction(self, event, element_instruction)
 	
 	built.emit(self)
+	_is_building = false
 
 func parse_element_instruction(graph_node : GraphNode, event : JEP_Event, instruction : JEP_ElementInstruction) -> void:
 	for handler : JEP_InstructionHandler in _HANDLERS:
