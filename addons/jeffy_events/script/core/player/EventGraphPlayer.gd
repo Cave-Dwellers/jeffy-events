@@ -6,6 +6,8 @@ signal finished()
 
 @export var graph : JEP_EventGraph
 
+var _is_editor : bool :
+	get : return Engine.is_editor_hint() || OS.has_feature(&"debug")
 var _context_object : JEP_GraphContext
 var _completed_uuids : Array[StringName] = []
 var _variables : Dictionary[StringName, Variant] = {}
@@ -32,7 +34,7 @@ func play(label : String = "", variables : Dictionary[StringName, Variant] = {})
 	
 	if !variables.is_empty():
 		bind_variables(variables)
-	if Engine.is_editor_hint() || OS.has_feature(&"debug"):
+	if _is_editor:
 		_verify_variables(_variables)
 	
 	var copy : JEP_EventGraph = graph.duplicate()
@@ -51,6 +53,10 @@ func play(label : String = "", variables : Dictionary[StringName, Variant] = {})
 	if !start:
 		push_warning("%s | Label %s does not exist in graph" % [name, label])
 		return
+		
+	if _is_editor:
+		if !_verify_flow(start):
+			return
 	
 	_execute(copy, start)
 
@@ -75,7 +81,29 @@ func _verify_variables(variables : Dictionary[StringName, Variant] = {}) -> void
 	for key : String in variables.keys():
 		# Variable should be defined in graph
 		assert(to_supply.has(key), "%s | Variable %s does not exist in graph, consider extending JEP_GraphContext instead" % [name, key])
+
+## Throws assertions if there is a loop in the connection (infinite recursion),
+## it does a simple depth check from whatever starting point is provided in
+## [param from_uuid]
+func _verify_flow(from_uuid : StringName, depth : int = 0, reached : Dictionary[StringName, int] = {}) -> bool:
+	if reached.has(from_uuid):
+		assert(reached[from_uuid] == depth, "%s | Backwards traversal detected in graph, please fix!")
+		return false
+	
+	var incoming_depth : int = reached.get(from_uuid, -1)
+	if incoming_depth == -1:
+		reached[from_uuid] = depth
+	
+	var connections := graph.get_connections_from(from_uuid)
+	for connection : JEP_EventGraphConnection in connections:
+		if connection.is_data():
+			continue
 		
+		return _verify_flow(connection.to_uuid, depth + 1, reached)
+	
+	# No problems here!
+	return true
+	
 func _execute(e_graph : JEP_EventGraph, uuid : StringName) -> void:
 	var event : JEP_Event = e_graph._events[uuid]
 	_resolve_data(e_graph, uuid)

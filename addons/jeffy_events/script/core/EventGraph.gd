@@ -167,7 +167,11 @@ func get_connection(from_uuid : StringName, from_port : int, to_uuid : StringNam
 		return connection
 	return null
 
-## Returns a list of event UUIDs that are connected to [param uuid].
+## Returns a list of connections that are sourced from [param uuid].
+func get_connections_from(uuid : StringName) -> Array[JEP_EventGraphConnection]:
+	return Array(_connections.get(uuid, []), TYPE_OBJECT, &"Resource", JEP_EventGraphConnection)
+
+## Returns a list of connections that are connected to [param uuid].
 func get_connections_to(uuid : StringName) -> Array[JEP_EventGraphConnection]:
 	var connections : Array[JEP_EventGraphConnection] = []
 	for array : Array in _connections.values():
