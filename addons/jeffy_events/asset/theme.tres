@@ -102,6 +102,58 @@ shadow_color = Color(0, 0, 0, 0.005)
 shadow_size = 8
 shadow_offset = Vector2(0, 4)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chnad"]
+bg_color = Color(0, 0, 0, 0.3372549)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+expand_margin_top = 1.0
+expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2iqoa"]
+bg_color = Color(0, 0, 0, 0.21960784)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+expand_margin_top = 1.0
+expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddyqc"]
+bg_color = Color(0, 0, 0, 0.21960784)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+expand_margin_top = 1.0
+expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2vpuo"]
+bg_color = Color(0, 0, 0, 0.21960784)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+expand_margin_top = 1.0
+expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
 [sub_resource type="DPITexture" id="DPITexture_ip2ow"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><rect width=\"14\" height=\"14\" x=\"1\" y=\"1\" fill=\"#699ce8\" rx=\"2.33\"/><path fill=\"#fff\" d=\"M11.5 3.734 5.89 9.346 4.185 7.665l-1.5 1.499 3.204 3.18L13 5.235z\"/></svg>
 "
@@ -984,6 +1036,12 @@ Button/styles/normal = SubResource("StyleBoxFlat_a8cvy")
 Button/styles/normal_mirrored = SubResource("StyleBoxFlat_a8cvy")
 Button/styles/pressed = SubResource("StyleBoxFlat_nf3vt")
 Button/styles/pressed_mirrored = SubResource("StyleBoxFlat_nf3vt")
+ButtonTitlebar/base_type = &"Button"
+ButtonTitlebar/colors/icon_pressed_color = Color(1, 1, 1, 1)
+ButtonTitlebar/styles/hover = SubResource("StyleBoxFlat_chnad")
+ButtonTitlebar/styles/hover_pressed = SubResource("StyleBoxFlat_2iqoa")
+ButtonTitlebar/styles/normal = SubResource("StyleBoxFlat_ddyqc")
+ButtonTitlebar/styles/pressed = SubResource("StyleBoxFlat_2vpuo")
 CheckBox/constants/check_v_offset = 0
 CheckBox/constants/h_separation = 8
 CheckBox/constants/outline_size = 0

@@ -74,9 +74,7 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 	
 	# Add new nodes
 	for node : JEP_EventGraphNode in nodes:
-		add_child(node)
-		uuid_to_node[node._uuid] = node
-		node.built.connect(_graph_node_rebuilt.bind(), CONNECT_DEFERRED)
+		_add_graph_node(node)
 		
 	# Handle connections
 	for uuid : StringName in p_graph._connections.keys():
@@ -135,6 +133,16 @@ func _graph_node_rebuilt(node : JEP_EventGraphNode) -> void:
 	if connections_broken > 0:
 		JEP_Print.toast_warn("%d event connection%s broken" % [connections_broken, "s were" if connections_broken > 1 else " was"])
 
+func _graph_node_removed(node : JEP_EventGraphNode) -> void:
+	graph.remove_event(node._event)
+
+func _add_graph_node(node : JEP_EventGraphNode) -> void:
+	add_child(node)
+	uuid_to_node[node._uuid] = node
+	node.built.connect(_graph_node_rebuilt.bind(), CONNECT_DEFERRED)
+	node.remove_requested.connect(_graph_node_removed.bind(), CONNECT_DEFERRED)
+	node.queue_redraw()
+
 func _on_connection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	var from_node := get_node(NodePath(from_path)) as GraphNode
 	var from_port_type := from_node.get_output_port_type(from_port)
@@ -156,8 +164,7 @@ func _on_event_added(event : JEP_Event, uuid : StringName) -> void:
 	var node : JEP_EventGraphNode = JEP_EventGraphNode.new(event, graph)
 	
 	node.name = uuid
-	uuid_to_node[uuid] = node
-	add_child(node)
+	_add_graph_node(node)
 
 func _on_event_removed(_event : JEP_Event, uuid : StringName) -> void:
 	JEP_Print.info("Event removed: uuid %s" % uuid)

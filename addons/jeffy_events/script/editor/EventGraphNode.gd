@@ -2,9 +2,12 @@
 class_name JEP_EventGraphNode extends GraphNode
 
 const THEME : Theme = preload("res://addons/jeffy_events/asset/theme.tres")
+const TITLEBAR_BUTTON_MARIGN : int = 20
 
 ## Fired when the node is built
 signal built(node : JEP_EventGraphNode)
+## Fired when event removal is requested
+signal remove_requested(node : JEP_EventGraphNode)
 
 ## TODO: registry system for this shit
 var _HANDLERS = [JEP_BuiltinInstructionHandler.new()]
@@ -29,22 +32,46 @@ func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	var color : Color = JEP_FolderColorAPI.get_color(path).darkened(0.2)
 	
 	if color != Color.WHITE:
-		var titlebar : StyleBoxFlat = THEME.get_stylebox(&"titlebar", &"GraphNode").duplicate()
-		var titlebar_selected : StyleBoxFlat = THEME.get_stylebox(&"titlebar_selected", &"GraphNode").duplicate()
+		var t_titlebar : StyleBoxFlat = THEME.get_stylebox(&"titlebar", &"GraphNode").duplicate()
+		var t_titlebar_selected : StyleBoxFlat = THEME.get_stylebox(&"titlebar_selected", &"GraphNode").duplicate()
 		
-		titlebar.bg_color = color
-		titlebar_selected.bg_color = color
+		t_titlebar.bg_color = color
+		t_titlebar_selected.bg_color = color
 		
-		add_theme_stylebox_override(&"titlebar", titlebar)
-		add_theme_stylebox_override(&"titlebar_selected", titlebar_selected)
+		add_theme_stylebox_override(&"titlebar", t_titlebar)
+		add_theme_stylebox_override(&"titlebar_selected", t_titlebar_selected)
 	
 	parse_instruction(event, graph)
+
+func _ready() -> void:
+	# Add delete button
+	var titlebar : HBoxContainer = get_titlebar_hbox()
+	titlebar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var delete : Button = Button.new()
+	delete.theme_type_variation = &"ButtonTitlebar"
+	delete.icon = preload("res://addons/jeffy_events/asset/icon/Remove.svg")
+	delete.pressed.connect(remove_requested.emit.bind(self))
+	delete.size_flags_horizontal = Control.SIZE_SHRINK_END
+	titlebar.add_child(delete)
+
+func _draw() -> void:
+	# Jeff - theres a strange bug with how the titlebar is handled,
+	# it seems to break it's sizing when it's redrawn? It's not fully
+	# in my control, so here is my hack to fix it 
+	var titlebar : HBoxContainer = get_titlebar_hbox()
+	
+	#var target_size : Vector2 = titlebar.get_parent_control().get_minimum_size()
+	#titlebar.custom_minimum_size.x = target_size.x - TITLEBAR_BUTTON_MARIGN
+	
+	# Jeff - similar thing happens to the contents of the graph node
 
 func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	# Dont let this be called several times in a frame
 	if _is_building:
 		return
 	_is_building = true
+	print("building %s" % event._get_name())
 	
 	# Remove existing
 	connection_listeners.clear()
@@ -56,7 +83,8 @@ func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	
 	var instruction := event._get_instruction(graph)
 	if !instruction.is_static:
-		event.changed.connect(parse_instruction.bind(event, graph), CONNECT_ONE_SHOT | CONNECT_DEFERRED)
+		event.changed.connect(parse_instruction.bind(event, graph), CONNECT_ONE_SHOT)
+		event.changed.connect(queue_sort, CONNECT_ONE_SHOT | CONNECT_DEFERRED)
 	
 	for handler : JEP_InstructionHandler in _HANDLERS:
 		handler._handle_node_instruction(instruction, self)

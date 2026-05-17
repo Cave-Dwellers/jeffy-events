@@ -34,6 +34,7 @@ func play(label : String = "", variables : Dictionary[StringName, Variant] = {})
 	
 	if !variables.is_empty():
 		bind_variables(variables)
+	
 	if _is_editor:
 		_verify_variables(_variables)
 	
