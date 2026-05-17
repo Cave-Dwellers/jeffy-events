@@ -54,24 +54,20 @@ func _ready() -> void:
 	delete.pressed.connect(remove_requested.emit.bind(self))
 	delete.size_flags_horizontal = Control.SIZE_SHRINK_END
 	titlebar.add_child(delete)
-
-func _draw() -> void:
-	# Jeff - theres a strange bug with how the titlebar is handled,
-	# it seems to break it's sizing when it's redrawn? It's not fully
-	# in my control, so here is my hack to fix it 
-	var titlebar : HBoxContainer = get_titlebar_hbox()
 	
-	#var target_size : Vector2 = titlebar.get_parent_control().get_minimum_size()
-	#titlebar.custom_minimum_size.x = target_size.x - TITLEBAR_BUTTON_MARIGN
+	var target_size : Vector2 = titlebar.get_parent_control().get_minimum_size()
+	titlebar.custom_minimum_size.x = target_size.x - TITLEBAR_BUTTON_MARIGN
 	
-	# Jeff - similar thing happens to the contents of the graph node
+	# Jeff - Sometimes sorting is a little messed up on graph nodes,
+	# so this waits for a draw frame before calling for a sort of our elements
+	await get_tree().process_frame
+	queue_sort.call_deferred()
 
 func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	# Dont let this be called several times in a frame
 	if _is_building:
 		return
 	_is_building = true
-	print("building %s" % event._get_name())
 	
 	# Remove existing
 	connection_listeners.clear()

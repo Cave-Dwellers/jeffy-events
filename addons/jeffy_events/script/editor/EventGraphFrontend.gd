@@ -83,6 +83,21 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 			connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
 			_signal_node_connection(connection, true)
 
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_VISIBILITY_CHANGED:
+			if !visible:
+				return
+			
+			for node in get_children():
+				if node is not JEP_EventGraphNode:
+					continue
+				
+				# Nodes need to be sorted
+				node = node as JEP_EventGraphNode
+				node.get_titlebar_hbox().queue_sort()
+				node.queue_sort()
+
 func _clear() -> void:
 	uuid_to_node.clear()
 	for child : Node in get_children():
@@ -141,7 +156,7 @@ func _add_graph_node(node : JEP_EventGraphNode) -> void:
 	uuid_to_node[node._uuid] = node
 	node.built.connect(_graph_node_rebuilt.bind(), CONNECT_DEFERRED)
 	node.remove_requested.connect(_graph_node_removed.bind(), CONNECT_DEFERRED)
-	node.queue_redraw()
+	node.queue_sort.call_deferred()
 
 func _on_connection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	var from_node := get_node(NodePath(from_path)) as GraphNode
