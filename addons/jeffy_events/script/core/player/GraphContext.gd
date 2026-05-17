@@ -47,7 +47,7 @@ func _find_node(from : Node, path : NodePath) -> Node:
 	if node:
 		return node
 	
-	if from.get_parent():
+	if !from.get_parent():
 		return null
 	return _find_node(from.get_parent(), path)
 	

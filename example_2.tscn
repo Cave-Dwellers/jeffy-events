@@ -9,14 +9,16 @@ resource_name = "Example2"
 script/source = "extends Node
 
 @export var value : int = 10
+@export var path : NodePath
 
 func _ready() -> void:
 	$JEP_EventGraphPlayer.finished.connect(print.bind(\"Execution completed!\"))
-	$JEP_EventGraphPlayer.play(\"Start\", {&\"amount\" : value} as Dictionary[StringName, Variant])
+	$JEP_EventGraphPlayer.play(\"Start\", {&\"amount\" : value, &\"to_delete\" : path} as Dictionary[StringName, Variant])
 "
 
 [node name="Example2" type="Node" unique_id=489760161]
 script = SubResource("GDScript_t555h")
+path = NodePath("Sprite2D")
 
 [node name="JEP_EventGraphPlayer" type="Node" parent="." unique_id=1521903508]
 script = ExtResource("1_1faq4")
