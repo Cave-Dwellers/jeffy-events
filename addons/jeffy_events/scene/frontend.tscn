@@ -577,6 +577,7 @@ source? This action cannot be undone."
 [connection signal="dock_ready" from="." to="Frame/RightContainer/Variables/VariablesManager" method="_dock_ready"]
 [connection signal="graph_added" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_added"]
 [connection signal="graph_removed" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_removed"]
+[connection signal="graph_removed" from="EventGraphPool" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_graph_removed"]
 [connection signal="graph_replaced" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_replaced"]
 [connection signal="graph_saved" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_saved"]
 [connection signal="parsed" from="GraphParser" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="on_graph_parsed"]

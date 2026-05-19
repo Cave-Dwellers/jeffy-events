@@ -12,24 +12,22 @@ script = ExtResource("1_je2si")
 from_uuid = &"99e4fadd-873a-4e12-a5ed-aa84faf48917"
 to_uuid = &"e6b8155f-dda8-424b-97a9-5eb4c177d71e"
 
-[sub_resource type="Resource" id="Resource_qerwj"]
-script = ExtResource("1_je2si")
-from_uuid = &"afddd198-b0c8-4fbd-89c3-a20f8fac79ae"
-to_uuid = &"e6b8155f-dda8-424b-97a9-5eb4c177d71e"
-
 [sub_resource type="Resource" id="Resource_a5oe7"]
 script = ExtResource("4_qerwj")
 label = "start"
 position = Vector2(-176, 80)
+uuid = &"4c0e9011-f327-441b-bda4-aa1f028f1dba"
 
 [sub_resource type="Resource" id="Resource_rptp7"]
 script = ExtResource("4_qerwj")
 label = "another_start"
 position = Vector2(-176, 240)
+uuid = &"4c0e9011-f327-441b-bda4-aa1f028f1dba"
 
 [sub_resource type="Resource" id="Resource_je2si"]
 script = ExtResource("3_gfdb1")
 position = Vector2(256, 160)
+uuid = &"4c0e9011-f327-441b-bda4-aa1f028f1dba"
 
 [sub_resource type="Resource" id="Resource_cd4fe"]
 script = ExtResource("5_xu6y7")
@@ -52,5 +50,5 @@ _labels = Array[StringName]([&"start", &"another_start", &"label_3"])
 _variables = Array[ExtResource("5_xu6y7")]([SubResource("Resource_cd4fe"), SubResource("Resource_ak7ew")])
 _connections = Dictionary[StringName, Array]({
 &"99e4fadd-873a-4e12-a5ed-aa84faf48917": [SubResource("Resource_xu6y7")],
-&"afddd198-b0c8-4fbd-89c3-a20f8fac79ae": [SubResource("Resource_qerwj")]
+&"afddd198-b0c8-4fbd-89c3-a20f8fac79ae": []
 })
