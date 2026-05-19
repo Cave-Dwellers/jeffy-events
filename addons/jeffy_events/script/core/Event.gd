@@ -13,6 +13,12 @@ const ELEMENT := preload("uid://b0rgkngbx133o")
 	set(value) :
 		position = value
 		emit_changed()
+## The unique identifier string for this event
+@export_storage var uuid : StringName
+
+func _init() -> void:
+	if uuid.is_empty():
+		uuid = JEP_UUID.v4()
 
 @abstract
 ## Method called by [JEP_EventGraphPlayer] when this

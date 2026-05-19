@@ -153,7 +153,7 @@ func _graph_node_rebuilt(node : JEP_EventGraphNode) -> void:
 func _graph_node_removed(node : JEP_EventGraphNode) -> void:
 	undo_redo.create_action(ACTION % "Removed event", UndoRedo.MERGE_ALL)
 	undo_redo.add_do_method(graph, &"remove_event", node.get_event())
-	undo_redo.add_undo_method(graph, &"add_event", node.get_event(), node.get_event().position, node.get_uuid())
+	undo_redo.add_undo_method(graph, &"add_event", node.get_event(), node.get_event().position)
 	undo_redo.add_undo_method(graph, &"add_connection_objects", graph.get_connections(node.get_uuid()))
 	undo_redo.commit_action()
 
@@ -194,14 +194,14 @@ func _on_remove_request(nodes : Array[StringName]) -> void:
 		undo_redo.commit_action()
 
 func _on_event_added(event : JEP_Event, uuid : StringName) -> void:
-	JEP_Print.info("Event added: uuid %s" % uuid)
+	#JEP_Print.info("Event added: uuid %s" % uuid)
 	var node : JEP_EventGraphNode = JEP_EventGraphNode.new(event, graph)
 	
 	node.name = uuid
 	_add_graph_node(node)
 
 func _on_event_removed(_event : JEP_Event, uuid : StringName) -> void:
-	JEP_Print.info("Event removed: uuid %s" % uuid)
+	#JEP_Print.info("Event removed: uuid %s" % uuid)
 	var node : JEP_EventGraphNode = uuid_to_node[uuid]
 	
 	uuid_to_node.erase(uuid)

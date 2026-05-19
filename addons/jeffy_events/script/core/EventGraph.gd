@@ -24,17 +24,22 @@ signal variable_removed(variable : JEP_EventGraphVariable)
 ## Connections between events (event UUID -> array of outgoing connections)
 @export_storage var _connections : Dictionary[StringName, Array]
 
+func _init() -> void:
+	# Force assign UUID to events
+	for key : StringName in _events.keys():
+		var event : JEP_Event = _events.get(key)
+		event.uuid = key
+
 ## Adds [param event] with the position [param at] to the event array
-func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO, uuid : StringName = &"") -> void:
-	if uuid.is_empty():
-		uuid = JEP_UUID.v4()
-	
+func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO) -> void:
 	if at != Vector2.ZERO:
 		event.position = at
 	
-	if _events.set(uuid, event):
-		event.changed.connect(emit_changed)
-		event_added.emit(event, uuid)
+	if _events.set(event.uuid, event):
+		if !event.changed.is_connected(emit_changed):
+			event.changed.connect(emit_changed)
+		
+		event_added.emit(event, event.uuid)
 		emit_changed()
 
 ## Adds several events at once
@@ -44,11 +49,10 @@ func add_events(events : Array[JEP_Event]) -> void:
 
 ## Removes [param event] from the event dictionary (if it exists)
 func remove_event(event : JEP_Event) -> void:
-	var uuid : StringName = get_event_uuid(event)
-	if uuid == null || uuid.is_empty():
+	if event.uuid.is_empty():
 		printerr("Could not find provided event %s" % event)
 		return
-	remove_event_from_uuid(uuid)
+	remove_event_from_uuid(event.uuid)
 
 ## Removes an event located at [param uuid] in the event dictionary (if it exists)
 func remove_event_from_uuid(uuid : StringName) -> void:
@@ -65,14 +69,6 @@ func has_event_type(type : StringName) -> bool:
 		if event.is_class(type):
 			return true
 	return false
-
-## Gets the UUID where [param event] is stored. If it doesnt exist in the
-## graph, it will return null instead
-func get_event_uuid(event : JEP_Event) -> StringName:
-	var value : Variant = _events.find_key(event)
-	if value is StringName:
-		return value
-	return &"" 
 
 ## Adds [param label] to the graph, if it doesn't already exist
 func add_label(label : StringName) -> bool:

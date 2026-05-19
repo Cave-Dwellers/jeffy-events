@@ -20,7 +20,7 @@ var connection_listeners : Array[JEP_NodeConnectionListener]
 
 func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	_event = event
-	_uuid = graph.get_event_uuid(event)
+	_uuid = event.uuid
 	
 	slot_sizes_changed.connect(reset_size)
 	position_offset = event.position
