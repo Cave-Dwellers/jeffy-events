@@ -9,6 +9,7 @@ class_name JEP_EventGraphFrontend extends GraphEdit
 
 signal graph_refresh_requested(graph : JEP_EventGraph)
 
+const ACTION : String = &"JeffyEvents | %s"
 const Ports := JEP_PortInfo.Ports
 
 @export var graph_parser : JEP_GraphParser
@@ -27,6 +28,8 @@ var selected : Array[JEP_EventGraphNode] :
 			if child.selected:
 				sel.append(child)
 		return sel
+var undo_redo : EditorUndoRedoManager :
+	get : return EditorInterface.get_editor_undo_redo()
 
 func _dock_ready() -> void:
 	# Add port types
@@ -95,7 +98,6 @@ func _notification(what: int) -> void:
 				
 				# Nodes need to be sorted
 				node = node as JEP_EventGraphNode
-				node.get_titlebar_hbox().queue_sort()
 				node.queue_sort()
 
 func _clear() -> void:
@@ -149,30 +151,47 @@ func _graph_node_rebuilt(node : JEP_EventGraphNode) -> void:
 		JEP_Print.toast_warn("%d event connection%s broken" % [connections_broken, "s were" if connections_broken > 1 else " was"])
 
 func _graph_node_removed(node : JEP_EventGraphNode) -> void:
-	graph.remove_event(node._event)
+	undo_redo.create_action(ACTION % "Removed event", UndoRedo.MERGE_ALL)
+	undo_redo.add_do_method(graph, &"remove_event", node.get_event())
+	undo_redo.add_undo_method(graph, &"add_event", node.get_event(), node.get_event().position, node.get_uuid())
+	undo_redo.add_undo_method(graph, &"add_connection_objects", graph.get_connections(node.get_uuid()))
+	undo_redo.commit_action()
 
 func _add_graph_node(node : JEP_EventGraphNode) -> void:
 	add_child(node)
 	uuid_to_node[node._uuid] = node
 	node.built.connect(_graph_node_rebuilt.bind(), CONNECT_DEFERRED)
 	node.remove_requested.connect(_graph_node_removed.bind(), CONNECT_DEFERRED)
-	node.queue_sort.call_deferred()
 
 func _on_connection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
 	var from_node := get_node(NodePath(from_path)) as GraphNode
 	var from_port_type := from_node.get_output_port_type(from_port)
 	var connection_type := JEP_EventGraphConnection.Type.Flow if from_port_type == 0 else JEP_EventGraphConnection.Type.Data
 	
-	graph.add_connection(from_path, from_port, to_path, to_port, connection_type)
+	undo_redo.create_action(ACTION % "Connection formed")
+	undo_redo.add_do_method(graph, &"add_connection", from_path, from_port, to_path, to_port, connection_type)
+	undo_redo.add_undo_method(graph, &"remove_connection", from_path, from_port, to_path, to_port)
+	undo_redo.commit_action()
 	
 func _on_disconnection_request(from_path : StringName, from_port : int, to_path : StringName, to_port : int) -> void:
-	graph.remove_connection(from_path, from_port, to_path, to_port)
+	var from_node := get_node(NodePath(from_path)) as GraphNode
+	var from_port_type := from_node.get_output_port_type(from_port)
+	var connection_type := JEP_EventGraphConnection.Type.Flow if from_port_type == 0 else JEP_EventGraphConnection.Type.Data
+	
+	undo_redo.create_action(ACTION % "Connection removed")
+	undo_redo.add_do_method(graph, &"remove_connection", from_path, from_port, to_path, to_port)
+	undo_redo.add_undo_method(graph, &"add_connection", from_path, from_port, to_path, to_port, connection_type)
+	undo_redo.commit_action()
 
 func _on_remove_request(nodes : Array[StringName]) -> void:
 	for uuid : StringName in nodes:
 		var node : JEP_EventGraphNode = uuid_to_node[uuid]
 		var event : JEP_Event = node.get_event()
-		graph.remove_event(event)
+		
+		undo_redo.create_action(ACTION % "Event(s) removed", UndoRedo.MERGE_ALL)
+		undo_redo.add_do_method(graph, &"remove_event", event)
+		undo_redo.add_undo_method(graph, &"add_event", event, event.position, node._uuid)
+		undo_redo.commit_action()
 
 func _on_event_added(event : JEP_Event, uuid : StringName) -> void:
 	JEP_Print.info("Event added: uuid %s" % uuid)
@@ -194,7 +213,7 @@ func _on_connection_added(connection : JEP_EventGraphConnection) -> void:
 	
 	_signal_node_connection(connection, true)
 	
-	JEP_Print.info("Connection made: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
+	#JEP_Print.info("Connection made: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_connection_removed(connection : JEP_EventGraphConnection) -> void:
 	disconnect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
@@ -202,12 +221,17 @@ func _on_connection_removed(connection : JEP_EventGraphConnection) -> void:
 	
 	_signal_node_connection(connection, false)
 	
-	JEP_Print.info("Connection broken: %s...@%d x %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
+	#JEP_Print.info("Connection broken: %s...@%d x %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_nodes_moved() -> void:
 	for node : JEP_EventGraphNode in selected:
-		node.get_event().position = node.position_offset
-
+		undo_redo.create_action(ACTION % "Event(s) moved", UndoRedo.MERGE_ALL)
+		undo_redo.add_do_property(node.get_event(), &"position", node.position_offset)
+		undo_redo.add_do_property(node, &"position_offset", node.position_offset)
+		undo_redo.add_undo_property(node.get_event(), &"position", node.get_event().position)
+		undo_redo.add_undo_property(node, &"position_offset", node.get_event().position)
+		undo_redo.commit_action()
+		
 func _signal_node_connection(connection : JEP_EventGraphConnection, connected : bool) -> void:
 	var to_node : JEP_EventGraphNode = get_node(NodePath(connection.to_uuid))
 	var to_slot : int = to_node.get_input_port_slot(connection.to_port)
@@ -232,7 +256,11 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
 	data = data as JEP_Event
-	graph.add_event(data, (at_position + scroll_offset) / zoom)
+	
+	undo_redo.create_action(ACTION % "Added event %s" % data._get_name())
+	undo_redo.add_do_method(graph, &"add_event", data, (at_position + scroll_offset) / zoom)
+	undo_redo.add_undo_method(graph, &"remove_event", data)
+	undo_redo.commit_action()
 
 #endregion
 #region Clipboard

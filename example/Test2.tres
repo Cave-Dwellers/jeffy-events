@@ -33,13 +33,6 @@ script = ExtResource("1_ihk5q")
 from_uuid = &"24174a08-69c1-46e6-be09-4364d7fe70a8"
 to_uuid = &"02b22bfd-ce26-4e21-bedd-e2cf5edc8478"
 
-[sub_resource type="Resource" id="Resource_f0uuc"]
-script = ExtResource("1_ihk5q")
-from_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
-to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-to_port = 2
-type = 1
-
 [sub_resource type="Resource" id="Resource_nbus4"]
 script = ExtResource("1_ihk5q")
 from_uuid = &"437b78b5-c760-4b09-bc36-c1b4627c1db0"
@@ -65,13 +58,6 @@ from_uuid = &"8f9143b6-6548-448e-b777-a59f15a86fbc"
 to_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
 type = 1
 
-[sub_resource type="Resource" id="Resource_6pnnt"]
-script = ExtResource("1_ihk5q")
-from_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
-to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-to_port = 1
-type = 1
-
 [sub_resource type="Resource" id="Resource_5rd6q"]
 script = ExtResource("1_ihk5q")
 from_uuid = &"b150feb5-4c76-4734-92ec-5355022b746d"
@@ -79,15 +65,29 @@ to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
 to_port = 1
 type = 1
 
-[sub_resource type="Resource" id="Resource_fqy15"]
+[sub_resource type="Resource" id="Resource_f0uuc"]
 script = ExtResource("1_ihk5q")
-from_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
-to_uuid = &"7b4a3667-e4ab-4d6d-953b-f695f3b1f8db"
+from_uuid = &"2a66ac6f-52be-4713-8c9e-cdfebb95930d"
+to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+to_port = 2
+type = 1
 
 [sub_resource type="Resource" id="Resource_peopf"]
 script = ExtResource("1_ihk5q")
 from_uuid = &"2cb32db7-2200-41dc-893c-99b9a1594694"
 to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+
+[sub_resource type="Resource" id="Resource_6pnnt"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
+to_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+to_port = 1
+type = 1
+
+[sub_resource type="Resource" id="Resource_fqy15"]
+script = ExtResource("1_ihk5q")
+from_uuid = &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee"
+to_uuid = &"7b4a3667-e4ab-4d6d-953b-f695f3b1f8db"
 
 [sub_resource type="Resource" id="Resource_4nt7k"]
 script = ExtResource("14_6se7u")
@@ -109,9 +109,13 @@ script = ExtResource("12_5rd6q")
 input = null
 position = Vector2(-336, -32)
 
+[sub_resource type="Resource" id="Resource_h5cqx"]
+script = ExtResource("7_fluda")
+position = Vector2(-608, -384)
+
 [sub_resource type="Resource" id="Resource_eh6du"]
 script = ExtResource("13_q4mnr")
-position = Vector2(-896, 144)
+position = Vector2(-880, 144)
 
 [sub_resource type="Resource" id="Resource_f7ulf"]
 script = ExtResource("2_2kpud")
@@ -152,10 +156,6 @@ script = ExtResource("4_4aeu4")
 to_print = "This is a {placeholder}. Heres an awesome {number}."
 keys = Array[StringName]([&"placeholder", &"number"])
 position = Vector2(-32, -384)
-
-[sub_resource type="Resource" id="Resource_h5cqx"]
-script = ExtResource("7_fluda")
-position = Vector2(-609.1041, -387.25107)
 
 [sub_resource type="Resource" id="Resource_6se7u"]
 script = ExtResource("13_nbus4")
