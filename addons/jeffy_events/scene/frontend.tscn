@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dk2hfx2if054y" path="res://addons/jeffy_events/asset/icon/Search.svg" id="4_4pgtr"]
 [ext_resource type="Texture2D" uid="uid://bwjeiceovmefo" path="res://addons/jeffy_events/asset/icon/EventLabel.svg" id="4_c8yvv"]
 [ext_resource type="Script" uid="uid://sgixw4p7fycr" path="res://addons/jeffy_events/script/editor/builder/GraphParser.gd" id="4_is55q"]
+[ext_resource type="Script" uid="uid://c11knndunm6oh" path="res://addons/jeffy_events/script/editor/dock/GraphUndoRedo.gd" id="4_laqrt"]
 [ext_resource type="Texture2D" uid="uid://7p0ewwufccg1" path="res://addons/jeffy_events/asset/icon/Variables.svg" id="5_c8yvv"]
 [ext_resource type="Script" uid="uid://b8egdudm6xsu6" path="res://addons/jeffy_events/script/editor/dock/SourceManager.gd" id="7_rwnnl"]
 [ext_resource type="Script" uid="uid://bkspwg5kx5wqx" path="res://addons/jeffy_events/script/editor/dock/EventListController.gd" id="9_e1yht"]
@@ -38,6 +39,9 @@ script = ExtResource("2_ird5w")
 [node name="EventGraphPool" type="Node" parent="." unique_id=1461389952]
 unique_name_in_owner = true
 script = ExtResource("16_4qmgu")
+
+[node name="GraphUndoRedo" type="Node" parent="." unique_id=1710565924]
+script = ExtResource("4_laqrt")
 
 [node name="GraphParser" type="Node" parent="." unique_id=1969330064]
 script = ExtResource("4_is55q")
@@ -167,13 +171,14 @@ layout_mode = 2
 metadata/_tab_index = 0
 metadata/_tab_name = "Event Graph"
 
-[node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer/EventGraphContainer" unique_id=366992606 node_paths=PackedStringArray("graph_parser", "no_graph_label")]
+[node name="EventGraph" type="GraphEdit" parent="Frame/RightContainer/EventGraphContainer" unique_id=366992606 node_paths=PackedStringArray("graph_undo_redo", "graph_parser", "no_graph_label")]
 layout_mode = 2
 snapping_distance = 16
 panning_scheme = 1
 right_disconnects = true
 show_grid_buttons = false
 script = ExtResource("16_iri01")
+graph_undo_redo = NodePath("../../../../GraphUndoRedo")
 graph_parser = NodePath("../../../../GraphParser")
 no_graph_label = NodePath("../NoGraph")
 
@@ -264,10 +269,11 @@ disabled = true
 icon = ExtResource("1_gudbx")
 flat = true
 
-[node name="LabelsManager" type="Node" parent="Frame/RightContainer/Labels" unique_id=1645267369 node_paths=PackedStringArray("line_edit", "add_button", "entry_template", "entry_container")]
+[node name="LabelsManager" type="Node" parent="Frame/RightContainer/Labels" unique_id=1645267369 node_paths=PackedStringArray("line_edit", "add_button", "graph_undo_redo", "entry_template", "entry_container")]
 script = ExtResource("13_0fkv5")
 line_edit = NodePath("../Margin/Scroll/Sort/AddEntry/LineEdit")
 add_button = NodePath("../Margin/Scroll/Sort/AddEntry/Button")
+graph_undo_redo = NodePath("../../../../GraphUndoRedo")
 entry_template = NodePath("../Margin/Scroll/Sort/LabelEntry")
 entry_container = NodePath("../Margin/Scroll/Sort/EntryContainer")
 
@@ -331,11 +337,12 @@ layout_mode = 2
 icon = ExtResource("1_gudbx")
 flat = true
 
-[node name="VariablesManager" type="Node" parent="Frame/RightContainer/Variables" unique_id=224479103 node_paths=PackedStringArray("line_edit", "type_dropdown", "add_button", "entry_template", "entry_container")]
+[node name="VariablesManager" type="Node" parent="Frame/RightContainer/Variables" unique_id=224479103 node_paths=PackedStringArray("line_edit", "type_dropdown", "add_button", "graph_undo_redo", "entry_template", "entry_container")]
 script = ExtResource("19_03hwm")
 line_edit = NodePath("../Margin/Scroll/Sort/AddEntry/LineEdit")
 type_dropdown = NodePath("../Margin/Scroll/Sort/AddEntry/Type")
 add_button = NodePath("../Margin/Scroll/Sort/AddEntry/Add")
+graph_undo_redo = NodePath("../../../../GraphUndoRedo")
 entry_template = NodePath("../Margin/Scroll/Sort/VariableEntry")
 entry_container = NodePath("../Margin/Scroll/Sort/EntryContainer")
 
@@ -576,8 +583,8 @@ source? This action cannot be undone."
 [connection signal="dock_ready" from="." to="Frame/RightContainer/Labels/LabelsManager" method="_dock_ready"]
 [connection signal="dock_ready" from="." to="Frame/RightContainer/Variables/VariablesManager" method="_dock_ready"]
 [connection signal="graph_added" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_added"]
+[connection signal="graph_removed" from="EventGraphPool" to="GraphUndoRedo" method="_on_graph_removed"]
 [connection signal="graph_removed" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_removed"]
-[connection signal="graph_removed" from="EventGraphPool" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="_on_graph_removed"]
 [connection signal="graph_replaced" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_replaced"]
 [connection signal="graph_saved" from="EventGraphPool" to="Frame/LeftSplit/ContainerB/GraphList" method="_on_graph_saved"]
 [connection signal="parsed" from="GraphParser" to="Frame/RightContainer/EventGraphContainer/EventGraph" method="on_graph_parsed"]

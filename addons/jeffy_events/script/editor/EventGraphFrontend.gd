@@ -11,6 +11,7 @@ signal graph_refresh_requested(graph : JEP_EventGraph)
 
 const PORTS := JEP_PortInfo.Ports
 
+@export var graph_undo_redo : JEP_GraphUndoRedo
 @export var graph_parser : JEP_GraphParser
 @export var no_graph_label : Label
 
@@ -31,13 +32,9 @@ var selected : Array[JEP_EventGraphNode] :
 				sel.append(child)
 		return sel
 
-## Generated [UndoRedo] for opened graphs
-var undo_redos : Dictionary[JEP_EventGraph, UndoRedo] = {}
 ## Current [UndoRedo] for graph
 var undo_redo : UndoRedo :
-	get : 
-		var ur : UndoRedo = undo_redos.get_or_add(graph, UndoRedoExt.new())
-		return ur
+	get : return graph_undo_redo.get_undo_redo(graph)
 
 func _dock_ready() -> void:
 	# Add port types
@@ -94,10 +91,6 @@ func on_graph_parsed(p_graph : JEP_EventGraph, nodes : Array[GraphNode]) -> void
 			connect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
 			_signal_node_connection(connection, true)
 
-func _on_graph_removed(p_graph : JEP_EventGraph) -> void:
-	# Remove UndoRedo
-	undo_redos.erase(p_graph)
-
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_VISIBILITY_CHANGED:
@@ -113,37 +106,18 @@ func _notification(what: int) -> void:
 				node.queue_sort()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is not InputEventKey || !visible:
+	if event is not InputEventKey || !is_visible_in_tree() || !graph:
 		return
 	event = event as InputEventKey
 	
 	if event.is_pressed() && event.is_command_or_control_pressed():
 		if event.shift_pressed && event.keycode == KEY_Z:
-			redo()
+			graph_undo_redo.redo(graph)
 			return
 		
 		match event.keycode:
-			KEY_Z:	undo(); return
-			KEY_Y:	redo(); return
-
-func undo() -> bool:
-	if !graph:
-		return false
-	
-	var action : String = undo_redo.get_current_action_name()
-	if undo_redo.undo():
-		JEP_Print.toast_info("Undo: %s" % action)
-		return true
-	return false
-
-func redo() -> bool:
-	if !graph:
-		return false
-	
-	if undo_redo.redo():
-		JEP_Print.toast_info("Redo: %s" % undo_redo.get_current_action_name())
-		return true
-	return false
+			KEY_Z:	graph_undo_redo.undo(graph); return
+			KEY_Y:	graph_undo_redo.redo(graph); return
 
 func _clear() -> void:
 	uuid_to_node.clear()
@@ -322,23 +296,3 @@ func _on_paste_nodes() -> void:
 	pass
 
 #endregion
-
-class UndoRedoExt extends UndoRedo:
-	
-	## Basic extension of [UndoRedo] that shows information
-	## to the user via [JEP_Print]
-	
-	func undo() -> bool:
-		JEP_Print.toast_info("Undo: %s" % get_current_action_name())
-		if super.undo():
-			JEP_Print.toast_info("Undo: %s" % get_current_action_name())
-			return true
-		return false
-	
-	func redo() -> bool:
-		JEP_Print.toast_info("Redo: %s" % get_current_action_name())
-		if super.redo():
-			JEP_Print.toast_info("Redo: %s" % get_current_action_name())
-			print("NO")
-			return true
-		return false
