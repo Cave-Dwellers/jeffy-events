@@ -17,6 +17,7 @@ var _event : JEP_Event
 var _uuid : StringName
 
 var connection_listeners : Array[JEP_NodeConnectionListener]
+var fields : Array[JEP_EventField]
 
 func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	_event = event
@@ -26,6 +27,7 @@ func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	slot_sizes_changed.connect(reset_size)
 	position_offset = event.position
 	connection_listeners = []
+	fields = []
 	
 	# Set titlebar color
 	var script : GDScript = _event.get_script()
@@ -72,6 +74,8 @@ func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	
 	# Remove existing
 	connection_listeners.clear()
+	fields.clear()
+	
 	for child in get_children():
 		if child is not Control:
 			continue
@@ -84,6 +88,7 @@ func parse_instruction(event : JEP_Event, graph : JEP_EventGraph) -> void:
 		event.changed.connect(queue_sort, CONNECT_ONE_SHOT | CONNECT_DEFERRED)
 	
 	for handler : JEP_InstructionHandler in _HANDLERS:
+		handler.undo_redo = JEP_GraphUndoRedo.get_undo_redo(graph)
 		handler._handle_node_instruction(instruction, self)
 	
 	for element_instruction : JEP_ElementInstruction in instruction.elements:
@@ -96,31 +101,28 @@ func parse_element_instruction(graph_node : GraphNode, event : JEP_Event, instru
 	for handler : JEP_InstructionHandler in _HANDLERS:
 		handler._handle_element_instruction(instruction, event, graph_node)
 
+func add_field(field : JEP_EventField) -> void:
+	fields.append(field)
+
 ## Adds an input connection listener to this [JEP_EventGraphNode]. The
 ## listener accepts an input node (which can be whatever you want) and
-## a callable that will fire that must accept two arguments: an input
-## reference [Control], and the state of the connection [bool]. 
+## a callable that will fire that must accept one boolean argument that
+## represents the state of the connection. 
 ## 
 ## This method can be used to update the state of a property's input field,
 ## usually when a data input port has been connected, as to prevent the
 ## user from setting otherwise redundant data in the field
-func add_connection_listener(slot : int, input : Control, update : Callable) -> void:
+func add_connection_listener(slot : int, update : Callable) -> void:
 	var listener : JEP_NodeConnectionListener = JEP_NodeConnectionListener.new()
-	listener.input_ref = weakref(input)
 	listener.slot = slot
 	listener.on_update = update
 	connection_listeners.append(listener)
 
 func input_update(slot : int, connected : bool) -> void:
-	# We want a duplicate so we can remove any invalid listeners
-	# on the original array
-	var listeners : Array = connection_listeners.duplicate()
-	for listener : JEP_NodeConnectionListener in listeners:
+	for listener : JEP_NodeConnectionListener in connection_listeners:
 		if listener.slot != slot:
 			continue
-		
-		if !listener._on_update(connected):
-			connection_listeners.erase(listener)
+		listener._on_update(connected)
 
 func get_event() -> JEP_Event:
 	return _event

@@ -71,244 +71,71 @@ func handle_property_instruction(
 	if instruction is JEP_ElementInstruction.ResourceField:
 		handle_resource_instruction(instruction, node, event, element)
 
-func handle_number_instruction(
-	instruction : JEP_ElementInstruction.Number, 
-	node : JEP_EventGraphNode,
-	event : JEP_Event,
-	element : HBoxContainer) -> void:
+func handle_number_instruction(instruction : JEP_ElementInstruction.Number, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
-	var input : SpinBox = configure_input(SpinBox.new())
+	var field : JEP_NumberField = JEP_NumberField.new(event, property, undo_redo)
+	var input : SpinBox = field._create_from_instruction(instruction, node)
 	
-	input.step = instruction._step
-	if typeof(event.get(property)) == TYPE_INT || instruction._rounded:
-		input.rounded = true
-		input.step = roundi(input.step)
-	
-	if instruction._has_range:
-		input.min_value = instruction._range_min
-		input.max_value = instruction._range_max
-	
-	input.set_value_no_signal(event.get(property))
-	input.value_changed.connect(
-		func(value : int) -> void:
-			event.set(property, value)
-			event.emit_changed()
-	)
-	node.add_connection_listener(
-		element.get_index(), input, 
-		func(inp : Control, connected : bool) -> void:
-			inp.set(&"editable", !connected)
-			inp.visible = !connected,
-	)
-	
+	input.value_changed.connect(field._set_value)
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 
-func handle_line_instruction(
-	instruction : JEP_ElementInstruction.Line, 
-	node : JEP_EventGraphNode,
-	event : JEP_Event,
-	element : HBoxContainer) -> void:
+func handle_line_instruction(instruction : JEP_ElementInstruction.Line, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
-	var input : LineEdit = configure_input(LineEdit.new())
+	var field : JEP_LineField = JEP_LineField.new(event, property, undo_redo)
+	var input : LineEdit = field._create_from_instruction(instruction, node)
 	
-	if instruction._max_character_count != -1:
-		input.max_length = instruction._max_character_count
-	
-	input.text = event.get(property) as String
-	input.editing_toggled.connect(
-		func(on : bool) -> void:
-			if on:
-				return
-			
-			event.set(property, input.text)
-			event.emit_changed()
-	)
-	node.add_connection_listener(
-		element.get_index(), input, 
-		func(inp : Control, connected : bool) -> void:
-			inp.set(&"editable", !connected)
-			inp.visible = !connected,
-	)
-	
+	input.editing_toggled.connect(field.edit_toggled_wrapper)
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 	
-func handle_code_line_instruction(
-	instruction : JEP_ElementInstruction.CodeLine,
-	node : JEP_EventGraphNode,
-	event : JEP_Event,
-	element : HBoxContainer) -> void:
+func handle_code_line_instruction(instruction : JEP_ElementInstruction.CodeLine, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
-	var input : CodeEdit = configure_input(CodeEdit.new())
-	
-	input.size_flags_vertical = 0
-	input.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-	input.scroll_fit_content_height = true
-	
-	if instruction._flat:
-		input.theme_type_variation = &"CodeEditFlat"
-	
-	if instruction._placeholder_text:
-		input.placeholder_text = instruction._placeholder_text
+	var field : JEP_CodeLineField = JEP_CodeLineField.new(event, property, undo_redo)
 	
 	# We want to erase the label, so the code block can take
 	# up the full horizontal space
 	for child in element.get_children():
 		child.queue_free()
+	var input : CodeEdit = field._create_from_instruction(instruction, node)
 	
-	input.text = event.get(property) as String
-	input.focus_exited.connect(
-		func() -> void:
-			event.set(property, input.text)
-			event.emit_changed()
-	)
-	node.add_connection_listener(
-		element.get_index(), input, 
-		func(inp : Control, connected : bool) -> void:
-			inp.set(&"editable", !connected)
-			inp.visible = !connected,
-	)
-	
+	input.focus_exited.connect(field._focus_exited_wrapper)
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 
-func handle_enum_line_instruction(
-	instruction : JEP_ElementInstruction.EnumLine,
-	node : JEP_EventGraphNode,
-	event : JEP_Event,
-	element : HBoxContainer) -> void:
+func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
-	var value : Variant = event.get(property)
-	var input : OptionButton = configure_input(OptionButton.new())
+	var field : JEP_EnumLineField = JEP_EnumLineField.new(event, property, undo_redo)
+	var input : OptionButton = field._create_from_instruction(instruction, node)
 	
-	# Enum keys tend to be long, so element should have more
-	# priority in sizing
-	input.size_flags_stretch_ratio = 1.5
-	input.autowrap_mode = TextServer.AUTOWRAP_OFF
-	input.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	
-	if instruction._strings.is_empty():
-		JEP_Print.error("Strings not provided to EnumLine instruction - %s" % property)
-		return
-	
-	var strings : PackedStringArray = instruction._strings
-	for i : int in range(strings.size()):
-		var entry : String = strings.get(i)
-		input.add_item(entry, i)
-		
-		if value == entry:
-			input.select(input.get_item_index(i))
-	
-	input.item_selected.connect(
-		func(at : int) -> void:
-			if at == -1:
-				return
-			
-			event.set(property, input.get_item_text(at))
-			event.emit_changed()
-	)
-	node.add_connection_listener(
-		element.get_index(), input, 
-		func(inp : Control, connected : bool) -> void:
-			inp.set(&"disabled", connected)
-			inp.visible = !connected,
-	)
-	
-	# If no default value, select first option in enum
-	if input.get_selected_id() == -1:
-		input.select(0)
-	
+	input.item_selected.connect(field._selected_wrapper)
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 
-func handle_bool_instruction(
-	instruction : JEP_ElementInstruction.Bool,
-	node : JEP_EventGraphNode,
-	event : JEP_Event,
-	element : HBoxContainer) -> void:
+func handle_bool_instruction(instruction : JEP_ElementInstruction.Bool, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
-	var input : CheckBox = configure_input(CheckBox.new())
+	var field : JEP_BoolField = JEP_BoolField.new(event, property, undo_redo)
+	var input : CheckBox = field._create_from_instruction(instruction, node)
 	
-	input.toggle_mode = true
-	input.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	input.size_flags_horizontal = Control.SIZE_SHRINK_END
-	input.button_pressed = event.get(property) as bool
-	
-	input.toggled.connect(
-		func(on : bool) -> void:
-			event.set(property, on)
-			event.emit_changed()
-	)
-	node.add_connection_listener(
-		element.get_index(), input, 
-		func(inp : Control, connected : bool) -> void:
-			inp.set(&"disabled", connected)
-			inp.visible = !connected,
-	)
-	
+	input.toggled.connect(field._set_value)
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 
-func handle_node_path_instruction(
-	instruction : JEP_ElementInstruction.NodePathField,
-	node : JEP_EventGraphNode,
-	event : JEP_Event,
-	element : HBoxContainer) -> void:
+func handle_node_path_instruction(instruction : JEP_ElementInstruction.NodePathField, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
-	var value : NodePath = event.get(property) as NodePath
-	var input : Button = configure_input(Button.new())
+	var field : JEP_NodePathField = JEP_NodePathField.new(event, property, undo_redo)
+	var input : Button = field._create_from_instruction(instruction, node)
 	
-	input.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS_FORCE
-	
-	var set_text : Callable = \
-		func(new_path : NodePath) -> void:
-			if !new_path.is_empty():
-				input.text = new_path.get_name(new_path.get_name_count() - 1)
-				input.tooltip_text = new_path
-			else:
-				input.text = &"Assign..."
-	set_text.call(value)
-	
-	var on_node_select : Callable = \
-		func(path : NodePath) -> void:
-			event.set(property, path)
-			set_text.call(path)
-			event.emit_changed()
-	
-	input.pressed.connect(
-		EditorInterface.popup_node_selector.bind(on_node_select, instruction._scope)
-	)
-	node.add_connection_listener(
-		element.get_index(), input, 
-		func(inp : Control, connected : bool) -> void:
-			inp.set(&"disabled", connected)
-			inp.visible = !connected,
-	)
-	
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 
-func handle_resource_instruction(
-	instruction : JEP_ElementInstruction.ResourceField,
-	node : JEP_EventGraphNode,
-	event : JEP_Event,
-	element : HBoxContainer) -> void:
+func handle_resource_instruction(instruction : JEP_ElementInstruction.ResourceField, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
-	var value : Resource = event.get(property) as Resource
-	var input : EditorResourcePicker = configure_input(EditorResourcePicker.new())
-	input.custom_minimum_size.x = 140
+	var field : JEP_ResourceField = JEP_ResourceField.new(event, property, undo_redo)
+	var input : EditorResourcePicker = field._create_from_instruction(instruction, node)
 	
-	if !instruction._scope.is_empty():
-		input.base_type = instruction._scope
-	input.edited_resource = value
-	
-	input.resource_changed.connect(
-		func(resource : Resource) -> void:
-			event.set(property, resource)
-			event.emit_changed()
-	)
-	node.add_connection_listener(
-		element.get_index(), input, 
-		func(inp : Control, connected : bool) -> void:
-			inp.set(&"editable", !connected)
-			inp.visible = !connected,
-	)
-	
+	input.resource_changed.connect(field._set_value)
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 
 func configure_input(node : Control) -> Control:

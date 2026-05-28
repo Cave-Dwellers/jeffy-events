@@ -2,9 +2,9 @@
 class_name JEP_GraphUndoRedo extends Node
 
 ## Generated [UndoRedo] for opened graphs
-var undo_redos : Dictionary[JEP_EventGraph, UndoRedo] = {}
+static var undo_redos : Dictionary[JEP_EventGraph, UndoRedo] = {}
 
-func get_undo_redo(graph : JEP_EventGraph) -> UndoRedo:
+static func get_undo_redo(graph : JEP_EventGraph) -> UndoRedo:
 	var ur : UndoRedo = undo_redos.get_or_add(graph, UndoRedo.new())
 	return ur
 

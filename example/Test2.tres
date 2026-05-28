@@ -22,7 +22,7 @@ script = ExtResource("1_ihk5q")
 from_uuid = &"02b22bfd-ce26-4e21-bedd-e2cf5edc8478"
 to_uuid = &"61f6333d-3cfd-49fb-9588-788e43cba9e2"
 
-[sub_resource type="Resource" id="Resource_83igj"]
+[sub_resource type="Resource" id="Resource_tkvqw"]
 script = ExtResource("1_ihk5q")
 from_uuid = &"098f8073-a05b-4021-b35f-456d57de74bb"
 to_uuid = &"a8a197d2-8cc9-4a75-9b17-525186a4bcf1"
@@ -143,7 +143,7 @@ uuid = &"720d7b88-392b-4d3f-a8f1-d739c53c74b2"
 [sub_resource type="Resource" id="Resource_4s03x"]
 script = ExtResource("9_fluda")
 operation = "Multiply"
-number_2 = 5.0
+number_2 = 6.0
 position = Vector2(-608, 48)
 uuid = &"720d7b88-392b-4d3f-a8f1-d739c53c74b2"
 
@@ -199,11 +199,11 @@ _events = Dictionary[StringName, ExtResource("2_q4mnr")]({
 &"b150feb5-4c76-4734-92ec-5355022b746d": SubResource("Resource_aqg6s"),
 &"f48d5b16-a6a7-4225-a3d9-911b44ab4cee": SubResource("Resource_3eejo")
 })
-_labels = Array[StringName]([&"Start", &"AnotherStart", &"NewLabel"])
+_labels = Array[StringName]([&"Start", &"AnotherStart"])
 _variables = Array[ExtResource("13_nbus4")]([SubResource("Resource_6se7u"), SubResource("Resource_37pu0")])
 _connections = Dictionary[StringName, Array]({
 &"02b22bfd-ce26-4e21-bedd-e2cf5edc8478": [SubResource("Resource_nox8m")],
-&"098f8073-a05b-4021-b35f-456d57de74bb": [SubResource("Resource_83igj")],
+&"098f8073-a05b-4021-b35f-456d57de74bb": [SubResource("Resource_tkvqw")],
 &"24174a08-69c1-46e6-be09-4364d7fe70a8": [SubResource("Resource_ahsei")],
 &"2a66ac6f-52be-4713-8c9e-cdfebb95930d": [SubResource("Resource_f0uuc")],
 &"2cb32db7-2200-41dc-893c-99b9a1594694": [SubResource("Resource_peopf")],

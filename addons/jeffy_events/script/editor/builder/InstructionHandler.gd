@@ -1,6 +1,8 @@
 @tool @abstract
 class_name JEP_InstructionHandler extends GDScript
 
+var undo_redo : UndoRedo
+
 @abstract
 func _handle_node_instruction(instruction : JEP_NodeInstruction, node : JEP_EventGraphNode) -> GraphNode
 
