@@ -20,12 +20,12 @@ To use JeffyEvents, just install the addon from the Godot asset library, enable 
 - Sources system which lets you define and organize folders to pull event scripts from 
 
 ### Planned features
-- [] Instruction handler registry
-- [] Clipboard support for graph nodes
-- [] Custom scene support for graph nodes
-- [] Nested graph execution
-- [] Connection stubs (a way of organizing dense connections)
-- [] Looping
+- [ ] Instruction handler registry
+- [ ] Clipboard support for graph nodes
+- [ ] Custom scene support for graph nodes
+- [ ] Nested graph execution
+- [ ] Connection stubs (a way of organizing dense connections)
+- [ ] Looping
 
 ### License
 This project is licensed under MPL. You may use this plugin for anything you want; if modifications are made to core components (not covering user made events,) you must make your changes open-source. Attribution would also be appreciated, but not required. 
