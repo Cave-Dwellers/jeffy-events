@@ -5,6 +5,10 @@ func _create_from_instruction(instruction : JEP_ElementInstruction, node : JEP_E
 	super._create_from_instruction(instruction, node)
 	field = configure_input(CodeEdit.new()) as CodeEdit
 	
+	# Disable the built in undo-redo features
+	field.shortcut_keys_enabled = false
+	field.context_menu_enabled = false
+	
 	field.size_flags_vertical = 0
 	field.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
 	field.scroll_fit_content_height = true

@@ -1,51 +1,33 @@
-# jeffy-events 2.0
-> [!WARNING]
-> This is still in active development and is NOT ready for use
+# jeffy-events 2.0 (pre-release)
 
 A graph based event sequencer for Godot 4.6. This addon is a designer friendly solution for game event sequencing, e.g. things like cutscenes and NPC interactions. Sequencing tends to be done through script, or through something like Godot's animation timeline. This is my proposed solution, which tries to strike a balance between minimal code for the programmer and minimal effort required for the designer.
 
-Events are small interfaces; they have one main method, and a few extraneous ones for frontend. As someone who hates wrangling GUI code, my solution is to let the programmer declare what they want in the event interface via code. This uses a builder system that is easily extensible if you want to add your own elements. Regardless, if you want more control, you can still manually create UI for events as their own scene files.
+Events are small interfaces; they have one main method, and a few extraneous ones that define how they interact with other nodes and the frontend. GUI is built based on a set of instructions provided by the programmer; it is easily extensible if you want to add new element handlers and instruction sets.
 
-This addon doesnt stop at JUST sequencing, though. There is support for advanced usage via dependency injection. You can create simple graph templates with placeholder values, and reuse them across your game.
-
-JeffyEvents aims to be unintrusive to existing systems that may exist in your project; as such all classes are namespaced with "JEP_" and the addon only ships with general purpose events. If you want a frame of reference on how events are created, you can check out some of the optional modules that are licensed under MIT (free to use in your projects!)
+JeffyEvents aims to be unintrusive to existing systems that may exist in your project; as such all classes are namespaced with "JEP_" and the addon only ships with general purpose events. If you want a frame of reference on how events are created, the built in module can serve as a good reference.
 
 ## Usage
-To use JeffyEvents, just install the addon from the Godot asset library. TBD
+To use JeffyEvents, just install the addon from the Godot asset library, enable JeffyEvents in *Project Settings > Plugins*, and restart the editor. You will see a graph editor tab added to the bottom dock, which is how you know the addon has been installed correctly. You can view more information about how to use JeffyEvents in the markdown docs.
 
-## Roadmap
-Not a finalized list
-- [ ] Frontend
-  - [ ] Side menu 
-    - [ ] Sources pane
-      - [x] Adding sources
-      - [x] Removing sources
-      - [x] Refreshing sources
-      - [ ] Searching sources/events 
-    - [ ] Opened graphs pane
-      - [x] Creating graphs
-      - [ ] Closing graphs
-      - [x] Save monitoring (mark as unsaved) 
-  - [ ] Graph menu
-    - [x] Change monitoring (switching focused graph on demand)
-    - [x] Graph pane
-    - [x] Labels pane
-    - [ ] Variables pane
-  - [ ] Event frontend
-    - [x] UI instructions
-      - [x] Instruction builder class
-      - [x] Property builder classes
-    - [x] Instruction parsing
-  - [ ] UndoRedo support
-- [ ] Backend
-  - [x] EventGraphExecutor
-    - [x] Traversal
-    - [x] Dependency resolution
-  - [x] Event 
+### Current features
+- A stylish graph sequencer frontend with support for flow and data resolution
+- Graph and event resource types
+- Declarative, extendable gui system for representing event parameters
+- Label system which defines starting points for graph execution
+- Variable system which allows the programmer to pass in external data to the graph
+- Int, float, string, boolean, node path and resource type connections supported
+- Graph executor node that performs error checking at editor runtime
+- Sources system which lets you define and organize folders to pull event scripts from 
 
-## Design quirks
-Regarding how UI is generated; GDScript does not offer preprocessor directives, which means that UI generation code is compiled and included in release builds of your game. Instead of directly building UI, and therefore referencing editor specific classes in exported builds (bad, throws lots of errors!) We use basic objects that hold instructions on how to construct the frontend for an event. These are called node (for the graph node itself) and element (for the elements in the graph node) instruction sets. These are parsed by an instruction handler class.
+### Planned features
+- [] Instruction handler registry
+- [] Clipboard support for graph nodes
+- [] Custom scene support for graph nodes
+- [] Nested graph execution
+- [] Connection stubs (a way of organizing dense connections)
+- [] Looping
 
-While somewhat complex, this flexibility allows for granular control over how individual events are configured to display, as well as the ease of making reusable elements akin to Godot's built in inspector menu
+### License
+This project is licensed under MPL. You may use this plugin for anything you want; if modifications are made to core components (not covering user made events,) you must make your changes open-source. Attribution would also be appreciated, but not required. 
+This project features external SVG assets which are sourced from Godot itself. [Godot's License](godotengine.org/license)
 
-TBD

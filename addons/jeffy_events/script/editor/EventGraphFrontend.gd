@@ -233,16 +233,12 @@ func _on_connection_added(connection : JEP_EventGraphConnection) -> void:
 	queue_redraw()
 	
 	_signal_node_connection(connection, true)
-	
-	#JEP_Print.info("Connection made: %s...@%d -> %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_connection_removed(connection : JEP_EventGraphConnection) -> void:
 	disconnect_node(connection.from_uuid, connection.from_port, connection.to_uuid, connection.to_port)
 	queue_redraw()
 	
 	_signal_node_connection(connection, false)
-	
-	#JEP_Print.info("Connection broken: %s...@%d x %s...@%d" % [connection.from_uuid.substr(0, 8), connection.from_port, connection.to_uuid.substr(0, 8), connection.to_port])
 
 func _on_nodes_moved() -> void:
 	for node : JEP_EventGraphNode in selected:
