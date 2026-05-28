@@ -146,12 +146,15 @@ func _draw() -> void:
 func _graph_node_rebuilt(node : JEP_EventGraphNode) -> void:
 	# Wait for node to be populated
 	var connections_to := graph.get_connections_to(node._uuid)
+	print(connections_to)
 	var connections_broken : int = 0
 	
 	var instruction : JEP_NodeInstruction = node._event._get_instruction(graph)
 	for connection : JEP_EventGraphConnection in connections_to:
+		print("Connections Son")
 		# If port count changed, and we're past it, remove
 		if instruction.get_input_port_count() <= connection.to_port:
+			print("Ports too large")
 			if graph.remove_connection_object(connection):
 				connections_broken += 1
 			continue

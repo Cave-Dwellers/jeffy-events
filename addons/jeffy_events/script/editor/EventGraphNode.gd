@@ -22,6 +22,8 @@ var fields : Array[JEP_EventField]
 func _init(event : JEP_Event, graph : JEP_EventGraph) -> void:
 	_event = event
 	_uuid = event.uuid
+	print(_uuid)
+	print(event.uuid)
 	name = _uuid
 	
 	slot_sizes_changed.connect(reset_size)

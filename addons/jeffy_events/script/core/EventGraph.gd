@@ -24,12 +24,6 @@ signal variable_removed(variable : JEP_EventGraphVariable)
 ## Connections between events (event UUID -> array of outgoing connections)
 @export_storage var _connections : Dictionary[StringName, Array]
 
-func _init() -> void:
-	# Force assign UUID to events
-	for key : StringName in _events.keys():
-		var event : JEP_Event = _events.get(key)
-		event.uuid = key
-
 ## Adds [param event] with the position [param at] to the event array
 func add_event(event : JEP_Event, at : Vector2 = Vector2.ZERO) -> void:
 	if at != Vector2.ZERO:
@@ -236,6 +230,11 @@ func get_data_connections_to(uuid : StringName) -> Array[JEP_EventGraphConnectio
 
 ## Fixes any errors, such as invalid connections, within the graph
 func sanitize() -> void:
+	# Assure uuids are set properly
+	for key : StringName in _events.keys():
+		var event : JEP_Event = _events.get(key)
+		event.uuid = key
+	
 	# Map of instructions [Event uuid -> instruction set]
 	var instruction_cache : Dictionary[StringName, JEP_NodeInstruction]
 	for uuid : StringName in _connections.keys():
@@ -246,7 +245,7 @@ func sanitize() -> void:
 		
 		for connection : JEP_EventGraphConnection in array:
 			_sanitize_connection(connection, instruction_cache)
-		
+	
 func _sanitize_connection(connection : JEP_EventGraphConnection, cache : Dictionary) -> void:
 	# Check one, check if either event is null
 	var uuid_1 : StringName = connection.from_uuid
