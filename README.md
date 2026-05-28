@@ -1,5 +1,7 @@
 # jeffy-events 2.0 (pre-release)
 
+![An example graph, demonstrating what the plugin looks like](branding/screenshot.png)
+
 A graph based event sequencer for Godot 4.6. This addon is a designer friendly solution for game event sequencing, e.g. things like cutscenes and NPC interactions. Sequencing tends to be done through script, or through something like Godot's animation timeline. This is my proposed solution, which tries to strike a balance between minimal code for the programmer and minimal effort required for the designer.
 
 Events are small interfaces; they have one main method, and a few extraneous ones that define how they interact with other nodes and the frontend. GUI is built based on a set of instructions provided by the programmer; it is easily extensible if you want to add new element handlers and instruction sets.
