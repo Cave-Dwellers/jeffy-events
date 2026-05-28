@@ -32,5 +32,5 @@ To use JeffyEvents, just install the addon from the Godot asset library, enable 
 ## License
 This project is licensed under MPL-2.0. You may use this plugin for anything you want; if modifications are made to core components (not covering user made events,) you must make your changes open-source. Attribution would also be appreciated, but not required. 
 
-This project features external SVG assets which are sourced from Godot itself. [Godot's License](godotengine.org/license)
+This project features external SVG assets which are sourced from Godot itself. [Godot's License](https://www.godotengine.org/license)
 
