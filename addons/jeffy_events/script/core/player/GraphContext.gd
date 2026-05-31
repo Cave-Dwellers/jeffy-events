@@ -40,14 +40,5 @@ func get_node_or_null(path : NodePath) -> Node:
 	# TODO - It might be better to have our own way of retrieving
 	# objects from a graph, rather than using nodepaths. Node groups
 	# might be the answer, but that may be prone to its own issues
-	return _find_node(graph_player.owner, path)
-
-func _find_node(from : Node, path : NodePath) -> Node:
-	var node : Node = from.get_node_or_null(path)
-	if node:
-		return node
-	
-	if !from.get_parent():
-		return null
-	return _find_node(from.get_parent(), path)
+	return JEP_NodePathResolver.find_node(graph_player.owner, path)
 	
