@@ -64,6 +64,8 @@ func handle_property_instruction(
 		handle_code_line_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.EnumLine:
 		handle_enum_line_instruction(instruction, node, event, element)
+	if instruction is JEP_ElementInstruction.EnumInt:
+		handle_enum_int_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.Bool:
 		handle_bool_instruction(instruction, node, event, element)
 	if instruction is JEP_ElementInstruction.NodePathField:
@@ -109,6 +111,15 @@ func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine,
 	var input : OptionButton = field._create_from_instruction(instruction, node)
 	
 	input.item_selected.connect(field._selected_wrapper)
+	node.add_connection_listener(element.get_index(), field._connection_status_updated)
+	element.add_child(input)
+
+func handle_enum_int_instruction(instruction : JEP_ElementInstruction.EnumLine, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
+	var property : StringName = instruction._property
+	var field : JEP_EnumIntField = JEP_EnumIntField.new(event, property, undo_redo)
+	var input : OptionButton = field._create_from_instruction(instruction, node)
+	
+	input.item_selected.connect(field._set_value)
 	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 

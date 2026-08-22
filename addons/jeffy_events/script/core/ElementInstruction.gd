@@ -116,6 +116,19 @@ class EnumLine extends Property:
 		_strings = array
 		return self
 
+class EnumInt extends Property:
+	var _strings : PackedStringArray = []
+	
+	func _get_type() -> Array[int]:
+		return [TYPE_INT]
+	
+	func _get_port_type() -> int:
+		return Ports.DataNumber
+	
+	func with_strings(array : PackedStringArray) -> EnumInt:
+		_strings = array
+		return self
+
 class CodeLine extends Property:
 	var _flat : bool
 	var _placeholder_text : StringName
