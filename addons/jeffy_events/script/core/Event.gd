@@ -55,11 +55,13 @@ func is_data() -> bool:
 	return false
 
 ## Returns the class name of this script
+@warning_ignore("native_method_override")
 func get_class() -> String:
 	var script : Script = get_script()
 	return script.get_global_name()
 
 ## Returns true if [param clazz] matches or inherits this class
+@warning_ignore("native_method_override")
 func is_class(clazz : String) -> bool:
 	var script : Script = get_script()
 	

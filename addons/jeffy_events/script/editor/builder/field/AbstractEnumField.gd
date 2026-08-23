@@ -21,7 +21,7 @@ func _create_from_instruction(instruction : JEP_ElementInstruction, node : JEP_E
 		var entry : String = strings.get(i)
 		field.add_item(entry, i)
 		
-		if value == entry:
+		if is_entry_identical(i, entry, value):
 			field.select(field.get_item_index(i))
 	
 	# If no default value, select first option in enum
@@ -32,3 +32,6 @@ func _create_from_instruction(instruction : JEP_ElementInstruction, node : JEP_E
 func _connection_status_updated(connected : bool) -> void:
 	field.set(&"disabled", connected)
 	field.visible = !connected
+
+@abstract
+func is_entry_identical(idx : int, text : String, value : Variant) -> bool

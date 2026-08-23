@@ -12,3 +12,6 @@ func _on_value_changed() -> void:
 		if field.get_item_text(i) == value:
 			field.selected = i
 			break
+
+func is_entry_identical(_idx : int, text : String, value : Variant) -> bool:
+	return text == (value as String)
