@@ -14,7 +14,7 @@ func _create_from_instruction(instruction : JEP_ElementInstruction, node : JEP_E
 	
 	if instruction._strings.is_empty():
 		JEP_Print.error("Strings not provided to EnumInt instruction - %s" % property)
-		return
+		return field
 	
 	var strings : PackedStringArray = instruction._strings
 	for i : int in range(strings.size()):

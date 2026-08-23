@@ -8,7 +8,12 @@ script = ExtResource("2_6o3rl")
 location = "res://addons/jeffy_events/events/"
 name = "Built-in"
 
+[sub_resource type="Resource" id="Resource_6o3rl"]
+script = ExtResource("2_6o3rl")
+location = "res://scripts/events/event/"
+name = "CSTD"
+
 [resource]
 script = ExtResource("1_6d36r")
-sources = Array[ExtResource("2_6o3rl")]([SubResource("Resource_6d36r")])
+sources = Array[ExtResource("2_6o3rl")]([SubResource("Resource_6d36r"), SubResource("Resource_6o3rl")])
 metadata/_custom_type_script = "uid://dfgsvhr3qav6c"
