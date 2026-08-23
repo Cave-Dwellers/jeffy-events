@@ -114,7 +114,7 @@ func handle_enum_line_instruction(instruction : JEP_ElementInstruction.EnumLine,
 	node.add_connection_listener(element.get_index(), field._connection_status_updated)
 	element.add_child(input)
 
-func handle_enum_int_instruction(instruction : JEP_ElementInstruction.EnumLine, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
+func handle_enum_int_instruction(instruction : JEP_ElementInstruction.EnumInt, node : JEP_EventGraphNode, event : JEP_Event, element : HBoxContainer) -> void:
 	var property : StringName = instruction._property
 	var field : JEP_EnumIntField = JEP_EnumIntField.new(event, property, undo_redo)
 	var input : OptionButton = field._create_from_instruction(instruction, node)
