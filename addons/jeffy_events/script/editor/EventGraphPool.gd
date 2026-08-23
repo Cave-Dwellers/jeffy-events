@@ -9,7 +9,7 @@ signal graph_removed(graph : JEP_EventGraph)
 signal graph_replaced(old : JEP_EventGraph, new : JEP_EventGraph)
 signal graph_saved(graph : JEP_EventGraph)
 
-var _graphs : Dictionary[String, Entry] = {}
+var _graphs : Dictionary[String, JEP_Entry] = {}
 
 func _dock_ready() -> void:
 	# Monitor file system changes
@@ -31,11 +31,11 @@ func add_graph(graph : JEP_EventGraph) -> void:
 	if has(graph):
 		JEP_Print.info("Replacing graph in pool")
 		var old_entry := _graphs[graph.resource_path]
-		_graphs[graph.resource_path] = Entry.new(graph)
+		_graphs[graph.resource_path] = JEP_Entry.new(graph)
 		graph_replaced.emit(old_entry.graph, graph)
 	else:
 		JEP_Print.info("Adding graph to pool")
-		_graphs[graph.resource_path] = Entry.new(graph)
+		_graphs[graph.resource_path] = JEP_Entry.new(graph)
 		graph_added.emit(graph)
 		
 	_handle_graph_connection(graph)
@@ -54,13 +54,13 @@ func save_graph(graph : JEP_EventGraph) -> bool:
 		JEP_Print.error("Graph not in graph pool!")
 		return false
 	
-	var entry : Entry = _graphs[graph.resource_path]
+	var entry : JEP_Entry = _graphs[graph.resource_path]
 	return _save_entry(entry)
 	
 func save_all_graphs() -> void:
 	var graphs_saved : int = 0
 	
-	for entry : Entry in _graphs.values():
+	for entry : JEP_Entry in _graphs.values():
 		if _save_entry(entry):
 			graphs_saved += 1
 	
@@ -94,7 +94,7 @@ func _handle_graph_connection(graph : JEP_EventGraph, connect : bool = true) -> 
 					#continue
 				#event.changed.disconnect(graph.emit_changed)
 	
-func _save_entry(entry : Entry) -> bool:
+func _save_entry(entry : JEP_Entry) -> bool:
 	# Do not save unmodified graphs
 	if !entry.pending_save:
 		return false
@@ -125,7 +125,7 @@ func _on_file_moved(old : String, new : String) -> void:
 	var graph := _graphs[old]
 	_graphs[new] = graph
 
-class Entry extends RefCounted:
+class JEP_Entry extends RefCounted:
 	var graph : JEP_EventGraph
 	var pending_save : bool = false
 	
